@@ -1,0 +1,9 @@
+/node_modules/*
+/bower_components/*
+/docs/*
+/internals/*
+/server/*
+/babel.config.js
+/sofa.config.js
+/sofa.template.config.js
+*.js

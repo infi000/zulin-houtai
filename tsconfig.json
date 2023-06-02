@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "removeComments": false,
+    "target": "es5",
+    "jsx": "react",
+    "baseUrl": "./",
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "paths": {
+      "utils/*": ["./src/utils/*"],
+      "configs/*": ["./src/configs/*"],
+      "containers/*": ["./src/containers/*"],
+      "components/*": ["./src/components/*"],
+      "hooks/*": ["./src/hooks/*"],
+      "pages/*": ["./src/pages/*"],
+      "store/*": ["./src/store/*"],
+      "static/*": ["./src/static/*"],
+      "types/*": ["./src/types/*"]
+    },
+    "experimentalDecorators": true,
+    "types": ["node", "webpack-env"],
+    "lib": ["es2019", "es6", "es2015", "dom", "es2015.promise"]
+  },
+  "include": ["./src/types/*.d.ts", "./src/**/*"],
+  "exclude": ["node_modules", "**/*.spec.ts", "**/*.test.ts"]
+}

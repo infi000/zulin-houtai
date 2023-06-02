@@ -1,0 +1,44 @@
+<!--
+ * @Author: 张驰阳 zhangchiyang@sfmail.sf-express.com
+ * @Date: 2023-02-21 11:16:41
+ * @LastEditors: 张驰阳 zhangchiyang@sfmail.sf-express.com
+ * @LastEditTime: 2023-04-13 18:03:33
+ * @FilePath: /ot-resources/src/templates/index.html
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="mobile-web-app-capable" content="yes">
+
+  <link rel="icon" href="https://festatic-1254389369.cos.ap-guangzhou.myqcloud.com/science/ot-resources/favicon.ico">
+  <title>供应链资源平台</title>
+</head>
+
+<body>
+  <link rel="stylesheet/less" type="text/css" href="/color.less" />
+  <script>
+    window.less = {
+        async: false,
+        env: 'production'//production  development
+    };
+  </script>
+  <!-- <script src="https://cdn.bootcss.com/less.js/2.7.3/less.min.js"></script> -->
+  <!-- Display a message if JS has been disabled on the browser. -->
+  <noscript>If you're seeing this message, that means
+    <strong>JavaScript has been disabled on your browser</strong>, please
+    <strong>enable JS</strong> to make this app work.</noscript>
+
+  <!-- The app hooks into this div -->
+  <div id="app"></div>
+
+  <!-- Open Sans Font -->
+  <!-- <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet"> -->
+
+  <!-- A lot of magic happens in this file. HtmlWebpackPlugin automatically injects all assets (e.g. bundle.js, main.css) with the correct HTML tags, which is why they are missing in this file. Don't add any assets here! (Check out webpack.dev.js and webpack.prod.js if you want to know more) -->
+</body>
+
+</html>
