@@ -2,7 +2,7 @@
  * @Author: 李淳
  * @Date: 2020-06-15 14:18:50
  * @LastEditors: 张驰阳 zhangchiyang@sfmail.sf-express.com
- * @LastEditTime: 2023-05-30 11:55:50
+ * @LastEditTime: 2023-06-08 00:08:07
  * @Description: file content
  */
 // prefix
@@ -34,6 +34,7 @@ export const USER_NOT_EXIST_ERRNO = 110018; // 用户不存在
 export const CREATE = 'create';
 export const EDIT = 'edit';
 export const VIEW = 'view';
+export const STATUS = 'status';
 export const REVIEW = 'review';
 export const APPROVE = 'approve';
 export const DELETE = 'delete';

@@ -113,7 +113,7 @@ const slice = createSlice({
           keyboard: false,
           title: '登录失败，您还未授权！',
           okText: '点击退出',
-          onOk: () => { gotoPass('logout'); },
+          onOk: () => { gotoPass('login'); },
         });
         return;
       }

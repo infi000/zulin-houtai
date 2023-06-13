@@ -85,9 +85,8 @@ export function createServiceAsyncThunk<ThunkArg = null, Returned = null>(typePr
           fetchPromise: fetchRequest,
         },
       );
-      // console.log('------', fetchMethodMap.get(requestMeta));
-      const res = await fetchRequest;
-      if (res.errno !== 0) {
+      const res:any = await fetchRequest;
+      if (res.res !== 'succ') {
         return rejectWithValue(res);
       }
 

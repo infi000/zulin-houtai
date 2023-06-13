@@ -5,6 +5,7 @@ import { longanDispatchError } from 'longan-sdk';
 import get from 'lodash/get';
 
 import { REQUEST_MATERIAL } from './constants';
+import { getCookie } from './utils';
 
 interface IOption {
   method?: string;
@@ -163,8 +164,11 @@ export default class FetchRequest {
   private readonly baseUrl: string = '';
 
   constructor(configs: IConfig = {}) {
+    // const mock = 'http://easy-mock.sftcwl.com/mock/647f4ca88988f273dfbd7b8e/zl';
+    const mock = '';
+
     const { baseUrl, ...otherConfigs } = configs;
-    this.baseUrl = baseUrl || '';
+    this.baseUrl = baseUrl || mock + '/index.php/AdminApi';
     this.config = otherConfigs ? { ...otherConfigs } : {};
   }
 
@@ -185,6 +189,7 @@ export default class FetchRequest {
       REQUEST_MATERIAL.requestMethod = newMethod;
       REQUEST_MATERIAL.requestUrl = url;
       if (newMethod !== 'GET' && !inQuery) {
+        newUrl = parseUrl(baseUrl, url);
         option.body = parseBody<T>(params, option.headers);
       }
       // 只在GET请求拼接参数 其他请求有可能超长
@@ -258,29 +263,48 @@ export default class FetchRequest {
   }
 
   static getRequest<T, K>(url: string, params?: T): Promise<IResponseData<K>> {
-    return FetchRequest.create().request(url, params, { headers: {} });
+    const token = getCookie('token');
+    return FetchRequest.create().request(url, { ...params, token }, { headers: {} });
   }
 
   static postRequest<T, K>(url: string, params?: T): Promise<IResponseData<K>> {
-    return FetchRequest.create('POST').request(url, params, {
+    const token = getCookie('token');
+    return FetchRequest.create('POST').request(url, { ...params, token }, {
       headers: { 'Content-Type': ContentType.form },
     });
   }
 
   static postJsonRequest<T, K>(url: string, params?: T): Promise<IResponseData<K>> {
-    return FetchRequest.create('POST').request(url, params, {
+    const token = getCookie('token');
+
+    return FetchRequest.create('POST').request(url, { ...params, token }, {
       headers: { 'Content-Type': ContentType.json },
     });
   }
 
   static postJsonQueryRequest<T, K>(url: string, params?: T): Promise<IResponseData<K>> {
-    return FetchRequest.create('POST').request(url, params, {
+    const token = getCookie('token');
+
+    return FetchRequest.create('POST').request(url, { ...params, token }, {
       headers: { 'Content-Type': ContentType.json },
     }, true);
   }
 
   static postFormDataRequest<T, K>(url: string, params?: T): Promise<IResponseData<K>> {
-    return FetchRequest.create('POST').request(url, params);
+    const token = getCookie('token');
+    const formData = new FormData(); // 新建一个formData对象
+    Object.entries({ ...params, token }).forEach((item: any) => {
+      const [key, val] = item;
+      if (Array.isArray(val) && val.length > 0 && val[0] instanceof File) {
+        val.forEach((file: any) => {
+          formData.append(`${key}[]`, file);
+        });
+      } else {
+        const { file } = val || {};
+        formData.append(key, file || val);
+      }
+    });
+    return FetchRequest.create('POST').request(url, formData);
   }
 }
 

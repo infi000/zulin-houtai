@@ -192,6 +192,38 @@ export const menuMessages = defineMessages({
     id: `${scope}.taskList`,
     defaultMessage: '数据导入导出',
   },
+  leasedEquipment:{
+    id: `${scope}.leasedEquipment`,
+    defaultMessage: '租赁设备管理',
+  },
+  houseManager: {
+    id: `${scope}.houseManager`,
+    defaultMessage: '房间管理',
+  },
+  experimentManager: {
+    id: `${scope}.experimentManager`,
+    defaultMessage: '实验项目管理',
+  },
+  equipmentManager: {
+    id: `${scope}.equipmentManager`,
+    defaultMessage: '设备管理',
+  },
+  toolboxManager: {
+    id: `${scope}.toolboxManager`,
+    defaultMessage: '工具箱管理',
+  },
+  toolManager: {
+    id: `${scope}.toolManager`,
+    defaultMessage: '工具管理',
+  },
+  orderManager: {
+    id: `${scope}.orderManager`,
+    defaultMessage: '订单管理',
+  },
+  order: {
+    id: `${scope}.order`,
+    defaultMessage: '订单',
+  },
 });
 
 export const yesOrNoMessages = defineMessages({

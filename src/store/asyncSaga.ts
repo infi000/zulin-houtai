@@ -1,8 +1,8 @@
 /*
  * @Author: 李淳
  * @Date: 2020-06-24 15:37:52
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-01-26 19:31:57
+ * @LastEditors: 张驰阳 zhangchiyang@sfmail.sf-express.com
+ * @LastEditTime: 2023-06-07 22:28:55
  * @Description: 面向fetch请求切面，对请求成功失败的附加处理；
  */
 import { notification } from 'antd';
@@ -26,8 +26,7 @@ import { actions } from './globalSlice';
 
 function* fetchSuccessSaga(action: IRedux.Action): Generator {
   const result = action?.payload;
-
-  if (result && result.errno === 0) { // 【成功】
+  if (result && result.res === 'succ') { // 【成功】
     if (action.type.indexOf(POST_ACTION_PREFIX) > -1) { // 预设只有post接口在正确时显示信息
       notification.success({
         message: '操作成功',
@@ -43,13 +42,13 @@ function* fetchSuccessSaga(action: IRedux.Action): Generator {
 
 function* fetchFailSaga(action: IRedux.Action): Generator {
   const result = action?.payload;
-  if (result && result.errno) {
-    if (result.errno === USER_NOT_LOGIN_ERRNO) { // 未登录，跳转登录
+  if (result && result.res) {
+    if (result.code === -1) { // 未登录，跳转登录
       gotoPass('login');
       return;
     }
     notification.error({ // 不同于请求成功，所有的请求都会暴露失败消息
-      message: result.errmsg ? `${result.errmsg}${isString(result?.data) ? `:${result.data}` : ''}` : '操作失败，请稍候再试',
+      message: result.errdata ? `${result.errdata}` : '操作失败，请稍候再试',
     });
     yield put(actions.operateError(new Error(JSON.stringify(action))));
     return;

@@ -6,8 +6,8 @@ const buildedConfig = process.env.PROJECT_ENV ? {
   fileProxyPrefix: 'cos-myqcloud',
 } : {};
 
-export const defaultConfig = {
-  moduleId: 1,
+export const defaultConfig:any = {
+  moduleId: '1',
   expiredTime: 3000000,
   uploadAuthUrl: '/cos/getUploadSigned',
   downloadAuthUrl: '/cos/getDownloadSigned',

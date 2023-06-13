@@ -1,7 +1,15 @@
+/*
+ * @Author: 张驰阳 zhangchiyang@sfmail.sf-express.com
+ * @Date: 2023-06-02 23:19:57
+ * @LastEditors: 张驰阳 zhangchiyang@sfmail.sf-express.com
+ * @LastEditTime: 2023-06-13 23:16:06
+ * @FilePath: /houtai/src/pages/Login/index.tsx
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useInjectReducer } from 'utils/redux-injectors';
-import { Alert } from 'antd';
+import { Alert, Button, Col, Form, Input, Row } from 'antd';
 
 import { conf as passConfig } from 'configs/pass.conf';
 import { getQueryString, setCookie } from 'utils/utils';
@@ -9,86 +17,72 @@ import { selectError } from 'store/selectors';
 import { actions as globalActions } from 'store/globalSlice';
 import loginPic from 'static/images/login_pic.svg';
 
-import { loadPassScript } from './sdkMethods';
-import { reducer } from './slice';
+// import { loadPassScript } from './sdkMethods';
+import { postLogin, reducer } from './slice';
 import { NAMESPACE } from './constants';
 import './index.less';
+import { falsyParamsFilter } from 'utils/filters';
 
 /* eslint-disable */
 const HomeLogin = () => {
+  const [form] = Form.useForm();
   useInjectReducer({ key: NAMESPACE, reducer });
   const dispatch = useDispatch();
-  const error = useSelector(selectError);
-
-  const autoLoginByCasTicket = () => {
-    const handler = (isLoading: boolean, successArgs: any, failArgs: any) => {
-      if (successArgs) {
-        dispatch(globalActions.operateError(null));
-        window.location.href = '//' + window.location.host + '/uiResources/homePage';
-      }
-      if (failArgs) {
-        dispatch(globalActions.operateError(failArgs.errmsg || null));
-      }
-    }
-    const casConifg: any = passConfig.casAddress || {};
-    const { host } = window.location;
-    let type = casConifg[host] ? casConifg[host].type : 'test';
-    const redirectUrl = type === 'test' ? 'http://' + host + casConifg.offline.redirectUrl : casConifg[host].redirectUrl;
-    const config = {
-      redirectUrl,
-      autoSetStoken: true,
-    };
-    if (!(window as any)._PASSICSDK) {
-      loadPassScript().then((Sdk) => {
-        console.log(Sdk, 'Sdk1');
-        Sdk.autoLoginByCasTicket(handler, config);
-      });
-    } else {
-      (window as any)._PASSICSDK.autoLoginByCasTicket(handler, config);
-    }
-  }
 
   useEffect(() => {
-    setCookie('tblh-platform', passConfig.platformMap);
-    if (getQueryString('ticket')) {
-      autoLoginByCasTicket();
-    // } else {
-    //   dispatch(actions.checkSsnPass());
-    }
+
   }, []);
 
-  const handleGotoCas = () => {
+  const handleGo = async () => {
     // 重置结束
-    const casConifg: any = passConfig.casAddress || {};
-    const { host } = window.location;
-    const type = casConifg[host] ? casConifg[host].type : 'test';
-    const redirectUrl = type === 'test' ? 'http://' + host + casConifg.offline.redirectUrl : casConifg[host].redirectUrl;
-    const config = {
-      env: type,
-      redirectUrl,
-    };
-    console.log('cas配置：', config);
-    if ((window as any)._PASSICSDK && (window as any)._PASSICSDK.jumpToCasLogin){
-      window.history.pushState({}, '', window.location.href);
-      (window as any)._PASSICSDK.jumpToCasLogin(config);
-    }
-  }
+    let values = await form.validateFields();
+    dispatch(postLogin(values));
 
+  }
+  const formItemLayout = {
+    labelCol: {
+      xs: { span: 24 },
+      sm: { span: 4 },
+    },
+    wrapperCol: {
+      xs: { span: 24 },
+      sm: { span: 20 },
+    },
+  };
   return (
     <div className='login-page'>
       <div className='login-page-left'>
         <div>Welcome</div>
         <div>Find more surpises here!</div>
-        <div>SF-EXPRESS</div>
+        <div></div>
       </div>
       <div className='login-page-right'>
         {/* <i className='login-logo'/> */}
-        <img className='login-logo' src={loginPic} alt='logo' />
-        { error && <Alert style={{ position: 'relative', top: '340px', left: '85px', width: '74%' }} message={error} type="error" /> }
-        <div className='card' onClick={handleGotoCas}>
-          <div className='main-text'>点击登录</div>
-          <div className='sub-text'>请使用丰声扫码登录</div>
-          <i className='right-image-decoration-bottom' />
+        {/* <img className='login-logo' src={loginPic} alt='logo' /> */}
+        <div className='card'>
+        <Form {...formItemLayout} form={form} size='middle'>
+          <Row>
+            <Col span={24}>
+              <Form.Item 
+              name='username'
+               label='用户名'
+               rules={[{ required: true, message: '必填项' }]}>
+                <Input allowClear placeholder='请输入' />
+              </Form.Item>
+            </Col>
+            <Col span={24}>
+              <Form.Item
+               name='password' 
+               label='密码'
+               rules={[{ required: true, message: '必填项' }]}>
+                <Input allowClear placeholder='请输入' />
+              </Form.Item>
+            </Col>
+            <Col span={24} style={{ textAlign: 'center'}}>
+              <Button onClick={handleGo}>登录</Button>
+            </Col>
+          </Row>
+          </Form>
         </div>
       </div>
     </div>

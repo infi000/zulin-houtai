@@ -1,5 +1,5 @@
 {
-  "cosmos.app.pages.HomePage.welcome": "欢迎使用供应链资源平台系统",
+  "cosmos.app.pages.HomePage.welcome": "欢迎使用系统",
   "cosmos.app.pages.NotFoundPage.notFoundText": "找不到当前路由",
   "cosmos.app.pages.SofaMapDemo.address": "地址",
   "cosmos.app.pages.SofaMapDemo.addressError": "根据经纬度查询地址失败",

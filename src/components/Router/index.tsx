@@ -1,3 +1,11 @@
+/*
+ * @Author: 张驰阳 zhangchiyang@sfmail.sf-express.com
+ * @Date: 2023-06-02 23:19:57
+ * @LastEditors: 张驰阳 zhangchiyang@sfmail.sf-express.com
+ * @LastEditTime: 2023-06-13 23:55:39
+ * @FilePath: /houtai/src/components/Router/index.tsx
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 import * as React from 'react';
 import { CacheRoute, CacheSwitch } from 'react-router-cache-route';
 
@@ -51,44 +59,78 @@ export function getLazyComponent(item: IMenuItem) {
   return comp;
 }
 
-export default class CoreRoute extends React.PureComponent<IProps, object> {
-  public makePathToComponent(menu: IMenuDataItem[]): IMenuItem[] {
-    return traversMenu(menu, [], this.props.prefix);
-  }
 
-  public render() {
-    const { menuData } = this.props;
-
-    const pathToComponentArr = this.makePathToComponent(menuData);
-    console.log(pathToComponentArr);
-    return (
-      <ErrorBoundary>
-        <React.Suspense fallback={<LoadingSkeleton />}>
-          <CacheSwitch>
-            <CacheRoute
-              exact
-              path='/'
-              key='default'
-              className='main-content-wrap'
-              component={getLazyComponent(pathToComponentArr[0])}
-            />
-            {
-              pathToComponentArr.map((item: IMenuItem) => (
-                <CacheRoute
-                  exact
-                  cacheKey={item.isDetail ? window.location.pathname + window.location.search : item.path}
-                  multiple={item.isDetail}
-                  key={item.path}
-                  className='main-content-wrap'
-                  path={item.isDetail ? `${item.path}/:id` : item.path}
-                  component={getLazyComponent(item)}
-                />
-              ))
-            }
-            <CacheRoute path='*' component={NotFoundPage} />
-          </CacheSwitch>
-        </React.Suspense>
-      </ErrorBoundary>
-    );
+export const CoreRoute = (props: IProps) => {
+  const makePathToComponent = (menu: IMenuDataItem[]): IMenuItem[] => {
+    return traversMenu(menu, [], props.prefix);
   }
+  return (
+    <ErrorBoundary>
+      <React.Suspense fallback={<LoadingSkeleton />}>
+        <CacheSwitch>
+          <CacheRoute
+            exact
+            path='/'
+            key='default'
+            className='main-content-wrap'
+            component={getLazyComponent(makePathToComponent(props.menuData)[0])}
+          />
+          {
+            makePathToComponent(props.menuData).map((item: IMenuItem) => (
+              <CacheRoute
+                exact
+                cacheKey={item.isDetail ? window.location.pathname + window.location.search : item.path}
+                multiple={item.isDetail}
+                key={item.path}
+                className='main-content-wrap'
+                path={item.isDetail ? `${item.path}/:id` : item.path}
+                component={getLazyComponent(item)}
+              />
+            ))
+          }
+          <CacheRoute path='*' component={NotFoundPage} />
+        </CacheSwitch>
+      </React.Suspense>
+    </ErrorBoundary>
+  );
 }
+// export default class CoreRoute2 extends React.PureComponent<IProps, object> {
+//   public makePathToComponent(menu: IMenuDataItem[]): IMenuItem[] {
+//     return traversMenu(menu, [], this.props.prefix);
+//   }
+
+//   public render() {
+//     const { menuData } = this.props;
+
+//     const pathToComponentArr = this.makePathToComponent(menuData);
+//     return (
+//       <ErrorBoundary>
+//         <React.Suspense fallback={<LoadingSkeleton />}>
+//           <CacheSwitch>
+//             <CacheRoute
+//               exact
+//               path='/'
+//               key='default'
+//               className='main-content-wrap'
+//               component={getLazyComponent(pathToComponentArr[0])}
+//             />
+//             {
+//               pathToComponentArr.map((item: IMenuItem) => (
+//                 <CacheRoute
+//                   exact
+//                   cacheKey={item.isDetail ? window.location.pathname + window.location.search : item.path}
+//                   multiple={item.isDetail}
+//                   key={item.path}
+//                   className='main-content-wrap'
+//                   path={item.isDetail ? `${item.path}/:id` : item.path}
+//                   component={getLazyComponent(item)}
+//                 />
+//               ))
+//             }
+//             <CacheRoute path='*' component={NotFoundPage} />
+//           </CacheSwitch>
+//         </React.Suspense>
+//       </ErrorBoundary>
+//     );
+//   }
+// }

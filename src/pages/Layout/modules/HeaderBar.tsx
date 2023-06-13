@@ -33,7 +33,7 @@ function Header(props: InjectedIntlProps) {
   };
 
   const handleLogout = () => {
-    gotoPass('logout');
+    gotoPass('login');
   };
 
   return (

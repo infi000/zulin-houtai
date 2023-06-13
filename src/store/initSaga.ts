@@ -1,8 +1,8 @@
 /*
  * @Author: 李淳
  * @Date: 2020-06-22 11:16:00
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2021-07-15 15:54:32
+ * @LastEditors: 张驰阳 zhangchiyang@sfmail.sf-express.com
+ * @LastEditTime: 2023-06-07 01:02:05
  * @Description: 控制全局数据获取；全局数据获取完毕后会发出finish信号；
  */
 import { takeLatest, putResolve, call, put, all, Pattern } from 'redux-saga/effects';
@@ -17,9 +17,9 @@ function* initGlobalData(): Generator {
     const { pathname } = window?.location || {};
     if (pathname !== conf.uri.login && pathname !== conf.uri.logout) {
       yield all([
-        putResolve(getLoginUserInfo() as any),
+        // putResolve(getLoginUserInfo() as any),
         // putResolve(getDictMaps() as any),
-        putResolve(getDictTypes() as any),
+        // putResolve(getDictTypes() as any),
       ]);
     }
 

@@ -13,7 +13,7 @@ export const scope = 'cosmos.app.pages.HomePage';
 export default defineMessages({
   welcome: {
     id: `${scope}.welcome`,
-    defaultMessage: '欢迎使用供应链资源平台系统运营',
+    defaultMessage: '欢迎使用系统运营',
   },
   copyright: {
     id: `${scope}.copyright`,
