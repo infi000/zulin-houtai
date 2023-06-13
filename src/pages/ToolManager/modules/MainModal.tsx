@@ -53,12 +53,6 @@ function MainModal() {
     return {
       ...oData,
       // 添加需要格式化的初始值
-      pics: [ {
-        uid: '-1',
-        name: 'xxx.png',
-        status: 'done',
-        url: 'http://www.baidu.com/xxx.png',
-      }],
     };
   }, [data, type]);
   const modalTitle = useMemo((): string => {
@@ -82,8 +76,6 @@ function MainModal() {
     } else {
 
       let values = await form.validateFields();
-      console.log(values);
-      return
       values = formatPostParams(values);
       if (type === CREATE) {
         dispatch(postCreate(falsyParamsFilter(values)));
@@ -95,7 +87,7 @@ function MainModal() {
       }
     }
   };
-console.log('memoData', memoData);
+  console.log('memoData', memoData);
   return (
     <Modal
       forceRender
@@ -183,24 +175,27 @@ console.log('memoData', memoData);
         <Col span={24}><Form.Item
           label='预览图'
           name='thumbinal'
-          initialValue={memoData?.thumbinal || ''}
-          rules={[{ required: true, message: '必填项' }]}
+          rules={[{ required: !isModify(type), message: '必填项' }]}
         >
           <Upload action='' beforeUpload={() => false} listType="picture">
             <Button icon={<UploadOutlined />}>Upload</Button>
           </Upload>
-          <ImageBox />
         </Form.Item>
         </Col>
-        <Col span={24}><Form.Item
-          label='大图'
-          name='pics'
-          initialValue={memoData?.pics || ''}
-          rules={[{ required: true, message: '必填项' }]}
-        >
-          <Upload action='' beforeUpload={() => false} listType="picture">
-            <Button icon={<UploadOutlined />}>Upload</Button>
-          </Upload>
+        <Col span={24}> <Form.Item label='大图' required={!isModify(type)}>
+          <Form.Item
+            name='pics'
+            // initialValue={memoData?.pics || ''}
+            rules={[{ required: !isModify(type), message: '必填项' }]}
+          >
+            <Upload action='' beforeUpload={() => false} listType="picture">
+              <Button icon={<UploadOutlined />}>Upload</Button>
+            </Upload>
+          </Form.Item>
+          <ImageBox
+            data={(memoData?.pics || '') as any}
+            delParams={{ params: { tid: memoData.id }, api: 'Lease/tooldelpic' }}
+          />
         </Form.Item>
         </Col>
         <Col span={24}><Form.Item

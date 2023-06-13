@@ -14,6 +14,7 @@ import selectors from '../selectors';
 import { ITableItem } from '../types';
 import { formatPostParams } from '../adapter';
 import { STATUS_MAP } from '../constants';
+import ImageBox from 'components/ImageBox';
 
 const { useEffect, useMemo } = React;
 const formItemLayout = {
@@ -87,10 +88,10 @@ function MainModal() {
           epid: data?.id,
         })));
       } else {
-        dispatch(postEdit({
+        dispatch(postEdit(falsyParamsFilter({
           ...values,
           epid: data?.id,
-        }));
+        })));
       }
     }
   };
@@ -226,24 +227,31 @@ function MainModal() {
               <Col span={24}><Form.Item
                 label='房间预览图'
                 name='thumbinal'
-                initialValue={memoData?.thumbinal || ''}
-                rules={[{ required: true, message: '必填项' }]}
+                rules={[{ required: !isModify(type), message: '必填项' }]}
               >
-                <Upload action='' beforeUpload={() => false}>
+                <Upload action='' beforeUpload={() => false} listType="picture">
                   <Button icon={<UploadOutlined />}>Upload</Button>
                 </Upload>
               </Form.Item>
               </Col>
-              <Col span={24}><Form.Item
-                label='设备大图'
-                name='pics'
-                initialValue={memoData?.pics || ''}
-                rules={[{ required: true, message: '必填项' }]}
-              >
-                <Upload action='' beforeUpload={() => false}>
-                  <Button icon={<UploadOutlined />}>Upload</Button>
-                </Upload>
-              </Form.Item>
+              <Col span={24}>
+                <Form.Item
+                  label='设备大图'
+                  required={!isModify(type)}
+                >
+                  <Form.Item
+                    name='pics'
+                    rules={[{ required: !isModify(type), message: '必填项' }]}
+                  >
+                    <Upload action='' beforeUpload={() => false} listType="picture">
+                      <Button icon={<UploadOutlined />}>Upload</Button>
+                    </Upload>
+                  </Form.Item>
+                  <ImageBox
+                    data={(memoData?.pics || '') as any}
+                    delParams={{ params: { epid: memoData.id }, api: 'Lease/equipmentdelpic' }}
+                  />
+                </Form.Item>
               </Col>
               <Col span={24}><Form.Item
                 label='说明'
