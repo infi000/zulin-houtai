@@ -2,7 +2,7 @@
  * @Author: 李淳
  * @Date: 2020-06-21 12:23:57
  * @LastEditors: 张驰阳 zhangchiyang@sfmail.sf-express.com
- * @LastEditTime: 2023-03-31 15:16:38
+ * @LastEditTime: 2023-06-14 01:01:10
  * @Description: 入口文件
  */
 
@@ -49,8 +49,8 @@ loadLongan();
 
 if (process.env.NODE_ENV === 'production') {
   // 版本检查
-  const buildVersion = BuildVersion.getInstance(process.env.BUILD_VERSION as any);
-  buildVersion.init();
+  // const buildVersion = BuildVersion.getInstance(process.env.BUILD_VERSION as any);
+  // buildVersion.init();
 }
 interface ITranslationMessages {
   'en-US': {

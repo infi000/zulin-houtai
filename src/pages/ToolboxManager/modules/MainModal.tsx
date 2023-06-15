@@ -96,6 +96,18 @@ function MainModal() {
     >
       <Form {...formItemLayout} form={form}>
         <Col span={24}><Form.Item
+          label='实验项目id'
+          name='eid'
+          initialValue={memoData?.eid || ''}
+          rules={[{ required: true, message: '必填项' }]}
+        >
+          <Input
+            placeholder='请输入'
+            disabled={isView(type)}
+          />
+        </Form.Item>
+        </Col>
+        <Col span={24}><Form.Item
           label='工具箱标题'
           name='title'
           initialValue={memoData?.title || ''}

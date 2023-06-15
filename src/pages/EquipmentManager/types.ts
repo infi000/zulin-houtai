@@ -26,6 +26,7 @@ export interface ITableItem {
   buyprice: number; // 购置价格
   remark: string; // 备注
   pics: string; // 设备大图
+  eid: string; // 实验项目id
   ctime: number; // 房间创建时间
   status: number; // 状态，1正常，0下线，2报废审核中，3已报废，4维护中，5备用
 }

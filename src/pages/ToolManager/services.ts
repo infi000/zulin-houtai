@@ -1,3 +1,11 @@
+/*
+ * @Author: 张驰阳 zhangchiyang@sfmail.sf-express.com
+ * @Date: 2023-06-03 23:26:54
+ * @LastEditors: 张驰阳 zhangchiyang@sfmail.sf-express.com
+ * @LastEditTime: 2023-06-16 00:02:18
+ * @FilePath: /houtai/src/pages/ToolManager/services.ts
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 import { getRequest, postRequest, postFormDataRequest } from 'utils/request';
 import { ITableItem, TSearchParams, TCreateParams, TModifyParams } from './types';
 
@@ -43,5 +51,5 @@ export default {
   postEditService,
   getDelService,
   getDataDetailService,
-  getOnlineService
+  getOnlineService,
 };

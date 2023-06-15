@@ -25,6 +25,8 @@ export interface ITableItem {
   ctime: number; // 工具箱创建时间
   status: number; // 状态，1正常，0关闭
   pics: string; // 大图
+  eid: string; // 实验项目id
+
 }
 
 //  查询项字段

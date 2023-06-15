@@ -169,6 +169,20 @@ function MainModal() {
                 />
               </Form.Item>
               </Col>
+              <Col span={24}><Form.Item
+                label='拼团人数'
+                name='maxmember'
+                initialValue={(memoData?.maxmember || memoData?.maxmember === 0) ? memoData?.maxmember : 1}
+              >
+                <InputNumber
+                  placeholder='请输入最大参与人数'
+                  disabled={isView(type)}
+                  style={{ width: '100%' }}
+                  max={5}
+                  min={1}
+                />
+              </Form.Item>
+              </Col>
               <Col span={24}>
                 <Form.Item
                   label='项目大图'

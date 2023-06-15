@@ -2,7 +2,7 @@
  * @Author: 李淳
  * @Date: 2020-06-08 10:40:43
  * @LastEditors: 张驰阳 zhangchiyang@sfmail.sf-express.com
- * @LastEditTime: 2023-06-08 00:06:31
+ * @LastEditTime: 2023-06-16 00:16:04
  * @Description: file content
  */
 // 基本类型
@@ -75,7 +75,7 @@ declare interface IPagination {
 }
 
 // 用户操作类型
-declare type OperateType = 'create' | 'edit' | 'view' | 'review' | 'status';
+declare type OperateType = 'create' | 'edit' | 'view' | 'review' | 'status' | '核销' | '续订' | '继续支付';
 
 declare interface IModalData<T> {
   visible: boolean;
