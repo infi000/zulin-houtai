@@ -224,6 +224,18 @@ export const menuMessages = defineMessages({
     id: `${scope}.order`,
     defaultMessage: '订单',
   },
+  consignmentManager: {
+    id: `${scope}.consignmentManager`,
+    defaultMessage: '寄卖管理',
+  },
+  consignmentGoodsManager: {
+    id: `${scope}.consignmentGoodsManager`,
+    defaultMessage: '寄卖商品',
+  },
+  consignmentOrderManager: {
+    id: `${scope}.consignmentOrderManager`,
+    defaultMessage: '寄卖订单',
+  },
 });
 
 export const yesOrNoMessages = defineMessages({
