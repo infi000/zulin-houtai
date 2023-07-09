@@ -139,6 +139,13 @@ function FormTable() {
       render: (text:any) => text?.map((item:any) => <Image width={50} height={50} src={item.pic} />),
     },
     {
+      title: '项目宣传内容图',
+      dataIndex: 'conpics',
+      key: 'conpics',
+      align: 'left',
+      render: (text:any) => text?.map((item:any) => <Image width={50} height={50} src={item.pic} />),
+    },
+    {
       title: '项目描述',
       dataIndex: 'des',
       key: 'des',

@@ -261,3 +261,19 @@ export const disabledDate = (current: any, type:'仅当月次月') => {
   }
   return true;
 };
+
+export const formatPage = (params: any) => {
+  const _params = { ...params };
+  try {
+    if (_params.pageSize) {
+      _params.count = _params.pageSize;
+    }
+    if (_params.pageNum) {
+      _params.offset = (_params.pageNum - 1)*_params.count;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+
+  return { ..._params };
+};

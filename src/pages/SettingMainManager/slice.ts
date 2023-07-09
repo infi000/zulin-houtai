@@ -43,32 +43,27 @@ export const postCreate = createServiceAsyncThunk(
 
 export const getDel = createServiceAsyncThunk(
   `${NAMESPACE}/getDel`,
-  async (params: {oid: number}) => services.getDelService(params),
+  async (params: {tid: number}) => services.getDelService(params),
 );
 
 export const getDataDetail = createServiceAsyncThunk(
   `${NAMESPACE}/getDataDetail`,
-  async (params: {oid: number, type: any}) => services.getDataDetailService({ oid: params.oid }),
+  async (params: {tid: number, type: any}) => services.getDataDetailService({ tid: params.tid }),
 );
 
 export const getOnline = createServiceAsyncThunk(
   `${NAMESPACE}/getOnline`,
-  async (params: {oid: number}) => services.getOnlineService(params),
+  async (params: {tid: number}) => services.getOnlineService(params),
+);
+export const postSetBg = createServiceAsyncThunk(
+  `${NAMESPACE}/postSetBg`,
+  async (params: { yearbg: any; tabg: any }) => services.postSetBgService(params),
+);
+export const postSetYear = createServiceAsyncThunk(
+  `${NAMESPACE}/postSetYear`,
+  async (params: {price: number}) => services.postSetYearService(params),
 );
 
-export const postOrderrenew = createServiceAsyncThunk(
-  `${NAMESPACE}/postOrderrenew`,
-  async (params: { pid: string, endtime: string}) => services.postOrderrenewService(params),
-);
-
-export const postVerify = createServiceAsyncThunk(
-  `${NAMESPACE}/postVerify`,
-  async (params: { oid: string, iscomplete: string}) => services.postVerifyService(params),
-);
-export const getOrdermodify = createServiceAsyncThunk(
-  `${NAMESPACE}/getOrdermodify`,
-  async (params: any) => services.getOrdermodifyService(params),
-);
 const slice = createSlice({
   name: NAMESPACE,
   initialState,
@@ -98,10 +93,10 @@ const slice = createSlice({
   // 异步的成功、失败处理，可以使用类似上面reducers的设置方式，但是由于是对字符串的捕获，会损失类型；
   extraReducers: builder => {
     builder.addCase(getDataList.fulfilled, (state, action) => {
-      state.tableData = action.payload?.data?.orders || [];
-      state.pagination.total = action.payload?.data?.total || 0;
-      state.pagination.pageNum = action?.meta?.arg?.pageNum || 1;
-      state.pagination.pageSize = action?.meta?.arg?.pageSize || baseTableConf.pageSize;
+      state.tableData = Array.isArray(action.payload?.data) ? action.payload?.data : [];
+      state.pagination.total = action.payload?.data?.tools?.length || 0;
+      state.pagination.pageNum = action.payload?.data?.pageNum || 1;
+      state.pagination.pageSize = action.payload?.data?.pageSize || baseTableConf.pageSize;
     });
     builder.addCase(getDataDetail.fulfilled, (state, action) => {
       state.mainModal.data = action.payload?.data || {};
@@ -124,18 +119,13 @@ const slice = createSlice({
       message.success('上线成功');
       state.refresh += 1;
     });
-    builder.addCase(postVerify.fulfilled, state => {
-      message.success('执行成功');
+    builder.addCase(postSetYear.fulfilled, state => {
+      message.success('设置成功');
       state.mainModal.visible = false;
       state.refresh += 1;
     });
-    builder.addCase(postOrderrenew.fulfilled, state => {
-      message.success('执行成功');
-      state.mainModal.visible = false;
-      state.refresh += 1;
-    });
-    builder.addCase(getOrdermodify.fulfilled, state => {
-      message.success('修改成功');
+    builder.addCase(postSetBg.fulfilled, state => {
+      message.success('设置成功');
       state.mainModal.visible = false;
       state.refresh += 1;
     });

@@ -7,11 +7,12 @@
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import { getRequest, postJsonRequest, postFormDataRequest, postRequest } from 'utils/request';
+import { formatPage } from 'utils/utils';
 import { ITableItem, TSearchParams, TCreateParams, TModifyParams } from './types';
 
 // 获取列表
 export const getDataListService = (params: TSearchParams & IPagination) =>
-  getRequest<TSearchParams & IPagination, IListResponse<ITableItem>>('/Lease/experiments', params);
+  getRequest<TSearchParams & IPagination, IListResponse<ITableItem>>('/Lease/experiments', formatPage(params));
 
 // 新建
 export const postCreateService = (params: TCreateParams) =>

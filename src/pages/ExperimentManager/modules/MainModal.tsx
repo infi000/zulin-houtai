@@ -202,6 +202,25 @@ function MainModal() {
                   />
                 </Form.Item>
               </Col>
+              <Col span={24}>
+                <Form.Item
+                  label='宣传内容图'
+                  required={!isModify(type)}
+                >
+                  <Form.Item
+                    name='conpics'
+                    rules={[{ required: !isModify(type), message: '必填项' }]}
+                  >
+                    <Upload action='' beforeUpload={() => false} listType="picture">
+                      <Button icon={<UploadOutlined />}>Upload</Button>
+                    </Upload>
+                  </Form.Item>
+                  <ImageBox
+                    data={(memoData?.conpics || '') as any}
+                    delParams={{ params: { eid: memoData.id }, api: 'Lease/experimentdelpic' }}
+                  />
+                </Form.Item>
+              </Col>
             </>
           )
         }

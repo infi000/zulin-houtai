@@ -135,7 +135,7 @@ function MainModal() {
                 rules={[{ required: true, message: '必填项' }]}
               >
                 <Input
-                  placeholder='请输入'
+                  placeholder='请输入,多个用英文逗号隔开'
                   disabled={isView(type)}
                 />
               </Form.Item>

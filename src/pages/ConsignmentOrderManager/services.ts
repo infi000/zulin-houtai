@@ -2,16 +2,17 @@
  * @Author: 张驰阳 zhangchiyang@sfmail.sf-express.com
  * @Date: 2023-06-03 23:26:54
  * @LastEditors: 张驰阳 zhangchiyang@sfmail.sf-express.com
- * @LastEditTime: 2023-06-18 19:02:13
+ * @LastEditTime: 2023-06-29 23:35:20
  * @FilePath: /houtai/src/pages/ToolManager/services.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import { getRequest, postRequest, postFormDataRequest } from 'utils/request';
+import { formatPage } from 'utils/utils';
 import { ITableItem, TSearchParams, TCreateParams, TModifyParams } from './types';
 
 // 获取列表
 export const getDataListService = (params: TSearchParams & IPagination) =>
-  getRequest<TSearchParams & IPagination, IListResponse<ITableItem>>('/Consignment/orders', params);
+  getRequest<TSearchParams & IPagination, IListResponse<ITableItem>>('/Consignment/orders', formatPage(params),);
 
 // 新建
 export const postCreateService = (params: TCreateParams) =>

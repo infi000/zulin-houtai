@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Col, Form, Input, Row, Table, Button, Image, Select, DatePicker } from 'antd';
+import { Col, Form, Input, Row, Table, Button, Image, Select, DatePicker, Tooltip } from 'antd';
 import { ColumnsType } from 'antd/lib/table/interface';
 import { useSelector, useDispatch } from 'react-redux';
 import { falsyParamsFilter } from 'utils/filters';
@@ -148,8 +148,16 @@ function FormTable() {
       title: '工具使用说明',
       dataIndex: 'des',
       key: 'des',
-      width: 100,
+      width: 200,
       align: 'left',
+      ellipsis: {
+        showTitle: false,
+      },
+      render: text => (
+        <Tooltip placement="topLeft" title={text}>
+          {text}
+        </Tooltip>
+      ),
     },
     {
       title: '工具租赁价格，单位元',

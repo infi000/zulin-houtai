@@ -236,6 +236,14 @@ export const menuMessages = defineMessages({
     id: `${scope}.consignmentOrderManager`,
     defaultMessage: '寄卖订单',
   },
+  settingManager: {
+    id: `${scope}.settingManager`,
+    defaultMessage: '设置管理',
+  },
+  settingMainManager: {
+    id: `${scope}.settingMainManager`,
+    defaultMessage: '基础设置',
+  },
 });
 
 export const yesOrNoMessages = defineMessages({

@@ -1,11 +1,12 @@
 import { getRequest, postJsonRequest, postRequest } from 'utils/request';
+import { formatPage } from 'utils/utils';
 import { ITableItem, TSearchParams, TCreateParams, TModifyParams } from './types';
 
 // 获取列表
 export const getDataListService = (params: TSearchParams & IPagination) =>
   getRequest<TSearchParams & IPagination, IListResponse<ITableItem>>(
     '/zl_house2/zl_house2/list',
-    params,
+    formatPage(params),
   );
 
 // 新建

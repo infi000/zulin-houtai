@@ -2,18 +2,18 @@
  * @Author: 张驰阳 zhangchiyang@sfmail.sf-express.com
  * @Date: 2023-06-14 22:43:51
  * @LastEditors: 张驰阳 zhangchiyang@sfmail.sf-express.com
- * @LastEditTime: 2023-06-16 00:18:17
+ * @LastEditTime: 2023-07-10 00:20:13
  * @FilePath: /houtai/src/pages/OrderManager/services.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE，
  */
 import { getRequest, postRequest, postFormDataRequest } from 'utils/request';
+import { formatPage } from 'utils/utils';
 import { ITableItem, TSearchParams, TCreateParams, TModifyParams } from './types';
-
 // 获取列表
 export const getDataListService = (params: TSearchParams & IPagination) =>
   getRequest<TSearchParams & IPagination, IListResponse<ITableItem>>(
     '/Lease/orders',
-    params,
+    formatPage(params),
   );
 
 // 新建
@@ -78,6 +78,11 @@ export const getOrderwxcodeService = (params: { oid: string}) =>
     '/Lease/orderwxcode',
     params,
   );
+export const getOrdermodifyService = (params: any) =>
+  postFormDataRequest<any, IResponseData<string>>(
+    'Lease/ordermodify',
+    params,
+  );
 
 export default {
   getDataListService,
@@ -89,4 +94,5 @@ export default {
   postVerifyService,
   postOrderrenewService,
   getOrderwxcodeService,
+  getOrdermodifyService,
 };

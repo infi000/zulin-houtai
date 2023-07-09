@@ -66,16 +66,12 @@ function FormTable() {
 
   // 新建、编辑、查看
   const openModalWithOperate = useDebounce(async (type: OperateType, data?: ITableItem) => {
-    if (type !== CREATE) {
-      const { id } = data;
-      await dispatch(getDataDetail({ tbid: id, type }));
-    } else {
-      dispatch(actions.updateMainModal({
-        visible: true,
-        type,
-      }));
-    }
+    dispatch(actions.updateMainModal({
+      visible: true,
+      type,
+    }));
   });
+
   // 导入
   const handleImport = () => {
     const templateId = (dictMaps[EDictMap['业务模块导入模板']])?.字典名;
@@ -88,17 +84,18 @@ function FormTable() {
       },
     }));
   };
-  
+
   // 删除
   const handleDel = (data: ITableItem) => {
     const { id } = data;
-    dispatch(getDel({ tbid: id }));
+    dispatch(getDel({ tid: id }));
   };
   // 上线
   const handleOnline = (data: ITableItem) => {
     const { id } = data;
-    dispatch(getOnline({ tbid: id }));
+    dispatch(getOnline({ tid: id }));
   };
+
   useEffect(() => {
     handleSearch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -106,7 +103,7 @@ function FormTable() {
 
   const columns: ColumnsType = [
     {
-      title: '自增id',
+      title: 'id',
       dataIndex: 'id',
       key: 'id',
       width: 100,
@@ -114,78 +111,32 @@ function FormTable() {
       fixed: 'left',
     },
     {
-      title: '工具箱标题',
-      dataIndex: 'title',
-      key: 'title',
+      title: 'sdes',
+      dataIndex: 'sdes',
+      key: 'sdes',
       width: 100,
       align: 'left',
     },
     {
-      title: '工具箱缩略图',
-      dataIndex: 'thumbinal',
-      key: 'thumbinal',
-      width: 100,
-      align: 'left',
-      render: (text:string) => <Image width={50} height={50} src={text} />,
-
-    },
-    {
-      title: '工具箱大图',
-      dataIndex: 'pics',
-      key: 'pics',
-      align: 'left',
-      render: (text:any) => text?.map((item:any) => <Image width={50} height={50} src={item.pic} />),
-    },
-    {
-      title: '工具箱说明',
-      dataIndex: 'des',
-      key: 'des',
-      width: 200,
-      align: 'left',
-      ellipsis: {
-        showTitle: false,
-      },
-      render: text => (
-        <Tooltip placement="topLeft" title={text}>
-          {text}
-        </Tooltip>
-      ),
-    },
-    {
-      title: '工具箱创建时间',
-      dataIndex: 'ctime',
-      key: 'ctime',
+      title: 'sname',
+      dataIndex: 'sname',
+      key: 'sname',
       width: 100,
       align: 'left',
     },
     {
-      title: '状态，1正常，0关闭',
-      dataIndex: 'status',
-      key: 'status',
+      title: 'stype',
+      dataIndex: 'stype',
+      key: 'stype',
       width: 100,
       align: 'left',
     },
     {
-      title: '操作',
-      dataIndex: 'operate',
-      key: 'operate',
+      title: 'value',
+      dataIndex: 'value',
+      key: 'value',
       width: 100,
-      render: (_value: unknown, row: ITableItem) => (
-        <>
-          <Auth authCode={null}>
-            <TableButton onClick={() => openModalWithOperate(VIEW, row)}>查看</TableButton>
-          </Auth>
-          <Auth authCode={null}>
-            <TableButton onClick={() => openModalWithOperate(EDIT, row)}>编辑</TableButton>
-          </Auth>
-          <Auth authCode={null}>
-            <TableButton isWrapperConfirm onClick={() => handleDel(row)}>下线</TableButton>
-          </Auth>
-          <Auth authCode={null}>
-            <TableButton isWrapperConfirm onClick={() => handleOnline(row)}>上线</TableButton>
-          </Auth>
-        </>
-      ),
+      align: 'left',
     },
   ];
 
@@ -197,26 +148,41 @@ function FormTable() {
       >
         <Form {...formItemLayout} form={form}>
           <Row>
-            <Col span={6}>
-              <Form.Item name='title' label='工具箱标题'>
+            {/* <Col span={6}>
+              <Form.Item name='companyid' label='总公司id'>
                 <Input allowClear placeholder='请输入' />
               </Form.Item>
             </Col>
             <Col span={6}>
-              <Form.Item name='thumbinal' label='工具箱缩略图'>
+              <Form.Item name='title' label='工具名称'>
                 <Input allowClear placeholder='请输入' />
               </Form.Item>
             </Col>
             <Col span={6}>
-              <Form.Item name='des' label='工具箱说明'>
+              <Form.Item name='thumbinal' label='预览图'>
                 <Input allowClear placeholder='请输入' />
               </Form.Item>
             </Col>
             <Col span={6}>
-              <Form.Item name='ctime' label='工具箱创建时间'>
+              <Form.Item name='des' label='工具使用说明'>
                 <Input allowClear placeholder='请输入' />
               </Form.Item>
             </Col>
+            <Col span={6}>
+              <Form.Item name='price' label='工具租赁价格，单位元'>
+                <Input allowClear placeholder='请输入' />
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item name='tbid' label='所属工具箱id'>
+                <Input allowClear placeholder='请输入' />
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item name='ctime' label='工具创建时间'>
+                <Input allowClear placeholder='请输入' />
+              </Form.Item>
+            </Col> */}
           </Row>
         </Form>
       </FilterFormWrapper>
@@ -226,10 +192,10 @@ function FormTable() {
         btns={(
           <>
             <Auth authCode={null}>
-              <Button type='primary' onClick={handleImport}>导入</Button>
+              <Button type='primary' onClick={() => openModalWithOperate('设置年会员')}>设置年会员价格</Button>
             </Auth>
             <Auth authCode={null}>
-              <Button type='primary' onClick={() => openModalWithOperate(CREATE)}>新建</Button>
+              <Button type='primary' onClick={() => openModalWithOperate('设置背景')}>设置背景</Button>
             </Auth>
           </>
         )}

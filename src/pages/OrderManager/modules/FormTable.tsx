@@ -53,7 +53,7 @@ function FormTable() {
       pageSize: pagination.pageSize,
       ...additionalParams,
     });
-    dispatch(getDataList(falsyParamsFilter<TSearchParams & IPagination>(formatParams)));
+    dispatch(getDataList(falsyParamsFilter(formatParams)));
   };
 
   // 重置
@@ -209,6 +209,9 @@ function FormTable() {
           </Auth>
           <Auth authCode={null}>
             <TableButton onClick={() => openModalWithOperate('继续支付', row)}>继续支付</TableButton>
+          </Auth>
+          <Auth authCode={null}>
+            <TableButton onClick={() => openModalWithOperate(EDIT, row)}>编辑</TableButton>
           </Auth>
           {/* <Auth authCode={null}>
             <TableButton isWrapperConfirm onClick={() => handleDel(row)}>下线</TableButton>

@@ -10,11 +10,12 @@ import moment from 'moment';
 import { selectAllDictMap } from 'store/selectors';
 import { UploadOutlined } from '@ant-design/icons';
 import ImageBox from 'components/ImageBox';
-import { actions, postCreate, postEdit, postOrderrenew, postVerify } from '../slice';
+import { useState } from 'react';
+import { actions, getOrdermodify, postCreate, postEdit, postOrderrenew, postVerify } from '../slice';
 import selectors from '../selectors';
 import { IOrderDetail, ITableItem } from '../types';
-import { formatPostParams } from '../adapter';
-import { useState } from 'react';
+import { formatPostParams, formatPostParams2 } from '../adapter';
+import { O_STATUS_MAP } from '../constants';
 
 const { useEffect, useMemo } = React;
 const formItemLayout = {
@@ -34,6 +35,7 @@ function MainModal() {
   const mainModal = useSelector(selectors.mainModal);
   const loading = useSelector(selectors.loading);
   const dictMaps = useSelector(selectAllDictMap);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [qr, setQr] = useState(null);
   const { data, type = EDIT, visible = false } = mainModal;
 
@@ -43,12 +45,12 @@ function MainModal() {
 
   useEffect(() => {
     if (type === '继续支付') {
-      //获取二维码
+      // 获取二维码
       const token = getCookie('token');
       const url = `/index.php/AdminApi/Lease/orderwxcode?oid=${data?.id}}&token=${token}`;
       setQr(url);
     }
-  }, [type]);
+  }, [data?.id, type]);
 
   // eslint-disable-next-line max-len
   const memoData = useMemo<any>(() => {
@@ -56,7 +58,16 @@ function MainModal() {
       return {};
     }
     const oData = { ...data };
-
+    if (data.starttime) {
+      // 日期
+      const { starttime } = data;
+      (oData as any).starttime = moment.unix(Number(starttime));
+    }
+    if (data.endtime) {
+      // 日期
+      const { endtime } = data;
+      (oData as any).endtime = moment.unix(Number(endtime));
+    }
     return {
       ...oData,
       // 添加需要格式化的初始值
@@ -78,6 +89,7 @@ function MainModal() {
   }, [type]);
 
   const handleCancel = (): void => {
+    setSelectedRowKeys([]);
     dispatch(actions.updateMainModalVisible(false));
   };
 
@@ -86,18 +98,36 @@ function MainModal() {
       handleCancel();
     } else {
       let values = await form.validateFields();
-      values = formatPostParams(values);
+    
       if (type === '核销') {
+        const brokentoolids = selectedRowKeys.join(',');
+        console.log('brokentoolids', brokentoolids);
+        console.log('selectedRowKeys', selectedRowKeys);
         dispatch(postVerify(falsyParamsFilter({
           ...values,
+          brokentoolids,
           oid: data?.id,
         })));
       } else if (type === '续订') {
+        values = formatPostParams(values);
+        // tools:json数据；例如：{"tools":[{"id":"1","price":"100.00","tbid":"1",}]}
+        const tools = [...selectedRowKeys].map((item: any) => {
+          const target = memoData?.prebook?.tools.find((tool: any) => tool.id === item) || {};
+          const { id, price, tbid } = target;
+          return { id, price, tbid };
+        });
         dispatch(postOrderrenew(falsyParamsFilter({
           ...values,
           pid: data?.id,
+          tools: JSON.stringify(tools),
         })));
-      } else { }
+      } else if (type === EDIT) {
+        values = formatPostParams2(values);
+        dispatch(getOrdermodify(falsyParamsFilter({
+          ...values,
+          oid: data?.id,
+        })));
+      }else { }
     }
   };
 
@@ -113,6 +143,14 @@ function MainModal() {
     },
   ];
   console.log('memoData', memoData);
+  const rowSelection = {
+    onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
+      console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+      setSelectedRowKeys(selectedRowKeys);
+    },
+    selectedRowKeys,
+  };
+
   return (
     <Modal
       forceRender
@@ -125,13 +163,20 @@ function MainModal() {
       width={800}
     >
       <Space direction='vertical' size='middle' style={{ display: 'flex' }}>
-        <Card title='工具箱信息' size='small'>
-          <Table
-            columns={columns}
-            dataSource={memoData?.prebook?.tools || []}
-            pagination={false}
-          />
-        </Card>
+        {
+          type !== EDIT && (
+            <Card title='工具箱信息' size='small'>
+              <Table
+                columns={columns}
+                dataSource={memoData?.prebook?.tools || []}
+                pagination={false}
+                rowKey='id'
+                rowSelection={{ ...rowSelection }}
+              />
+            </Card>
+          )
+        }
+
         <Form {...formItemLayout} form={form}>
           {
             type === '核销' && (
@@ -176,6 +221,65 @@ function MainModal() {
           {
             type === '继续支付' && (
               <img src={qr} width={300} height={300} alt='图片二维码' />
+            )
+          }
+          {
+            type === EDIT && (
+              <Row gutter={24}>
+                <Col span={24}><Form.Item
+                  label='付款金额'
+                  name='totalpay'
+                  initialValue={(memoData?.totalpay || memoData?.totalpay === 0) ? memoData?.totalpay : ''}
+                >
+                  <InputNumber
+                    placeholder='请输入付款金额'
+                    style={{ width: '100%' }}
+                  />
+                </Form.Item>
+                </Col>
+                <Col span={24}><Form.Item
+                  label='开始时间'
+                  name='starttime'
+                  initialValue={memoData?.starttime || ''}
+                >
+                  <DatePicker
+                    format='YYYY-MM-DD hh:mm:ss'
+                    placeholder='请选择'
+                    style={{ width: '100%' }}
+                    disabled={isView(type)}
+                  />
+                </Form.Item>
+                </Col>
+                <Col span={24}><Form.Item
+                  label='结束时间'
+                  name='endtime'
+                  initialValue={memoData?.endtime || ''}
+                >
+                  <DatePicker
+                    format='YYYY-MM-DD hh:mm:ss'
+                    placeholder='请选择'
+                    style={{ width: '100%' }}
+                    disabled={isView(type)}
+                  />
+                </Form.Item>
+                </Col>
+                <Col span={24}><Form.Item
+                  label='状态'
+                  name='ostatus:'
+                  initialValue={memoData?.ostatus || ''}
+                >
+                  <Select
+                    placeholder='请选择'
+                    disabled={isView(type)}
+                  >
+                    {
+                      // eslint-disable-next-line max-len
+                      Array.from(O_STATUS_MAP).map(([key, value]) => <Select.Option value={key} key={key}>{value}</Select.Option>)
+                    }
+                  </Select>
+                </Form.Item>
+                </Col>
+              </Row>
             )
           }
         </Form>
