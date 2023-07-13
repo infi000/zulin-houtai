@@ -130,8 +130,8 @@ function MainModal() {
             <>
               <Col span={24}><Form.Item
                 label='实验项目id'
-                name='eid'
-                initialValue={memoData?.eid || ''}
+                name='eids'
+                initialValue={memoData?.eids || ''}
                 rules={[{ required: true, message: '必填项' }]}
               >
                 <Input
