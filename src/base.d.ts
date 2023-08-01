@@ -19,3 +19,4 @@ declare interface IValLabelItem {
   value: string | number;
   label: string;
 }
+declare module 'react-signature-canvas';

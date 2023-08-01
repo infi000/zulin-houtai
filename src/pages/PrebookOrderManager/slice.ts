@@ -83,8 +83,8 @@ const slice = createSlice({
     builder.addCase(getDataList.fulfilled, (state, action) => {
       state.tableData = action.payload?.data?.list || [];
       state.pagination.total = action.payload?.data?.total || 0;
-      state.pagination.pageNum = action.payload?.data?.pageNum || 1;
-      state.pagination.pageSize = action.payload?.data?.pageSize || baseTableConf.pageSize;
+      state.pagination.pageNum = action?.meta?.arg?.pageNum || 1;
+      state.pagination.pageSize = action?.meta?.arg?.pageSize || baseTableConf.pageSize;
     });
     builder.addCase(postCreate.fulfilled, state => {
       state.mainModal.visible = false;

@@ -1,3 +1,11 @@
+/*
+ * @Author: 张驰阳 zhangchiyang@sfmail.sf-express.com
+ * @Date: 2023-06-02 23:19:57
+ * @LastEditors: 张驰阳 zhangchiyang@sfmail.sf-express.com
+ * @LastEditTime: 2023-08-01 11:21:32
+ * @FilePath: /houtai/src/pages/Layout/index.tsx
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 import * as React from 'react';
 import { Layout as AntdLayout } from 'antd';
 import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
@@ -9,6 +17,8 @@ import { actions } from 'store/globalSlice';
 import CoreRoute from 'components/Router';
 import { menuMessages } from 'utils/messages';
 import menuConfig from 'configs/dev.router.conf';
+import WordApp from 'pages/WordApp';
+import Signature from 'pages/Signature';
 import Login from 'pages/Login';
 import Logout from 'pages/Login/logout';
 import { conf } from 'configs/pass.conf';
@@ -40,6 +50,10 @@ function Layout() {
   };
 
   switch (window.location.pathname) {
+    case '/uiResources/blank/wordApp':
+      return <CacheRoute path='/uiResources/blank/wordApp' key='wordApp' component={WordApp} />;
+    case '/uiResources/blank/signature':
+      return <CacheRoute path='/uiResources/blank/signature' key='signature' component={Signature} />;
     case conf.uri.login:
       return <CacheRoute path='/uiResources/pass/login' key='login' component={Login} />;
     case conf.uri.logout:

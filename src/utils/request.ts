@@ -261,6 +261,14 @@ export default class FetchRequest {
   static create(method = 'GET', config: IConfig = defaultConfig) {
     return new FetchRequest({ ...config, method });
   }
+  /**
+   * 使用默认配置发起请求
+   * @param method
+   * @param config
+   */
+  static createWx(method = 'GET', config: IConfig = defaultConfig) {
+    return new FetchRequest({ ...config,  method });
+  }
 
   static getRequest<T, K>(url: string, params?: T): Promise<IResponseData<K>> {
     const token = getCookie('token');
@@ -306,6 +314,22 @@ export default class FetchRequest {
     });
     return FetchRequest.create('POST').request(url, formData);
   }
+
+  static postFormDataRequestWx<T, K>(url: string, params?: T): Promise<IResponseData<K>> {
+    const formData = new FormData(); // 新建一个formData对象
+    Object.entries({ ...params }).forEach((item: any) => {
+      const [key, val] = item;
+      if (Array.isArray(val) && val.length > 0 && val[0] instanceof File) {
+        val.forEach((file: any) => {
+          formData.append(`${key}[]`, file);
+        });
+      } else {
+        const { file } = val || {};
+        formData.append(key, file || val);
+      }
+    });
+    return FetchRequest.create('POST', { baseUrl: '/index.php/MiniApi'} ).request(url, formData);
+  }
 }
 
 export const parseParams = (params: { [key: string]: any }) => (
@@ -314,7 +338,8 @@ export const parseParams = (params: { [key: string]: any }) => (
     .join('&')
 );
 
-const { create, getRequest, postRequest, postJsonRequest, postFormDataRequest, postJsonQueryRequest } = FetchRequest;
+const { create, getRequest, postRequest,
+   postJsonRequest, postFormDataRequest, postJsonQueryRequest, postFormDataRequestWx } = FetchRequest;
 
 export {
   create,
@@ -323,4 +348,5 @@ export {
   postJsonRequest,
   postFormDataRequest,
   postJsonQueryRequest,
+  postFormDataRequestWx,
 };

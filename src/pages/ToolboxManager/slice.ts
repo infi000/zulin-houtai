@@ -88,8 +88,8 @@ const slice = createSlice({
     builder.addCase(getDataList.fulfilled, (state, action) => {
       state.tableData = action.payload?.data?.toolboxs || [];
       state.pagination.total = action.payload?.data?.toolboxs?.length || 0;
-      state.pagination.pageNum = action.payload?.data?.pageNum || 1;
-      state.pagination.pageSize = action.payload?.data?.pageSize || baseTableConf.pageSize;
+      state.pagination.pageNum = action?.meta?.arg?.pageNum || 1;
+      state.pagination.pageSize = action?.meta?.arg?.pageSize || baseTableConf.pageSize;
     });
     builder.addCase(getDataDetail.fulfilled, (state, action) => {
       state.mainModal.data = action.payload?.data || {};

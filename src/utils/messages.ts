@@ -244,6 +244,10 @@ export const menuMessages = defineMessages({
     id: `${scope}.settingMainManager`,
     defaultMessage: '基础设置',
   },
+  userInfoManager: {
+    id: `${scope}.userInfoManager`,
+    defaultMessage: '用户管理',
+  },
 });
 
 export const yesOrNoMessages = defineMessages({

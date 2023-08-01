@@ -11,7 +11,7 @@ import { message } from 'antd';
 export const initialState: IPageState = {
   refresh: 0,
   loading: false,
-  searchCondition: {}, // 初始化检索条件
+  searchCondition: {mtype: '1'}, // 初始化检索条件
   tableData: [],
   pagination: {
     pageNum: 1,
@@ -48,12 +48,20 @@ export const getDel = createServiceAsyncThunk(
 
 export const getDataDetail = createServiceAsyncThunk(
   `${NAMESPACE}/getDataDetail`,
-  async (params: {tid: number, type: any}) => services.getDataDetailService({ tid: params.tid }),
+  async (params: {uid: any, type: any}) => services.getDataDetailService({ uid: params.uid }),
 );
 
 export const getOnline = createServiceAsyncThunk(
   `${NAMESPACE}/getOnline`,
   async (params: {tid: number}) => services.getOnlineService(params),
+);
+export const postSetBg = createServiceAsyncThunk(
+  `${NAMESPACE}/postSetBg`,
+  async (params: { yearbg: any; tabg: any }) => services.postSetBgService(params),
+);
+export const postUserverify = createServiceAsyncThunk(
+  `${NAMESPACE}/postUserverify`,
+  async (params:any) => services.postUserverify(params),
 );
 
 const slice = createSlice({
@@ -85,8 +93,8 @@ const slice = createSlice({
   // 异步的成功、失败处理，可以使用类似上面reducers的设置方式，但是由于是对字符串的捕获，会损失类型；
   extraReducers: builder => {
     builder.addCase(getDataList.fulfilled, (state, action) => {
-      state.tableData = action.payload?.data?.tools || [];
-      state.pagination.total = action.payload?.data?.tools?.length || 0;
+      state.tableData = Array.isArray(action.payload?.data?.users) ? action.payload?.data?.users : [];
+      state.pagination.total = action.payload?.data?.total || 0;
       state.pagination.pageNum = action?.meta?.arg?.pageNum || 1;
       state.pagination.pageSize = action?.meta?.arg?.pageSize || baseTableConf.pageSize;
     });
@@ -109,6 +117,16 @@ const slice = createSlice({
     });
     builder.addCase(getOnline.fulfilled, state => {
       message.success('上线成功');
+      state.refresh += 1;
+    });
+    builder.addCase(postUserverify.fulfilled, state => {
+      message.success('设置成功');
+      state.mainModal.visible = false;
+      state.refresh += 1;
+    });
+    builder.addCase(postSetBg.fulfilled, state => {
+      message.success('设置成功');
+      state.mainModal.visible = false;
       state.refresh += 1;
     });
   },

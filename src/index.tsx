@@ -2,7 +2,7 @@
  * @Author: 李淳
  * @Date: 2020-06-21 12:23:57
  * @LastEditors: 张驰阳 zhangchiyang@sfmail.sf-express.com
- * @LastEditTime: 2023-06-14 01:01:10
+ * @LastEditTime: 2023-07-20 22:53:32
  * @Description: 入口文件
  */
 
@@ -32,7 +32,7 @@ import 'file-loader?name=.htaccess!./.htaccess'; // eslint-disable-line import/e
 import { configureAppStore } from 'store/configureStore';
 
 // Import Longan
-import loadLongan from 'utils/loadLongan';
+// import loadLongan from 'utils/loadLongan';
 
 // Import root app
 import App from './pages/Layout';
@@ -45,7 +45,7 @@ import { translationMessages } from './i18n';
 // Import global style
 import './styles/index.less';
 
-loadLongan();
+// loadLongan();
 
 if (process.env.NODE_ENV === 'production') {
   // 版本检查

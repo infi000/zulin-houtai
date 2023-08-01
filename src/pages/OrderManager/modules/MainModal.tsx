@@ -191,7 +191,7 @@ function MainModal() {
                     disabled={isView(type)}
                   >
                     <Select.Option value='1'>完成</Select.Option>
-                    <Select.Option value='2'>未完成</Select.Option>
+                    <Select.Option value='0'>未完成</Select.Option>
                   </Select>
                 </Form.Item>
                 </Col>

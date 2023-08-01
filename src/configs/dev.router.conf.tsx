@@ -2,7 +2,7 @@
  * @Author: 张驰阳 zhangchiyang@sfmail.sf-express.com
  * @Date: 2023-06-02 23:19:57
  * @LastEditors: 张驰阳 zhangchiyang@sfmail.sf-express.com
- * @LastEditTime: 2023-07-05 00:20:31
+ * @LastEditTime: 2023-08-01 17:21:29
  * @FilePath: /houtai/src/configs/dev.router.conf.tsx
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -90,6 +90,12 @@ const config: Array<any> = [
         componentName: 'ConsignmentOrderManager',
       },
     ]
+  },
+  {
+    path: 'userInfoManager',
+    icon: <DesktopOutlined />,
+    name: '用户管理',
+    componentName: 'UserInfoManager',
   },
   {
     path: 'settingManager',

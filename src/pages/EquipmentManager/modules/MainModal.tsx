@@ -141,18 +141,6 @@ function MainModal() {
               </Form.Item>
               </Col>
               <Col span={24}><Form.Item
-                label='设备编码'
-                name='ecode'
-                initialValue={memoData?.ecode || ''}
-                rules={[{ required: true, message: '必填项' }]}
-              >
-                <Input
-                  placeholder='请输入'
-                  disabled={isView(type)}
-                />
-              </Form.Item>
-              </Col>
-              <Col span={24}><Form.Item
                 label='设备名称'
                 name='title'
                 initialValue={memoData?.title || ''}
