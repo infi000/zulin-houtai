@@ -248,6 +248,10 @@ export const menuMessages = defineMessages({
     id: `${scope}.userInfoManager`,
     defaultMessage: '用户管理',
   },
+  zllist: {
+    id: `${scope}.zllist`,
+    defaultMessage: '租赁列表',
+  },
 });
 
 export const yesOrNoMessages = defineMessages({

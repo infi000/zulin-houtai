@@ -4,7 +4,7 @@
  * @Author: 张驰阳 zhangchiyang@sfmail.sf-express.com
  * @Date: 2023-07-30 00:36:13
  * @LastEditors: 张驰阳 zhangchiyang@sfmail.sf-express.com
- * @LastEditTime: 2023-08-01 19:51:41
+ * @LastEditTime: 2023-08-03 01:38:51
  * @FilePath: /houtai/src/pages/WordApp1/index.tsx
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -13,7 +13,8 @@ import html2canvas from 'html2canvas';
 import styled from 'styled-components';
 import { getQueryString } from 'utils/utils';
 import moment from 'moment';
-import { Button, Modal } from 'antd';
+import { Button, Modal, Result } from 'antd';
+import { LoadingOutlined, SmileOutlined } from '@ant-design/icons';
 import Word1 from './Word1';
 import Word2 from './Word2';
 import Word3 from './Word3';
@@ -37,38 +38,14 @@ const Wrap = styled.div`
       text-align: center;
   }
   }
-  
 `;
-const downloadFile = (base64: string, fileName: string) => {
-  const base64ToBlob = function (base64: string) { // base64编码格式：'data:image/jpeg;base64,/9j/4AAQSkZJRgAB...'
-    const MIMEAndCode = base64.split(';base64,'); // 分割完整的base64编码分别得到各个部分（MIME文件类型相关、纯编码）
-    const contentType = MIMEAndCode[0].split(':')[1]; // image/jpeg，用于构造Blob对象时指定文件类型type
-
-    // Blob对象的第一个构造参数是BufferArray对象或者BufferArrayView对象或者Blob
-    // BufferArray对象或者BufferArrayView对象的区别就是BufferArray就是纯二进制内容，不方便我们直接操作，BufferArrayView对象比如Uint8Array数组，就是把二进制内容变成方便我们操作的数据
-
-    // 把纯base64编码转为解码后的字符串
-    const rawCode = window.atob(MIMEAndCode[1]);
-
-    // 创建一个Uint8Array数组，长度为解码后字符的长度
-    const rawCodeLength = rawCode.length;
-    const uInt8Array = new Uint8Array(rawCodeLength);
-    // 遍历，把每个解码后的字符通过charCodeAt方法转为对应字符的Unicode编码（一种编码而已，值为0 - 65535 之间的整数）
-    for (let i = 0; i < rawCodeLength; i++) {
-      uInt8Array[i] = rawCode.charCodeAt(i);
-    }
-    // new Blob第一个参数为数组，数组里面是BufferArray或者BufferArrayView对象，第二个配置对象的type属性指定文件类型
-    return new Blob([uInt8Array], {
-      type: contentType
-    });
-  };
-  const blob = base64ToBlob(base64); // 拿到base64编码对应的blob对象传给URL.createObjectURL方法，构建一个href值
-  let a: HTMLAnchorElement | null = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = '';
-  a.click();
-  a = null;
-};
+const ModalWrap = styled.div`
+  padding: 20px;
+  text-align: center;
+  h3{
+    padding:20px;
+  }
+`;
 
 const WordApp = () => {
   const type = getQueryString('type');
@@ -79,7 +56,7 @@ const WordApp = () => {
   const formatParams = JSON.parse(params);
   const formatAgreement = JSON.parse(agreement);
   const registernum = moment(new Date()).format('YYYYMMDDHHmmss') + Math.floor(Math.random() * 10000);
-  const [modalInfo, setModalInfo] = useState({ visible: false, content: '' });
+  const [modalInfo, setModalInfo] = useState<{ visible: boolean, type: 'pending' | 'success' | 'error' }>({ visible: false, type: 'pending' });
   console.log('formatParams', formatParams);
   console.log('formatAgreement', formatAgreement);
 
@@ -102,17 +79,27 @@ const WordApp = () => {
       if (res2.res === 'succ') {
         return res2.data;
       }
-      return '';
+      throw new Error('生成图片失败');
     } catch (error) {
-      console.log(error);
+      console.log('error', error);
+      setModalInfo({
+        visible: true,
+        type: 'error',
+      });
     }
   };
+
+  const handleGoBack = () => {
+    wx.miniProgram.reLaunch({
+      url: '/pages/Main/index',
+    });
+  }
 
   useEffect(() => {
     if (type === 'create') {
       setModalInfo({
         visible: true,
-        content: '数据整理中，请勿关闭',
+        type: 'pending',
       });
 
       const ready = async () => {
@@ -133,16 +120,20 @@ const WordApp = () => {
             openid,
           };
           console.log('data', data);
-          postAgreement(data).then(() => {
+          postAgreement(data).then((d) => {
+            if (d.res === 'succ') {
+              setModalInfo({
+                visible: true,
+                type: 'success',
+              });
+            }
+            throw new Error(d);
+          }).catch((err) => {
+            console.log('err', err);
             setModalInfo({
               visible: true,
-              content: '协议信息生成成功',
+              type: 'error',
             });
-            setTimeout(() => {
-              wx.miniProgram.reLaunch({
-                url: '/pages/Main/index',
-              });
-            }, 1000);
           });
         }, 3000);
       };
@@ -161,13 +152,40 @@ const WordApp = () => {
       {
         modalInfo.visible && (
           <Modal
-            title='生成协议信息'
+            // title='生成协议信息'
             closable={false}
             maskClosable={false}
             visible
             footer={null}
           >
-            <p>{modalInfo.content}</p>
+            <ModalWrap>
+              {
+                modalInfo.type === 'pending' && (
+                  <Result
+                    icon={<LoadingOutlined />}
+                    title='数据整理中，请勿关闭或刷新页面!'
+                  />
+                )
+              }
+              {
+                modalInfo.type === 'success' && (
+                  <Result
+                    status='success'
+                    title='注册成功，点击确认返回'
+                    extra={<Button type='primary' size='large' onClick={handleGoBack}>确认</Button>}
+                  />
+                )
+              }
+              {
+                modalInfo.type === 'error' && (
+                  <Result
+                    status='warning'
+                    title='数据生成失败，点击确认返回'
+                    extra={<Button type='primary' size='large' onClick={handleGoBack}>确认</Button>}
+                  />
+                )
+              }
+            </ModalWrap>
           </Modal>
         )
       }
