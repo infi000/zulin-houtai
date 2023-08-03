@@ -4,7 +4,7 @@
  * @Author: 张驰阳 zhangchiyang@sfmail.sf-express.com
  * @Date: 2023-07-30 00:36:13
  * @LastEditors: 张驰阳 zhangchiyang@sfmail.sf-express.com
- * @LastEditTime: 2023-08-03 01:38:51
+ * @LastEditTime: 2023-08-03 19:33:43
  * @FilePath: /houtai/src/pages/WordApp1/index.tsx
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -126,6 +126,7 @@ const WordApp = () => {
                 visible: true,
                 type: 'success',
               });
+              return;
             }
             throw new Error(d);
           }).catch((err) => {
@@ -142,7 +143,7 @@ const WordApp = () => {
       } else {
         ready();
       }
-      // ready();
+      ready();
     }
   }, [type]);
 
