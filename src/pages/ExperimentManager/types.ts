@@ -23,6 +23,7 @@ export interface ITableItem {
   thumbinal: string; // 缩略图
   des: string; // 项目描述
   deposit: number; // 押金价格
+  joinmoney: number; // 拼团金额
   ctime: number; // 项目创建时间
   status: number; // 实验项目状态，1正常，0关闭
   pics: string; // 设备大图

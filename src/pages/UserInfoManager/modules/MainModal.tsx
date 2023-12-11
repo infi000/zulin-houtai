@@ -119,7 +119,6 @@ function MainModal() {
             <Descriptions.Item label='监护人姓名'>{data.register.userguardianname}</Descriptions.Item>
             <Descriptions.Item label='监护人手机号'>{data.register.userguardianphone}</Descriptions.Item>
             <Descriptions.Item label='监护人联系地址'>{data.register.userguardianaddress}</Descriptions.Item>
-            <Descriptions.Item label='年费'>{data.register.yearmoney}</Descriptions.Item>
             <Descriptions.Item label='公司签约时间'>{data.register.companysigntime}</Descriptions.Item>
             <Descriptions.Item label='用户签约时间'>{data.register.usersigntime}</Descriptions.Item>
             <Descriptions.Item label='公司签约盖章'><Image width={50} height={50} src={data.register.companyseal} /></Descriptions.Item>

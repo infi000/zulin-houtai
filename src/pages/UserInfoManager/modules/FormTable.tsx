@@ -12,7 +12,7 @@ import { CREATE, EDictMap, EExportModuleId, REVIEW, VIEW } from 'utils/constants
 import Auth from 'containers/AuthController';
 import authMap from 'configs/auth.conf';
 import { objToArray } from 'utils/utils';
-import { actions, getDataDetail, getDataList, getDel, getOnline } from '../slice';
+import { actions, getDataDetail, getDataList, getDel, getOnline, postSetuserut } from '../slice';
 import selectors from '../selectors';
 import { ITableItem, TSearchParams } from '../types';
 import { formatSearchParams } from '../adapter';
@@ -99,10 +99,10 @@ function FormTable() {
     dispatch(getDel({ tid: id }));
   };
   // 上线
-  const handleOnline = (data: ITableItem) => {
+  const handleSetuserut = useDebounce((data: ITableItem, ut: '1' | '2') => {
     const { id } = data;
-    dispatch(getOnline({ tid: id }));
-  };
+    dispatch(postSetuserut({ uid: id, ut }));
+  });
 
   useEffect(() => {
     handleSearch();
@@ -197,6 +197,12 @@ function FormTable() {
           </Auth>
           <Auth authCode={null}>
             <TableButton onClick={() => openModalWithOperate(REVIEW, row)}>审核</TableButton>
+          </Auth>
+          <Auth authCode={null}>
+            <TableButton onClick={() => handleSetuserut(row, '1')}> 设为不可验票</TableButton>
+          </Auth>
+          <Auth authCode={null}>
+            <TableButton onClick={() => handleSetuserut(row, '2')}> 设为可验票</TableButton>
           </Auth>
         </>
       ),

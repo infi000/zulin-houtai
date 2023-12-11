@@ -51,9 +51,9 @@ export const getDataDetail = createServiceAsyncThunk(
   async (params: {uid: any, type: any}) => services.getDataDetailService({ uid: params.uid }),
 );
 
-export const getOnline = createServiceAsyncThunk(
-  `${NAMESPACE}/getOnline`,
-  async (params: {tid: number}) => services.getOnlineService(params),
+export const postSetuserut = createServiceAsyncThunk(
+  `${NAMESPACE}/postSetuserut`,
+  async (params: { uid: any; ut: '1' | '2' }) => services.postSetuserutService(params),
 );
 export const postSetBg = createServiceAsyncThunk(
   `${NAMESPACE}/postSetBg`,
@@ -115,8 +115,8 @@ const slice = createSlice({
       message.success('下线成功');
       state.refresh += 1;
     });
-    builder.addCase(getOnline.fulfilled, state => {
-      message.success('上线成功');
+    builder.addCase(postSetuserut.fulfilled, state => {
+      message.success('设置成功');
       state.refresh += 1;
     });
     builder.addCase(postUserverify.fulfilled, state => {

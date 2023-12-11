@@ -252,6 +252,42 @@ export const menuMessages = defineMessages({
     id: `${scope}.zllist`,
     defaultMessage: '租赁列表',
   },
+  gztManager: {
+    id: `${scope}.gztManager`,
+    defaultMessage: '工作台列表',
+  },
+  yunying: {
+    id: `${scope}.yunying`,
+    defaultMessage: '运营',
+  },
+  nkkeyManager: {
+    id: `${scope}.nkkeyManager`,
+    defaultMessage: '年卡key管理',
+  },
+  rdManager: {
+    id: `${scope}.rdManager`,
+    defaultMessage: '入店客户',
+  },
+  jcList: {
+    id: `${scope}.jcList`,
+    defaultMessage: '进场列表',
+  },
+  jcmpList: {
+    id: `${scope}.jcmpList`,
+    defaultMessage: '门票',
+  },
+  jcyyList: {
+    id: `${scope}.jcyyList`,
+    defaultMessage: '预约',
+  },
+  cardsManager: {
+    id: `${scope}.cardsManager`,
+    defaultMessage: '会员卡管理',
+  },
+  smjcjl: {
+    id: `${scope}.smjcjl`,
+    defaultMessage: '扫码进场记录',
+  },
 });
 
 export const yesOrNoMessages = defineMessages({
