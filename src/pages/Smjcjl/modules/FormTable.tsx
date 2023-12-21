@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Form, Table, Image, Select, DatePicker, Tag } from 'antd';
+import { Form, Table, Image, Select, DatePicker, Tag, Button } from 'antd';
 import { ColumnsType } from 'antd/lib/table/interface';
 import { useSelector, useDispatch } from 'react-redux';
 import { falsyParamsFilter } from 'utils/filters';
@@ -9,13 +9,13 @@ import { selectAllDictMap } from 'store/selectors';
 import { EDictMap, VIEW } from 'utils/constants';
 import useDebounce from 'hooks/useDebounce';
 import { getDiffTime } from 'utils/utils';
-import moment from 'moment';
+import Auth from 'containers/AuthController';
 import { actions, getDataDetail, getDataList, getDel, getOnline } from '../slice';
 import selectors from '../selectors';
 import { ITableItem, TSearchParams } from '../types';
 import { formatSearchParams } from '../adapter';
-import { CHECK_MAP, MTYPE } from '../constants';
-
+import { CHECK_MAP, MTYPE, card_type } from '../constants';
+import ExportModal from './ExportModal';
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 const { useEffect, useRef, useState, useMemo } = React;
@@ -39,6 +39,7 @@ function FormTable() {
   const loading = useSelector(selectors.loading);
   const dictMaps = useSelector(selectAllDictMap);
   const dispatch = useDispatch();
+  const [exportModal, setExportModal] = useState(false);
   const searchCondition = useSelector(selectors.searchCondition);
   // 查询
   const handleSearch = (additionalParams: Dictionary<TAdditionalParams> = {}) => {
@@ -121,9 +122,21 @@ function FormTable() {
       width: 100,
     },
     {
-      title: 'cardid',
-      dataIndex: 'cardid',
-      key: 'cardid',
+      title: '卡类型',
+      dataIndex: 'cardtype',
+      key: 'cardtype',
+      align: 'left',
+      width: 100,
+      // 1年卡，2季卡，3月卡，4次卡
+      render: (text: string, record: ITableItem) => {
+        const txt = card_type.get(`${text}`) || '-'
+        return txt;
+      }
+    },
+    {
+      title: '卡名称',
+      dataIndex: 'cardname',
+      key: 'cardname',
       align: 'left',
       width: 100,
     },
@@ -176,6 +189,13 @@ function FormTable() {
       <TableWrapper
         title='列表'
         isShowTitlePrefixIcon
+        btns={(
+          <>
+            <Auth authCode={null}>
+              <Button type='primary' onClick={() => setExportModal(true)}>导出</Button>
+            </Auth>
+          </>
+        )}
       >
         <Table
           bordered
@@ -195,6 +215,7 @@ function FormTable() {
           }}
         />
       </TableWrapper>
+      { exportModal && <ExportModal onClose={() => setExportModal(false)} />}
     </>
   );
 }

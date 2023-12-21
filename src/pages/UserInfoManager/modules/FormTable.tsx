@@ -11,7 +11,7 @@ import { selectAllDictMap } from 'store/selectors';
 import { CREATE, EDictMap, EExportModuleId, REVIEW, VIEW } from 'utils/constants';
 import Auth from 'containers/AuthController';
 import authMap from 'configs/auth.conf';
-import { objToArray } from 'utils/utils';
+import { getCookie, objToArray } from 'utils/utils';
 import { actions, getDataDetail, getDataList, getDel, getOnline, postSetuserut } from '../slice';
 import selectors from '../selectors';
 import { ITableItem, TSearchParams } from '../types';
@@ -93,6 +93,13 @@ function FormTable() {
     }));
   };
 
+  // 导出
+  const handleExport = () => {
+    const token = getCookie('token');
+
+    window.open(`/index.php/AdminApi/Card/curcardexport?token=${token}`, '_blank');
+  };
+
   // 删除
   const handleDel = (data: ITableItem) => {
     const { id } = data;
@@ -124,13 +131,7 @@ function FormTable() {
       align: 'left',
       width: 100,
     },
-    {
-      title: '微信昵称',
-      dataIndex: 'wxnickname',
-      key: 'wxnickname',
-      width: 100,
-      align: 'left',
-    },
+
     {
       title: '微信头像',
       dataIndex: 'wxavatarurl',
@@ -141,47 +142,9 @@ function FormTable() {
 
     },
     {
-      title: '头像',
-      dataIndex: 'face',
-      key: 'face',
-      width: 100,
-      align: 'left',
-      render: (text: string) => <Image width={50} height={50} src={text} />,
-
-    },
-    {
-      title: '自拍',
-      dataIndex: 'zipaiphoto',
-      key: 'zipaiphoto',
-      width: 100,
-      render: (text: string) => <Image width={50} height={50} src={text} />,
-    },
-    {
       title: '手机',
       dataIndex: 'mobile',
       key: 'mobile',
-      width: 100,
-      align: 'left',
-    },
-    {
-      title: '生日',
-      dataIndex: 'birthday',
-      key: 'birthday',
-      width: 100,
-      align: 'left',
-    },
-    {
-      title: '会员类型',
-      dataIndex: 'mtype',
-      key: 'mtype',
-      width: 100,
-      align: 'left',
-      render: (text: string) => <span>{M_TYPE_MAP.get(text) || '-'}</span>,
-    },
-    {
-      title: '等级积分',
-      dataIndex: 'levelscore',
-      key: 'levelscore',
       width: 100,
       align: 'left',
     },
@@ -237,7 +200,7 @@ function FormTable() {
         btns={(
           <>
             <Auth authCode={null}>
-              <Button type='primary' onClick={() => openModalWithOperate('设置年会员')}>设置年会员价格</Button>
+              <Button type='primary' onClick={handleExport}>导出</Button>
             </Auth>
             <Auth authCode={null}>
               <Button type='primary' onClick={() => openModalWithOperate('设置背景')}>设置背景</Button>
