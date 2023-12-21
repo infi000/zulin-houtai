@@ -1,9 +1,10 @@
 import React from 'react';
 import { Empty } from 'antd';
+import emp from 'static/images/empty.png';
 
 export const empty = {
   emptyText: <Empty
-    image='https://festatic-1254389369.cos.ap-guangzhou.myqcloud.com/science/ot-resources/%E6%9A%82%E6%97%A0%E6%95%B0%E6%8D%AE%403x.png'
+    image={emp}
     imageStyle={{
       height: 120,
       width: 120,

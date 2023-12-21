@@ -2,12 +2,11 @@
  * @Author: 张驰阳 zhangchiyang@sfmail.sf-express.com
  * @Date: 2023-06-02 23:19:57
  * @LastEditors: 张驰阳 zhangchiyang@sfmail.sf-express.com
- * @LastEditTime: 2023-12-11 23:56:20
+ * @LastEditTime: 2023-12-21 23:38:47
  * @FilePath: /houtai/src/configs/dev.router.conf.tsx
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import React from 'react';
-import { MyIcon } from 'static/icon';
 import authMap from './auth.conf';
 import {
   AppstoreOutlined,
@@ -25,20 +24,21 @@ import {
 const config: Array<any> = [
   {
     path: '',
-    icon: <MyIcon type='icon-icn_shouyegaoliang1' />,
+    icon: <AppstoreOutlined />,
     name: '首页',
     text: '首页',
     componentName: 'HomePage',
   },
   {
     path: 'homePage',
-    icon: <MyIcon type='icon-icn_shouyegaoliang1' />,
+    icon: <AppstoreOutlined />,
     name: '首页',
   },
   {
     path: 'leasedEquipment',
-    icon: <AppstoreOutlined />,
+    icon: <DesktopOutlined />,
     name: '租赁设备管理',
+    auth: 123456,
     children: [
       {
         path: 'equipmentManager',
@@ -64,8 +64,9 @@ const config: Array<any> = [
   },
   {
     path: 'order',
-    icon: <ContainerOutlined />,
+    icon: <PieChartOutlined />,
     name: '订单',
+    auth: 123456,
     children: [
       {
         path: 'orderManager',
@@ -78,6 +79,7 @@ const config: Array<any> = [
     path: 'consignmentManager',
     icon: <MailOutlined />,
     name: '寄卖管理',
+    auth: 123456,
     children: [
       {
         path: 'consignmentGoodsManager',
@@ -93,7 +95,7 @@ const config: Array<any> = [
   },
   {
     path: 'settingManager',
-    icon: <MenuFoldOutlined />,
+    icon: <DesktopOutlined />,
     name: '设置管理',
     children: [
       {
@@ -105,18 +107,20 @@ const config: Array<any> = [
   },
   {
     path: 'yunying',
-    icon: <MenuFoldOutlined />,
+    icon: <PieChartOutlined />,
     name: '运营',
     children: [
       {
         path: 'gztManager',
         name: '工作台列表',
         componentName: 'GztManager',
+        auth: 123456,
       },
       {
         path: 'nkkeyManager',
         name: '年卡key管理',
         componentName: 'NkkeyManager',
+        auth: 123456,
       },
       {
         path: 'cardsManager',
@@ -132,18 +136,20 @@ const config: Array<any> = [
   },
   {
     path: 'jcList',
-    icon: <MenuFoldOutlined />,
+    icon: <ContainerOutlined />,
     name: '进场列表',
     children: [
       {
         path: 'jcmpList',
         name: '门票',
         componentName: 'JcmpList',
+        auth: 123456,
       },
       {
         path: 'jcyyList',
         name: '预约',
         componentName: 'JcyyList',
+        auth: 123456,
       },
       {
         path: 'smjcjl',
@@ -157,6 +163,7 @@ const config: Array<any> = [
     icon: <PieChartOutlined />,
     name: '租赁列表',
     componentName: 'Zllist',
+    auth: 123456,
   },
   {
     path: 'userInfoManager',
