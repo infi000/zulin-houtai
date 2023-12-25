@@ -12,11 +12,12 @@ import { CREATE, EDictMap, EExportModuleId, REVIEW, VIEW } from 'utils/constants
 import Auth from 'containers/AuthController';
 import authMap from 'configs/auth.conf';
 import { getCookie, objToArray } from 'utils/utils';
+import useDebounce from 'hooks/useDebounce';
+import usePageJump from 'hooks/usePageJump';
 import { actions, getDataDetail, getDataList, getDel, getOnline, postSetuserut } from '../slice';
 import selectors from '../selectors';
 import { ITableItem, TSearchParams } from '../types';
 import { formatSearchParams } from '../adapter';
-import useDebounce from 'hooks/useDebounce';
 import { M_TYPE_MAP } from '../constants';
 
 const { RangePicker } = DatePicker;
@@ -42,6 +43,8 @@ function FormTable() {
   const loading = useSelector(selectors.loading);
   const dictMaps = useSelector(selectAllDictMap);
   const dispatch = useDispatch();
+  const pageJump = usePageJump();
+
   const searchCondition = useSelector(selectors.searchCondition);
   // 查询
   const handleSearch = (additionalParams: Dictionary<TAdditionalParams> = {}) => {
@@ -70,14 +73,13 @@ function FormTable() {
     if (type === VIEW) {
       const { id } = data;
       await dispatch(getDataDetail({ uid: id, type }));
-    }else{
+    } else {
       dispatch(actions.updateMainModal({
         visible: true,
         type,
-        data
+        data,
       }));
     }
-
   });
 
   // 导入
@@ -91,6 +93,12 @@ function FormTable() {
         templateId,
       },
     }));
+  };
+  // handleCheckCard
+  const handleCheckCard = (row:any) => {
+    const { id } = row;
+    const newPath = `/uiResources/userInfoManager/userCardsManager/:${id}?uid=${id}`;
+    pageJump(newPath);
   };
 
   // 导出
@@ -156,7 +164,7 @@ function FormTable() {
       render: (_value: unknown, row: ITableItem) => (
         <>
           <Auth authCode={null}>
-            <TableButton onClick={() => openModalWithOperate(VIEW, row)}>查看</TableButton>
+            <TableButton onClick={() => handleCheckCard(row)}>查看会员卡</TableButton>
           </Auth>
           <Auth authCode={null}>
             <TableButton onClick={() => openModalWithOperate(REVIEW, row)}>审核</TableButton>
@@ -189,6 +197,11 @@ function FormTable() {
                     ))
                   }
                 </Select>
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item name='phone' label='手机号'>
+                <Input placeholder='请输入' allowClear />
               </Form.Item>
             </Col>
           </Row>

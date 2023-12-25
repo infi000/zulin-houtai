@@ -288,6 +288,14 @@ export const menuMessages = defineMessages({
     id: `${scope}.smjcjl`,
     defaultMessage: '扫码进场记录',
   },
+  userCardsManager: {
+    id: `${scope}.userCardsManager`,
+    defaultMessage: '用户会员卡管理',
+  },
+  importCardsManager: {
+    id: `${scope}.importCardsManager`,
+    defaultMessage: '导入卡管理',
+  },
 });
 
 export const yesOrNoMessages = defineMessages({

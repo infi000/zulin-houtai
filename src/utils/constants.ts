@@ -2,7 +2,7 @@
  * @Author: 李淳
  * @Date: 2020-06-15 14:18:50
  * @LastEditors: 张驰阳 zhangchiyang@sfmail.sf-express.com
- * @LastEditTime: 2023-06-08 00:08:07
+ * @LastEditTime: 2023-12-22 23:20:50
  * @Description: file content
  */
 // prefix
@@ -114,3 +114,10 @@ export enum EExportModuleId {
    '闲置设备记录' = '500',
    '调拨设备记录' = '600',
 }
+
+export const card_type = new Map([
+  ['1', '年卡'],
+  ['2', '季卡'],
+  ['3', '月卡'],
+  ['4', '次卡'],
+]);

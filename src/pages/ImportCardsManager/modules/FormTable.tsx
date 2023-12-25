@@ -1,21 +1,26 @@
 import * as React from 'react';
-import { Form, Table, Image, Select, DatePicker, Tag, Button } from 'antd';
+import { Col, Form, Input, Row, Table, Button, Image, Select, DatePicker, Tooltip } from 'antd';
 import { ColumnsType } from 'antd/lib/table/interface';
 import { useSelector, useDispatch } from 'react-redux';
 import { falsyParamsFilter } from 'utils/filters';
 import { baseTableConf } from 'configs/base.conf';
+import FilterFormWrapper from 'components/FilterFormWrapper';
 import TableWrapper from 'components/TableWrapper';
+import TableButton from 'components/TableButton';
 import { selectAllDictMap } from 'store/selectors';
-import { EDictMap, VIEW, card_type } from 'utils/constants';
-import useDebounce from 'hooks/useDebounce';
-import { getDiffTime } from 'utils/utils';
+import { CREATE, EDictMap, EExportModuleId, REVIEW, VIEW, card_type } from 'utils/constants';
 import Auth from 'containers/AuthController';
-import { actions, getDataDetail, getDataList, getDel, getOnline } from '../slice';
+import authMap from 'configs/auth.conf';
+import { getCookie, getQueryString, objToArray } from 'utils/utils';
+import useDebounce from 'hooks/useDebounce';
+import moment from 'moment';
+import { actions, getDataDetail, getDataList, getDel, getOnline, postSetuserut } from '../slice';
 import selectors from '../selectors';
 import { ITableItem, TSearchParams } from '../types';
 import { formatSearchParams } from '../adapter';
-import { CHECK_MAP, MTYPE } from '../constants';
-import ExportModal from './ExportModal';
+import { M_TYPE_MAP } from '../constants';
+import CheckModal from './CheckModal';
+
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 const { useEffect, useRef, useState, useMemo } = React;
@@ -39,7 +44,9 @@ function FormTable() {
   const loading = useSelector(selectors.loading);
   const dictMaps = useSelector(selectAllDictMap);
   const dispatch = useDispatch();
-  const [exportModal, setExportModal] = useState(false);
+  const [checkModal, setCheckModal] = useState({ show: false, data: {} });
+  const UUID = getQueryString('uid');
+
   const searchCondition = useSelector(selectors.searchCondition);
   // 查询
   const handleSearch = (additionalParams: Dictionary<TAdditionalParams> = {}) => {
@@ -90,16 +97,23 @@ function FormTable() {
     }));
   };
 
+  // 导出
+  const handleExport = () => {
+    const token = getCookie('token');
+
+    window.open(`/index.php/AdminApi/Card/curcardexport?token=${token}`, '_blank');
+  };
+
   // 删除
   const handleDel = (data: ITableItem) => {
     const { id } = data;
     dispatch(getDel({ tid: id }));
   };
   // 上线
-  const handleOnline = (data: ITableItem) => {
+  const handleSetuserut = useDebounce((data: ITableItem, ut: '1' | '2') => {
     const { id } = data;
-    dispatch(getOnline({ tid: id }));
-  };
+    dispatch(postSetuserut({ uid: id, ut }));
+  });
 
   useEffect(() => {
     handleSearch();
@@ -115,9 +129,23 @@ function FormTable() {
       align: 'left',
     },
     {
-      title: 'cardcode',
-      dataIndex: 'cardcode',
-      key: 'cardcode',
+      title: 'uid',
+      dataIndex: 'uid',
+      key: 'uid',
+      align: 'left',
+      width: 100,
+    },
+    {
+      title: '手机号',
+      dataIndex: 'phone',
+      key: 'phone',
+      align: 'left',
+      width: 100,
+    },
+    {
+      title: 'cardid',
+      dataIndex: 'cardid',
+      key: 'cardid',
       align: 'left',
       width: 100,
     },
@@ -127,72 +155,100 @@ function FormTable() {
       key: 'cardtype',
       align: 'left',
       width: 100,
-      // 1年卡，2季卡，3月卡，4次卡
       render: (text: string, record: ITableItem) => {
-        const txt = card_type.get(`${text}`) || '-'
+        const txt = card_type.get(`${text}`) || '-';
         return txt;
-      }
+      },
     },
     {
-      title: '卡名称',
-      dataIndex: 'cardname',
-      key: 'cardname',
+      title: '开始时间',
+      dataIndex: 'carddate',
+      key: 'carddate',
       align: 'left',
       width: 100,
+      // render: (text: string, record: ITableItem) => {
+      //   const t = text == '-1' ? text : moment.unix(Number(text)).format('YYYY-MM-DD');
+      //   return t;
+      // },
     },
     {
-      title: '过期时间',
-      dataIndex: 'cardexpired',
-      key: 'cardexpired',
+      title: '卡期限',
+      dataIndex: 'expired',
+      key: 'expired',
       align: 'left',
       width: 100,
+      // render: (text: string, record: ITableItem) => {
+      //   const t = text == '-1' ? text : moment.unix(Number(text)).format('YYYY-MM-DD');
+      //   return t;
+      // },
+    },
+    // {
+    //   title: '二维码',
+    //   dataIndex: 'codeurl',
+    //   key: 'codeurl',
+    //   align: 'left',
+    //   width: 100,
+    //   render: (text: string) => <Image width={50} height={50} src={text} />,
+    // },
+    {
+      title: '剩余次数', dataIndex: 'leftcount', key: 'leftcount', align: 'left', width: 100,
     },
     {
-      title: '检票时间',
-      dataIndex: 'checktime',
-      key: 'checktime',
-      align: 'left',
-      width: 100,
+      title: '总次数', dataIndex: 'totalcount', key: 'totalcount', align: 'left', width: 100,
     },
     {
-      title: '剩余次数',
-      dataIndex: 'leftcount',
-      key: 'leftcount',
-      align: 'left',
-      width: 100,
+      title: '总价', dataIndex: 'totalprice', key: 'totalprice', align: 'left', width: 100,
     },
     {
-      title: '昵称',
-      dataIndex: 'nickname',
-      key: 'nickname',
-      align: 'left',
-      width: 100,
+      title: '备注', dataIndex: 'remark', key: 'remark', align: 'left', width: 100,
     },
     {
-      title: 'uid',
-      dataIndex: 'uid',
-      key: 'uid',
-      align: 'left',
-      width: 100,
+      title: '操作',
+      dataIndex: 'operate',
+      key: 'operate',
+      width: 200,
+      render: (_value: unknown, row: ITableItem) => (
+        <>
+          <Auth authCode={null}>
+            <Button type='primary' onClick={() => setCheckModal({ show: true, data: row })}>核销</Button>
+
+          </Auth>
+        </>
+      ),
     },
-    {
-      title: '手机',
-      dataIndex: 'phone',
-      key: 'phone',
-      align: 'left',
-      width: 100,
-    }
   ];
 
   return (
     <>
+      <FilterFormWrapper
+        onSearch={() => handleSearch()}
+        onReset={() => handleReset()}
+      >
+        <Form {...formItemLayout} form={form} initialValues={searchCondition}>
+          <Row>
+            <Col span={6}>
+              <Form.Item name='uid' label='用户uid' initialValue={UUID}>
+                <Input placeholder='请输入' allowClear />
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item name='phone' label='用户手机号'>
+                <Input placeholder='请输入' allowClear />
+              </Form.Item>
+            </Col>
+          </Row>
+        </Form>
+      </FilterFormWrapper>
       <TableWrapper
         title='列表'
         isShowTitlePrefixIcon
         btns={(
           <>
             <Auth authCode={null}>
-              <Button type='primary' onClick={() => setExportModal(true)}>导出</Button>
+              <Button type='primary' onClick={handleExport}>导出</Button>
+            </Auth>
+            <Auth authCode={null}>
+              <Button type='primary' onClick={() => openModalWithOperate('设置背景')}>设置背景</Button>
             </Auth>
           </>
         )}
@@ -215,7 +271,14 @@ function FormTable() {
           }}
         />
       </TableWrapper>
-      { exportModal && <ExportModal onClose={() => setExportModal(false)} />}
+      {checkModal.show
+        && (
+          <CheckModal
+            data={checkModal.data}
+            onClose={() => setCheckModal({ show: false, data: {} })}
+          />
+        )}
+
     </>
   );
 }
