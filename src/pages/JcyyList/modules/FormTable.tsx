@@ -1,23 +1,19 @@
 import * as React from 'react';
-import { Col, Form, Input, Row, Table, Button, Image, Select, DatePicker, Tooltip } from 'antd';
+import { Form, Table, Image, Select, DatePicker } from 'antd';
 import { ColumnsType } from 'antd/lib/table/interface';
 import { useSelector, useDispatch } from 'react-redux';
 import { falsyParamsFilter } from 'utils/filters';
 import { baseTableConf } from 'configs/base.conf';
-import FilterFormWrapper from 'components/FilterFormWrapper';
 import TableWrapper from 'components/TableWrapper';
-import TableButton from 'components/TableButton';
 import { selectAllDictMap } from 'store/selectors';
-import { CREATE, EDictMap, EExportModuleId, REVIEW, VIEW } from 'utils/constants';
-import Auth from 'containers/AuthController';
-import authMap from 'configs/auth.conf';
-import { objToArray } from 'utils/utils';
-import { actions, getDataDetail, getDataList, getDel, getOnline, postSetuserut } from '../slice';
+import { EDictMap, VIEW } from 'utils/constants';
+import { actions, getDataDetail, getDataList, getDel, getOnline } from '../slice';
 import selectors from '../selectors';
 import { ITableItem, TSearchParams } from '../types';
 import { formatSearchParams } from '../adapter';
 import useDebounce from 'hooks/useDebounce';
-import { M_TYPE_MAP } from '../constants';
+import { CHECK_MAP, MTYPE } from '../constants';
+import { getDiffTime } from 'utils/utils';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -70,7 +66,7 @@ function FormTable() {
     if (type === VIEW) {
       const { id } = data;
       await dispatch(getDataDetail({ uid: id, type }));
-    }else{
+    } else {
       dispatch(actions.updateMainModal({
         visible: true,
         type,
@@ -99,10 +95,10 @@ function FormTable() {
     dispatch(getDel({ tid: id }));
   };
   // 上线
-  const handleSetuserut = useDebounce((data: ITableItem, ut: '1' | '2') => {
+  const handleOnline = (data: ITableItem) => {
     const { id } = data;
-    dispatch(postSetuserut({ uid: id, ut }));
-  });
+    dispatch(getOnline({ tid: id }));
+  };
 
   useEffect(() => {
     handleSearch();
@@ -118,132 +114,61 @@ function FormTable() {
       align: 'left',
     },
     {
-      title: '昵称',
+      title: '微信用户',
       dataIndex: 'nickname',
       key: 'nickname',
       align: 'left',
       width: 100,
     },
+    // {
+    //   title: '手机',
+    //   dataIndex: 'phone',
+    //   key: 'phone',
+    //   align: 'left',
+    //   width: 100,
+    // },
+    // {
+    //   title: '验票',
+    //   dataIndex: 'ischeck',
+    //   key: 'ischeck',
+    //   align: 'left',
+    //   width: 100,
+    //   render: (text: string) => <span style={{ color: CHECK_MAP.get(text) === '验证过' ? 'green' : 'black' }}>{CHECK_MAP.get(text) || '-'}</span>,
+    // },
     {
-      title: '微信昵称',
-      dataIndex: 'wxnickname',
-      key: 'wxnickname',
-      width: 100,
+      title: '开始时间',
+      dataIndex: 'starttime',
+      key: 'starttime',
       align: 'left',
+      width: 100,
+      render: (text: string) => {
+        const c5 = getDiffTime(text, new Date());
+        const style = c5 ? { color: 'red', fontWeight: 'bold'} : {};
+        return <><span style={style} >{text}</span></>
+      },
     },
     {
-      title: '微信头像',
-      dataIndex: 'wxavatarurl',
-      key: 'wxavatarurl',
-      width: 100,
+      title: '结束时间',
+      dataIndex: 'endtime',
+      key: 'endtime',
       align: 'left',
-      render: (text: string) => <Image width={50} height={50} src={text} />,
-
-    },
-    {
-      title: '头像',
-      dataIndex: 'face',
-      key: 'face',
       width: 100,
-      align: 'left',
-      render: (text: string) => <Image width={50} height={50} src={text} />,
-
     },
     {
-      title: '自拍',
-      dataIndex: 'zipaiphoto',
-      key: 'zipaiphoto',
-      width: 100,
-      render: (text: string) => <Image width={50} height={50} src={text} />,
-    },
-    {
-      title: '手机',
-      dataIndex: 'mobile',
-      key: 'mobile',
-      width: 100,
-      align: 'left',
-    },
-    {
-      title: '生日',
-      dataIndex: 'birthday',
-      key: 'birthday',
-      width: 100,
-      align: 'left',
-    },
-    {
-      title: '会员类型',
+      title: '类型',
       dataIndex: 'mtype',
       key: 'mtype',
-      width: 100,
       align: 'left',
-      render: (text: string) => <span>{M_TYPE_MAP.get(text) || '-'}</span>,
-    },
-    {
-      title: '等级积分',
-      dataIndex: 'levelscore',
-      key: 'levelscore',
       width: 100,
-      align: 'left',
-    },
-    {
-      title: '操作',
-      dataIndex: 'operate',
-      key: 'operate',
-      width: 200,
-      render: (_value: unknown, row: ITableItem) => (
-        <>
-          <Auth authCode={null}>
-            <TableButton onClick={() => openModalWithOperate(VIEW, row)}>查看</TableButton>
-          </Auth>
-          <Auth authCode={null}>
-            <TableButton onClick={() => openModalWithOperate(REVIEW, row)}>审核</TableButton>
-          </Auth>
-          <Auth authCode={null}>
-            <TableButton onClick={() => handleSetuserut(row, '1')}> 设为不可验票</TableButton>
-          </Auth>
-          <Auth authCode={null}>
-            <TableButton onClick={() => handleSetuserut(row, '2')}> 设为可验票</TableButton>
-          </Auth>
-        </>
-      ),
+      render: (text: string) => <span>{MTYPE.get(text) || '-'}</span>,
     },
   ];
 
   return (
     <>
-      <FilterFormWrapper
-        onSearch={() => handleSearch()}
-        onReset={() => handleReset()}
-      >
-        <Form {...formItemLayout} form={form} initialValues={searchCondition}>
-          <Row>
-            <Col span={6}>
-              <Form.Item name='mtype' label='会员类型'>
-                <Select allowClear>
-                  {
-                    Array.from(M_TYPE_MAP).map(([key, value]) => (
-                      <Select.Option key={key} value={key}>{value}</Select.Option>
-                    ))
-                  }
-                </Select>
-              </Form.Item>
-            </Col>
-          </Row>
-        </Form>
-      </FilterFormWrapper>
       <TableWrapper
         title='列表'
         isShowTitlePrefixIcon
-        btns={(
-          <>
-            <Auth authCode={null}>
-              <Button type='primary' onClick={() => openModalWithOperate('设置年会员')}>设置年会员价格</Button>
-            </Auth>
-            <Auth authCode={null}>
-              <Button type='primary' onClick={() => openModalWithOperate('设置背景')}>设置背景</Button>
-            </Auth>
-          </>
-        )}
       >
         <Table
           bordered

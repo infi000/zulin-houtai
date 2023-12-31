@@ -170,6 +170,19 @@ function MainModal() {
               </Form.Item>
               </Col>
               <Col span={24}><Form.Item
+                label='拼团金额'
+                name='joinmoney'
+                initialValue={(memoData?.joinmoney || memoData?.joinmoney === 0) ? memoData?.joinmoney : ''}
+                rules={[{ required: true, message: '必填项' }]}
+              >
+                <InputNumber
+                  placeholder='请输入拼团金额'
+                  disabled={isView(type)}
+                  style={{ width: '100%' }}
+                />
+              </Form.Item>
+              </Col>
+              <Col span={24}><Form.Item
                 label='拼团人数'
                 name='maxmember'
                 initialValue={(memoData?.maxmember || memoData?.maxmember === 0) ? memoData?.maxmember : 1}

@@ -152,6 +152,18 @@ function FormTable() {
       width: 100,
     },
     {
+      key: 'uphone ',
+      title: '预约电话',
+      dataIndex: 'uphone',
+      width: 100,
+    },
+    {
+      key: 'remark ',
+      title: '备注',
+      dataIndex: 'remark',
+      width: 100,
+    },
+    {
       key: 'title ',
       title: '订单标题',
       dataIndex: 'title',

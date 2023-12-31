@@ -269,11 +269,38 @@ export const formatPage = (params: any) => {
       _params.count = _params.pageSize;
     }
     if (_params.pageNum) {
-      _params.offset = (_params.pageNum - 1)*_params.count;
+      _params.offset = (_params.pageNum - 1) * _params.count;
     }
   } catch (error) {
     console.log(error);
   }
 
   return { ..._params };
+};
+
+// 计算两个时间戳的时间差
+export const getDiffTime2 = (startTime: number, endTime: number) => {
+  const diff = endTime
+    ? moment(endTime).diff(moment(startTime))
+    : moment().diff(moment(startTime));
+  const duration = moment.duration(diff);
+  const days = duration.days();
+  const hours = duration.hours();
+  const minutes = duration.minutes();
+  const seconds = duration.seconds();
+  return `${days}天${hours}小时${minutes}分${seconds}秒`;
+};
+
+// t1比t2多出的时间,单位秒，默认5分钟
+// 条件不足返回空字符串
+export const getDiffTime = (t1:any, t2:any, diffTime?:any ) => {
+  const time1 = new Date(t1).getTime();
+  const time2 = t2.getTime();
+  const diff = time1 - time2;
+  if (diff > 0) {
+    if ((diff) < (diffTime || 5) * 60 * 1000 ) {
+      return true;
+    }
+  }
+  return '';
 };

@@ -2,7 +2,7 @@
  * @Author: 张驰阳 zhangchiyang@sfmail.sf-express.com
  * @Date: 2023-06-02 23:19:57
  * @LastEditors: 张驰阳 zhangchiyang@sfmail.sf-express.com
- * @LastEditTime: 2023-08-01 11:21:32
+ * @LastEditTime: 2023-09-06 23:12:27
  * @FilePath: /houtai/src/pages/Layout/index.tsx
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -19,6 +19,8 @@ import { menuMessages } from 'utils/messages';
 import menuConfig from 'configs/dev.router.conf';
 import WordApp from 'pages/WordApp';
 import Signature from 'pages/Signature';
+import WordAppParent from 'pages/WordAppParent';
+import SignatureParent from 'pages/SignatureParent';
 import Login from 'pages/Login';
 import Logout from 'pages/Login/logout';
 import { conf } from 'configs/pass.conf';
@@ -54,6 +56,10 @@ function Layout() {
       return <CacheRoute path='/uiResources/blank/wordApp' key='wordApp' component={WordApp} />;
     case '/uiResources/blank/signature':
       return <CacheRoute path='/uiResources/blank/signature' key='signature' component={Signature} />;
+    case '/uiResources/blank/signatureParent':
+      return <CacheRoute path='/uiResources/blank/signatureParent' key='signatureParent' component={SignatureParent} />;
+    case '/uiResources/blank/wordAppParent':
+      return <CacheRoute path='/uiResources/blank/wordAppParent' key='wordAppParent' component={WordAppParent} />;
     case conf.uri.login:
       return <CacheRoute path='/uiResources/pass/login' key='login' component={Login} />;
     case conf.uri.logout:

@@ -11,7 +11,7 @@ import { message } from 'antd';
 export const initialState: IPageState = {
   refresh: 0,
   loading: false,
-  searchCondition: {mtype: '1'}, // 初始化检索条件
+  searchCondition: {}, // 初始化检索条件
   tableData: [],
   pagination: {
     pageNum: 1,
@@ -51,9 +51,9 @@ export const getDataDetail = createServiceAsyncThunk(
   async (params: {uid: any, type: any}) => services.getDataDetailService({ uid: params.uid }),
 );
 
-export const postSetuserut = createServiceAsyncThunk(
-  `${NAMESPACE}/postSetuserut`,
-  async (params: { uid: any; ut: '1' | '2' }) => services.postSetuserutService(params),
+export const getOnline = createServiceAsyncThunk(
+  `${NAMESPACE}/getOnline`,
+  async (params: {tid: number}) => services.getOnlineService(params),
 );
 export const postSetBg = createServiceAsyncThunk(
   `${NAMESPACE}/postSetBg`,
@@ -93,7 +93,7 @@ const slice = createSlice({
   // 异步的成功、失败处理，可以使用类似上面reducers的设置方式，但是由于是对字符串的捕获，会损失类型；
   extraReducers: builder => {
     builder.addCase(getDataList.fulfilled, (state, action) => {
-      state.tableData = Array.isArray(action.payload?.data?.users) ? action.payload?.data?.users : [];
+      state.tableData = Array.isArray(action.payload?.data?.pickets) ? action.payload?.data?.pickets : [];
       state.pagination.total = action.payload?.data?.total || 0;
       state.pagination.pageNum = action?.meta?.arg?.pageNum || 1;
       state.pagination.pageSize = action?.meta?.arg?.pageSize || baseTableConf.pageSize;
@@ -115,8 +115,8 @@ const slice = createSlice({
       message.success('下线成功');
       state.refresh += 1;
     });
-    builder.addCase(postSetuserut.fulfilled, state => {
-      message.success('设置成功');
+    builder.addCase(getOnline.fulfilled, state => {
+      message.success('上线成功');
       state.refresh += 1;
     });
     builder.addCase(postUserverify.fulfilled, state => {

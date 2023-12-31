@@ -2,7 +2,7 @@
  * @Author: 张驰阳 zhangchiyang@sfmail.sf-express.com
  * @Date: 2023-06-02 23:19:57
  * @LastEditors: 张驰阳 zhangchiyang@sfmail.sf-express.com
- * @LastEditTime: 2023-08-03 00:31:07
+ * @LastEditTime: 2023-08-20 23:31:34
  * @FilePath: /houtai/src/configs/dev.router.conf.tsx
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -100,6 +100,45 @@ const config: Array<any> = [
         path: 'settingMainManager',
         name: '基础设置',
         componentName: 'SettingMainManager',
+      },
+    ]
+  },
+  {
+    path: 'yunying',
+    icon: <MenuFoldOutlined />,
+    name: '运营',
+    children: [
+      {
+        path: 'gztManager',
+        name: '工作台列表',
+        componentName: 'GztManager',
+      },
+      {
+        path: 'nkkeyManager',
+        name: '年卡key管理',
+        componentName: 'NkkeyManager',
+      },
+      // {
+      //   path: 'rdManager',
+      //   name: '入店客户',
+      //   componentName: 'RdManager',
+      // },
+    ]
+  },
+  {
+    path: 'jcList',
+    icon: <MenuFoldOutlined />,
+    name: '进场列表',
+    children: [
+      {
+        path: 'jcmpList',
+        name: '门票',
+        componentName: 'JcmpList',
+      },
+      {
+        path: 'jcyyList',
+        name: '预约',
+        componentName: 'JcyyList',
       },
     ]
   },

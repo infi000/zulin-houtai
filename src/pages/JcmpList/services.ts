@@ -2,7 +2,7 @@
  * @Author: 张驰阳 zhangchiyang@sfmail.sf-express.com
  * @Date: 2023-06-03 23:26:54
  * @LastEditors: 张驰阳 zhangchiyang@sfmail.sf-express.com
- * @LastEditTime: 2023-08-06 22:03:27
+ * @LastEditTime: 2023-08-10 22:24:26
  * @FilePath: /houtai/src/pages/ToolManager/services.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -109,13 +109,13 @@ import { ITableItem, TSearchParams, TCreateParams, TModifyParams } from './types
 // 获取列表
 export const getDataListService = (params: TSearchParams & IPagination) =>
   getRequest<TSearchParams & IPagination, IListResponse<ITableItem>>(
-    '/User/search',
+    '/Picket/search',
     formatPage(params),
   );
   
 // 设置setyearprice
 export const postUserverify = (params:any) =>
-  postFormDataRequest<any, IResponseData<string>>('/User/userverify', params);
+  postFormDataRequest<any, IResponseData<string>>('User/userverify', params);
   
 // 设置setbg
 export const postSetBgService = (params: { yearbg: any; tabg: any  }) =>
@@ -139,11 +139,9 @@ export const postEditService = (params: TModifyParams) =>
 // 删除
 export const getDelService = (params: { tid: number }) =>
   postRequest<{ tid: number }, IResponseData<string>>('/Lease/toolscrapped', params);
-// uid:用户id
-// ut: 1不可验票，2可验票
-
-export const postSetuserutService = (params: { uid: any; ut: '1' | '2' }) =>
-  getRequest<{ uid: any; ut: '1' | '2' }, IResponseData<string>>('/User/setuserut', params);
+// 上线
+export const getOnlineService = (params: { tid: number }) =>
+  postRequest<{ tid: number }, IResponseData<string>>('/Lease/toolonline', params);
 
 
 // 详情
@@ -159,7 +157,7 @@ export default {
   postEditService,
   getDelService,
   getDataDetailService,
-  postSetuserutService,
+  getOnlineService,
   postSetBgService,
   postUserverify,
 };

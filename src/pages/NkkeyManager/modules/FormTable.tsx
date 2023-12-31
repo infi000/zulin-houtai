@@ -8,16 +8,15 @@ import FilterFormWrapper from 'components/FilterFormWrapper';
 import TableWrapper from 'components/TableWrapper';
 import TableButton from 'components/TableButton';
 import { selectAllDictMap } from 'store/selectors';
-import { CREATE, EDictMap, EExportModuleId, REVIEW, VIEW } from 'utils/constants';
+import { CREATE, EDictMap, EExportModuleId, EDIT, VIEW } from 'utils/constants';
 import Auth from 'containers/AuthController';
 import authMap from 'configs/auth.conf';
 import { objToArray } from 'utils/utils';
-import { actions, getDataDetail, getDataList, getDel, getOnline, postSetuserut } from '../slice';
+import { actions, getDataDetail, getDataList, getDel, getOnline } from '../slice';
 import selectors from '../selectors';
 import { ITableItem, TSearchParams } from '../types';
 import { formatSearchParams } from '../adapter';
 import useDebounce from 'hooks/useDebounce';
-import { M_TYPE_MAP } from '../constants';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -42,7 +41,7 @@ function FormTable() {
   const loading = useSelector(selectors.loading);
   const dictMaps = useSelector(selectAllDictMap);
   const dispatch = useDispatch();
-  const searchCondition = useSelector(selectors.searchCondition);
+
   // 查询
   const handleSearch = (additionalParams: Dictionary<TAdditionalParams> = {}) => {
     const params = form.getFieldsValue();
@@ -67,17 +66,10 @@ function FormTable() {
 
   // 新建、编辑、查看
   const openModalWithOperate = useDebounce(async (type: OperateType, data?: ITableItem) => {
-    if (type === VIEW) {
-      const { id } = data;
-      await dispatch(getDataDetail({ uid: id, type }));
-    }else{
-      dispatch(actions.updateMainModal({
-        visible: true,
-        type,
-        data
-      }));
-    }
-
+    dispatch(actions.updateMainModal({
+      visible: true,
+      type,
+    }));
   });
 
   // 导入
@@ -99,16 +91,16 @@ function FormTable() {
     dispatch(getDel({ tid: id }));
   };
   // 上线
-  const handleSetuserut = useDebounce((data: ITableItem, ut: '1' | '2') => {
+  const handleOnline = (data: ITableItem) => {
     const { id } = data;
-    dispatch(postSetuserut({ uid: id, ut }));
-  });
+    dispatch(getOnline({ tid: id }));
+  };
 
   useEffect(() => {
     handleSearch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refresh]);
-
+  
   const columns: ColumnsType = [
     {
       title: 'id',
@@ -116,96 +108,49 @@ function FormTable() {
       key: 'id',
       width: 100,
       align: 'left',
+      fixed: 'left',
     },
     {
-      title: '昵称',
-      dataIndex: 'nickname',
-      key: 'nickname',
-      align: 'left',
-      width: 100,
-    },
-    {
-      title: '微信昵称',
-      dataIndex: 'wxnickname',
-      key: 'wxnickname',
+      title: 'key',
+      dataIndex: 'key',
+      key: 'key',
       width: 100,
       align: 'left',
     },
     {
-      title: '微信头像',
-      dataIndex: 'wxavatarurl',
-      key: 'wxavatarurl',
-      width: 100,
-      align: 'left',
-      render: (text: string) => <Image width={50} height={50} src={text} />,
-
-    },
-    {
-      title: '头像',
-      dataIndex: 'face',
-      key: 'face',
-      width: 100,
-      align: 'left',
-      render: (text: string) => <Image width={50} height={50} src={text} />,
-
-    },
-    {
-      title: '自拍',
-      dataIndex: 'zipaiphoto',
-      key: 'zipaiphoto',
-      width: 100,
-      render: (text: string) => <Image width={50} height={50} src={text} />,
-    },
-    {
-      title: '手机',
-      dataIndex: 'mobile',
-      key: 'mobile',
+      title: '创建时间',
+      dataIndex: 'ctime',
+      key: 'ctime',
       width: 100,
       align: 'left',
     },
     {
-      title: '生日',
-      dataIndex: 'birthday',
-      key: 'birthday',
+      title: 'used',
+      dataIndex: 'used',
+      key: 'used',
       width: 100,
       align: 'left',
     },
     {
-      title: '会员类型',
-      dataIndex: 'mtype',
-      key: 'mtype',
-      width: 100,
-      align: 'left',
-      render: (text: string) => <span>{M_TYPE_MAP.get(text) || '-'}</span>,
-    },
-    {
-      title: '等级积分',
-      dataIndex: 'levelscore',
-      key: 'levelscore',
+      title: 'uid',
+      dataIndex: 'uid',
+      key: 'uid',
       width: 100,
       align: 'left',
     },
     {
-      title: '操作',
-      dataIndex: 'operate',
-      key: 'operate',
-      width: 200,
-      render: (_value: unknown, row: ITableItem) => (
-        <>
-          <Auth authCode={null}>
-            <TableButton onClick={() => openModalWithOperate(VIEW, row)}>查看</TableButton>
-          </Auth>
-          <Auth authCode={null}>
-            <TableButton onClick={() => openModalWithOperate(REVIEW, row)}>审核</TableButton>
-          </Auth>
-          <Auth authCode={null}>
-            <TableButton onClick={() => handleSetuserut(row, '1')}> 设为不可验票</TableButton>
-          </Auth>
-          <Auth authCode={null}>
-            <TableButton onClick={() => handleSetuserut(row, '2')}> 设为可验票</TableButton>
-          </Auth>
-        </>
-      ),
+      title: 'bid',
+      dataIndex: 'bid',
+      key: 'bid',
+      width: 100,
+      align: 'left',
+    },
+    {
+      title: 'status',
+      dataIndex: 'status',
+      key: 'status',
+      width: 100,
+      align: 'left',
     },
   ];
 
@@ -215,19 +160,43 @@ function FormTable() {
         onSearch={() => handleSearch()}
         onReset={() => handleReset()}
       >
-        <Form {...formItemLayout} form={form} initialValues={searchCondition}>
+        <Form {...formItemLayout} form={form}>
           <Row>
-            <Col span={6}>
-              <Form.Item name='mtype' label='会员类型'>
-                <Select allowClear>
-                  {
-                    Array.from(M_TYPE_MAP).map(([key, value]) => (
-                      <Select.Option key={key} value={key}>{value}</Select.Option>
-                    ))
-                  }
-                </Select>
+            {/* <Col span={6}>
+              <Form.Item name='companyid' label='总公司id'>
+                <Input allowClear placeholder='请输入' />
               </Form.Item>
             </Col>
+            <Col span={6}>
+              <Form.Item name='title' label='工具名称'>
+                <Input allowClear placeholder='请输入' />
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item name='thumbinal' label='预览图'>
+                <Input allowClear placeholder='请输入' />
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item name='des' label='工具使用说明'>
+                <Input allowClear placeholder='请输入' />
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item name='price' label='工具租赁价格，单位元'>
+                <Input allowClear placeholder='请输入' />
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item name='tbid' label='所属工具箱id'>
+                <Input allowClear placeholder='请输入' />
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item name='ctime' label='工具创建时间'>
+                <Input allowClear placeholder='请输入' />
+              </Form.Item>
+            </Col> */}
           </Row>
         </Form>
       </FilterFormWrapper>
@@ -237,10 +206,7 @@ function FormTable() {
         btns={(
           <>
             <Auth authCode={null}>
-              <Button type='primary' onClick={() => openModalWithOperate('设置年会员')}>设置年会员价格</Button>
-            </Auth>
-            <Auth authCode={null}>
-              <Button type='primary' onClick={() => openModalWithOperate('设置背景')}>设置背景</Button>
+              <Button type='primary' onClick={() => openModalWithOperate(CREATE)}>新建</Button>
             </Auth>
           </>
         )}
