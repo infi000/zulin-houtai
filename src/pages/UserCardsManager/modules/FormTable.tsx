@@ -8,17 +8,18 @@ import FilterFormWrapper from 'components/FilterFormWrapper';
 import TableWrapper from 'components/TableWrapper';
 import TableButton from 'components/TableButton';
 import { selectAllDictMap } from 'store/selectors';
-import { CREATE, EDictMap, EExportModuleId, REVIEW, VIEW } from 'utils/constants';
+import { CREATE, EDictMap, EExportModuleId, REVIEW, VIEW, card_type } from 'utils/constants';
 import Auth from 'containers/AuthController';
 import authMap from 'configs/auth.conf';
-import { objToArray } from 'utils/utils';
+import { getCookie, getQueryString, objToArray } from 'utils/utils';
+import useDebounce from 'hooks/useDebounce';
+import moment from 'moment';
 import { actions, getDataDetail, getDataList, getDel, getOnline, postSetuserut } from '../slice';
 import selectors from '../selectors';
 import { ITableItem, TSearchParams } from '../types';
 import { formatSearchParams } from '../adapter';
-import useDebounce from 'hooks/useDebounce';
 import { M_TYPE_MAP } from '../constants';
-import usePageJump from 'hooks/usePageJump';
+import CheckModal from './CheckModal';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -43,7 +44,8 @@ function FormTable() {
   const loading = useSelector(selectors.loading);
   const dictMaps = useSelector(selectAllDictMap);
   const dispatch = useDispatch();
-  const pageJump = usePageJump();
+  const [checkModal, setCheckModal] = useState({ show: false, data: {} });
+  const UUID = getQueryString('uid');
 
   const searchCondition = useSelector(selectors.searchCondition);
   // 查询
@@ -73,14 +75,13 @@ function FormTable() {
     if (type === VIEW) {
       const { id } = data;
       await dispatch(getDataDetail({ uid: id, type }));
-    }else{
+    } else {
       dispatch(actions.updateMainModal({
         visible: true,
         type,
-        data
+        data,
       }));
     }
-
   });
 
   // 导入
@@ -95,11 +96,12 @@ function FormTable() {
       },
     }));
   };
-  // handleCheckCard
-  const handleCheckCard = (row:any) => {
-    const { id } = row;
-    const newPath = `/uiResources/userInfoManager/userCardsManager/:${id}?uid=${id}`;
-    pageJump(newPath);
+
+  // 导出
+  const handleExport = () => {
+    const token = getCookie('token');
+
+    window.open(`/index.php/AdminApi/Card/curcardexport?token=${token}`, '_blank');
   };
 
   // 删除
@@ -127,72 +129,78 @@ function FormTable() {
       align: 'left',
     },
     {
-      title: '昵称',
-      dataIndex: 'nickname',
-      key: 'nickname',
+      title: 'uid',
+      dataIndex: 'uid',
+      key: 'uid',
       align: 'left',
       width: 100,
     },
     {
-      title: '微信昵称',
-      dataIndex: 'wxnickname',
-      key: 'wxnickname',
-      width: 100,
+      title: '手机号',
+      dataIndex: 'phone',
+      key: 'phone',
       align: 'left',
+      width: 100,
     },
     {
-      title: '微信头像',
-      dataIndex: 'wxavatarurl',
-      key: 'wxavatarurl',
-      width: 100,
+      title: 'cardid',
+      dataIndex: 'cardid',
+      key: 'cardid',
       align: 'left',
+      width: 100,
+    },
+    {
+      title: '卡类型',
+      dataIndex: 'cardtype',
+      key: 'cardtype',
+      align: 'left',
+      width: 100,
+      render: (text: string, record: ITableItem) => {
+        const txt = card_type.get(`${text}`) || '-';
+        return txt;
+      },
+    },
+    {
+      title: '开始时间',
+      dataIndex: 'cardstarttime',
+      key: 'cardstarttime',
+      align: 'left',
+      width: 100,
+      render: (text: string, record: ITableItem) => {
+        const t = text == '-1' ? text : moment.unix(Number(text)).format('YYYY-MM-DD');
+        return t;
+      },
+    },
+    {
+      title: '卡期限',
+      dataIndex: 'cardexpired',
+      key: 'cardexpired',
+      align: 'left',
+      width: 100,
+      render: (text: string, record: ITableItem) => {
+        const t = text == '-1' ? text : moment.unix(Number(text)).format('YYYY-MM-DD');
+        return t;
+      },
+    },
+    {
+      title: '二维码',
+      dataIndex: 'codeurl',
+      key: 'codeurl',
+      align: 'left',
+      width: 100,
       render: (text: string) => <Image width={50} height={50} src={text} />,
-
     },
     {
-      title: '头像',
-      dataIndex: 'face',
-      key: 'face',
-      width: 100,
-      align: 'left',
-      render: (text: string) => <Image width={50} height={50} src={text} />,
-
+      title: '剩余次数', dataIndex: 'leftcount', key: 'leftcount', align: 'left', width: 100,
     },
     {
-      title: '自拍',
-      dataIndex: 'zipaiphoto',
-      key: 'zipaiphoto',
-      width: 100,
-      render: (text: string) => <Image width={50} height={50} src={text} />,
+      title: '总次数', dataIndex: 'totalcount', key: 'totalcount', align: 'left', width: 100,
     },
     {
-      title: '手机',
-      dataIndex: 'mobile',
-      key: 'mobile',
-      width: 100,
-      align: 'left',
+      title: '总价', dataIndex: 'totalprice', key: 'totalprice', align: 'left', width: 100,
     },
     {
-      title: '生日',
-      dataIndex: 'birthday',
-      key: 'birthday',
-      width: 100,
-      align: 'left',
-    },
-    {
-      title: '会员类型',
-      dataIndex: 'mtype',
-      key: 'mtype',
-      width: 100,
-      align: 'left',
-      render: (text: string) => <span>{M_TYPE_MAP.get(text) || '-'}</span>,
-    },
-    {
-      title: '等级积分',
-      dataIndex: 'levelscore',
-      key: 'levelscore',
-      width: 100,
-      align: 'left',
+      title: '备注', dataIndex: 'remark', key: 'remark', align: 'left', width: 100,
     },
     {
       title: '操作',
@@ -202,19 +210,8 @@ function FormTable() {
       render: (_value: unknown, row: ITableItem) => (
         <>
           <Auth authCode={null}>
-            <TableButton onClick={() => handleCheckCard(row)}>查看会员卡</TableButton>
-          </Auth>
-          <Auth authCode={null}>
-            <TableButton onClick={() => openModalWithOperate(VIEW, row)}>查看</TableButton>
-          </Auth>
-          <Auth authCode={null}>
-            <TableButton onClick={() => openModalWithOperate(REVIEW, row)}>审核</TableButton>
-          </Auth>
-          <Auth authCode={null}>
-            <TableButton onClick={() => handleSetuserut(row, '1')}> 设为不可验票</TableButton>
-          </Auth>
-          <Auth authCode={null}>
-            <TableButton onClick={() => handleSetuserut(row, '2')}> 设为可验票</TableButton>
+            <Button type='primary' onClick={() => setCheckModal({ show: true, data: row })}>核销</Button>
+
           </Auth>
         </>
       ),
@@ -230,14 +227,13 @@ function FormTable() {
         <Form {...formItemLayout} form={form} initialValues={searchCondition}>
           <Row>
             <Col span={6}>
-              <Form.Item name='mtype' label='会员类型'>
-                <Select allowClear>
-                  {
-                    Array.from(M_TYPE_MAP).map(([key, value]) => (
-                      <Select.Option key={key} value={key}>{value}</Select.Option>
-                    ))
-                  }
-                </Select>
+              <Form.Item name='uid' label='用户uid' initialValue={UUID}>
+                <Input placeholder='请输入' allowClear />
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item name='phone' label='用户手机号'>
+                <Input placeholder='请输入' allowClear />
               </Form.Item>
             </Col>
           </Row>
@@ -249,7 +245,7 @@ function FormTable() {
         btns={(
           <>
             <Auth authCode={null}>
-              <Button type='primary' onClick={() => openModalWithOperate('设置年会员')}>设置年会员价格</Button>
+              <Button type='primary' onClick={handleExport}>导出</Button>
             </Auth>
             <Auth authCode={null}>
               <Button type='primary' onClick={() => openModalWithOperate('设置背景')}>设置背景</Button>
@@ -275,6 +271,14 @@ function FormTable() {
           }}
         />
       </TableWrapper>
+      {checkModal.show
+        && (
+          <CheckModal
+            data={checkModal.data}
+            onClose={() => setCheckModal({ show: false, data: {} })}
+          />
+        )}
+
     </>
   );
 }

@@ -280,6 +280,10 @@ export const menuMessages = defineMessages({
     id: `${scope}.jcyyList`,
     defaultMessage: '预约',
   },
+  cardsManager: {
+    id: `${scope}.cardsManager`,
+    defaultMessage: '会员卡管理',
+  },
 });
 
 export const yesOrNoMessages = defineMessages({
