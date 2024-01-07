@@ -284,6 +284,10 @@ export const menuMessages = defineMessages({
     id: `${scope}.cardsManager`,
     defaultMessage: '会员卡管理',
   },
+  rentManager: {
+    id: `${scope}.rentManager`,
+    defaultMessage: '出租列表',
+  },
 });
 
 export const yesOrNoMessages = defineMessages({
