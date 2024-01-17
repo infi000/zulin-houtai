@@ -200,15 +200,15 @@ function FormTable() {
 
     },
     {
-      key: '开始时间 ',
-      title: 'starttime',
+      key: 'starttime ',
+      title: '开始时间',
       dataIndex: 'starttime',
       width: 100,
       // render: (text: any) => (text ? moment.unix(text).format('YYYY-MM-DD hh:mm:ss') : '-'),
     },
     {
-      key: '结束时间 ',
-      title: 'endtime',
+      key: 'endtime ',
+      title: '结束时间',
       dataIndex: 'endtime',
       width: 100,
       // render: (text: any) => (text ? moment.unix(text).format('YYYY-MM-DD hh:mm:ss') : '-'),
