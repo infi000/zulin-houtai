@@ -2,7 +2,7 @@
  * @Author: 张驰阳 zhangchiyang@sfmail.sf-express.com
  * @Date: 2023-06-02 23:19:57
  * @LastEditors: 张驰阳 zhangchiyang@sfmail.sf-express.com
- * @LastEditTime: 2024-01-06 23:57:41
+ * @LastEditTime: 2024-01-17 23:53:49
  * @FilePath: /houtai/src/configs/dev.router.conf.tsx
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -147,6 +147,12 @@ const config: Array<any> = [
       },
     ]
   },
+  // {
+  //   path: 'videoManager',
+  //   icon: <PieChartOutlined />,
+  //   name: '视频介绍',
+  //   componentName: 'VideoManager',
+  // },
   {
     path: 'zllist',
     icon: <PieChartOutlined />,

@@ -288,6 +288,10 @@ export const menuMessages = defineMessages({
     id: `${scope}.rentManager`,
     defaultMessage: '出租列表',
   },
+  videoManager: {
+    id: `${scope}.videoManager`,
+    defaultMessage: '视频介绍',
+  },
 });
 
 export const yesOrNoMessages = defineMessages({

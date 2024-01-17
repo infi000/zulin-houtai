@@ -48,9 +48,9 @@ function MainModal() {
       handleCancel();
     } else {
       let values = await form.validateFields();
-      const { orderid } = data;
+      const { id } = data;
       console.log(data);
-      values = formatPostParams({ oid: orderid, ...values });
+      values = formatPostParams({ oid: id, ...values });
       dispatch(postOrderverification(falsyParamsFilter(values)));
     }
   };

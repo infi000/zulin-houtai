@@ -18,7 +18,7 @@ import { ITableItem, TSearchParams } from '../types';
 import { formatSearchParams } from '../adapter';
 import moment from 'moment';
 import useDebounce from 'hooks/useDebounce';
-import { CARD_TYPE_MAP, STATUS_MAP } from '../constants';
+import { CARD_TYPE_MAP } from '../constants';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -68,11 +68,15 @@ function FormTable() {
 
   // 新建、编辑、查看
   const openModalWithOperate = useDebounce(async (type: OperateType, data?: ITableItem) => {
-    dispatch(actions.updateMainModal({
-      visible: true,
-      type,
-      data,
-    }));
+    if (type !== CREATE) {
+      const { id } = data;
+      await dispatch(getDataDetail({ cid: id, type }));
+    } else {
+      dispatch(actions.updateMainModal({
+        visible: true,
+        type,
+      }));
+    }
   });
 
   // 导入
@@ -106,76 +110,63 @@ function FormTable() {
 
   const columns: ColumnsType = [
     {
-      title: '订单号',
-      dataIndex: 'orderid',
-      key: 'orderid',
+      title: '自增id',
+      dataIndex: 'id',
+      key: 'id',
       width: 100,
       align: 'left',
       fixed: 'left',
     },
     {
-      title: '产品名称',
+      title: '实验项目分类',
+      dataIndex: 'ctitle',
+      key: 'ctitle',
+      width: 100,
+      align: 'left',
+    },
+    {
+      title: '实验项目',
+      dataIndex: 'etitle',
+      key: 'etitle',
+      width: 100,
+      align: 'left',
+    },
+    {
+      title: '标题',
       dataIndex: 'title',
       key: 'title',
       width: 100,
       align: 'left',
     },
     {
-      title: '数量',
-      dataIndex: 'num',
-      key: 'num',
-      width: 100,
-      align: 'left',
-    },
-    {
-      title: 'verify_time',
-      dataIndex: 'verify_time',
-      key: 'verify_time',
-      align: 'left',
-    },
-    {
-      title: '租金',
-      dataIndex: 'pricetotal',
-      key: 'pricetotal',
-      align: 'left',
-      render: (text: any, opt:any) => <span>{(text - opt.deposit)?.toFixed(2) }</span>,
-
-    },
-    {
-      title: '押金',
-      dataIndex: 'deposit',
-      key: 'deposit',
-      align: 'left',
-    },
-    {
-      title: '产品图片',
-      dataIndex: 'fpath',
-      key: 'fpath',
+      title: '预览图',
+      dataIndex: 'thumbinal',
+      key: 'thumbinal',
       width: 100,
       align: 'left',
       render: (text: string) => <Image width={50} height={50} src={text} />,
     },
     {
-      title: '承租人',
-      dataIndex: 'uname',
-      key: 'uname',
-      width: 100,
+      title: '视频',
+      dataIndex: 'video',
+      key: 'video',
       align: 'left',
     },
     {
-      title: 'create_time',
-      dataIndex: 'create_time',
-      key: 'create_time',
+      title: '描述',
+      dataIndex: 'des',
+      key: 'des',
       width: 100,
       align: 'left',
+      render: (text: string) => CARD_TYPE_MAP.get(text),
     },
     {
-      title: '状态',
-      dataIndex: 'status',
-      key: 'status',
+      title: '创建时间',
+      dataIndex: 'ctime',
+      key: 'ctime',
       width: 100,
       align: 'left',
-      render: (text: string) => STATUS_MAP.get(text),
+      render: (text: any) => (text ? moment.unix(text).format('YYYY-MM-DD hh:mm:ss') : '-'),
     },
     {
       title: '操作',
@@ -184,8 +175,20 @@ function FormTable() {
       width: 200,
       render: (_value: unknown, row: ITableItem) => (
         <>
+          {/* <Auth authCode={null}>
+            <TableButton onClick={() => openModalWithOperate(STATUS, row)}>修改状态</TableButton>
+          </Auth> */}
           <Auth authCode={null}>
-            <TableButton onClick={() => openModalWithOperate(EDIT, row)}>核销</TableButton>
+            <TableButton onClick={() => openModalWithOperate(VIEW, row)}>查看</TableButton>
+          </Auth>
+          <Auth authCode={null}>
+            <TableButton onClick={() => openModalWithOperate(EDIT, row)}>编辑</TableButton>
+          </Auth>
+          <Auth authCode={null}>
+            <TableButton isWrapperConfirm onClick={() => handleDel(row)}>下线</TableButton>
+          </Auth>
+          <Auth authCode={null}>
+            <TableButton isWrapperConfirm onClick={() => handleOnline(row)}>上线</TableButton>
           </Auth>
         </>
       ),
@@ -201,35 +204,10 @@ function FormTable() {
         <Form {...formItemLayout} form={form}>
           <Row>
             <Col span={6}>
-              <Form.Item name='uid' label='用户id'>
-                <Input placeholder='请输入' />
-              </Form.Item>
-            </Col>
-            <Col span={6}>
-              <Form.Item name='phone' label='用户手机'>
-                <Input placeholder='请输入' />
-              </Form.Item>
-            </Col>
-            <Col span={6}>
-              <Form.Item name='gid' label='商品id'>
-                <Input placeholder='请输入' />
-              </Form.Item>
-            </Col>
-            <Col span={6}>
-              <Form.Item name='title' label='商品标题'>
-                <Input placeholder='请输入' />
-              </Form.Item>
-            </Col>
-            <Col span={6}>
-              <Form.Item name='orderid' label='订单号'>
-                <Input placeholder='请输入' />
-              </Form.Item>
-            </Col>
-            <Col span={6}>
-              <Form.Item name='status' label='状态'>
-                <Select allowClear placeholder='请选择'>
+              <Form.Item name='cardtype' label='卡类型'>
+                <Select allowClear>
                   {
-                    Array.from(STATUS_MAP).map(([key, value]) => (
+                    Array.from(CARD_TYPE_MAP).map(([key, value]) => (
                       <Select.Option key={key} value={key}>{value}</Select.Option>
                     ))
                   }
@@ -244,12 +222,12 @@ function FormTable() {
         isShowTitlePrefixIcon
         btns={(
           <>
-            {/* <Auth authCode={null}>
+            <Auth authCode={null}>
               <Button type='primary' onClick={handleImport}>导入</Button>
             </Auth>
             <Auth authCode={null}>
               <Button type='primary' onClick={() => openModalWithOperate(CREATE)}>新建</Button>
-            </Auth> */}
+            </Auth>
           </>
         )}
       >
