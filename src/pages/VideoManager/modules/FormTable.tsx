@@ -70,7 +70,7 @@ function FormTable() {
   const openModalWithOperate = useDebounce(async (type: OperateType, data?: ITableItem) => {
     if (type !== CREATE) {
       const { id } = data;
-      await dispatch(getDataDetail({ cid: id, type }));
+      await dispatch(getDataDetail({ vid: id, type }));
     } else {
       dispatch(actions.updateMainModal({
         visible: true,
@@ -95,12 +95,12 @@ function FormTable() {
   // 删除
   const handleDel = (data: ITableItem) => {
     const { id } = data;
-    dispatch(getDel({ cid: id }));
+    dispatch(getDel({ vid: id }));
   };
   // 上线
   const handleOnline = (data: ITableItem) => {
     const { id } = data;
-    dispatch(getOnline({ cid: id }));
+    dispatch(getOnline({ vid: id }));
   };
 
   useEffect(() => {
@@ -158,7 +158,6 @@ function FormTable() {
       key: 'des',
       width: 100,
       align: 'left',
-      render: (text: string) => CARD_TYPE_MAP.get(text),
     },
     {
       title: '创建时间',
@@ -185,11 +184,11 @@ function FormTable() {
             <TableButton onClick={() => openModalWithOperate(EDIT, row)}>编辑</TableButton>
           </Auth>
           <Auth authCode={null}>
-            <TableButton isWrapperConfirm onClick={() => handleDel(row)}>下线</TableButton>
+            <TableButton isWrapperConfirm onClick={() => handleDel(row)}>删除</TableButton>
           </Auth>
-          <Auth authCode={null}>
+          {/* <Auth authCode={null}>
             <TableButton isWrapperConfirm onClick={() => handleOnline(row)}>上线</TableButton>
-          </Auth>
+          </Auth> */}
         </>
       ),
     },
@@ -203,16 +202,21 @@ function FormTable() {
       >
         <Form {...formItemLayout} form={form}>
           <Row>
-            <Col span={6}>
-              <Form.Item name='cardtype' label='卡类型'>
-                <Select allowClear>
-                  {
-                    Array.from(CARD_TYPE_MAP).map(([key, value]) => (
-                      <Select.Option key={key} value={key}>{value}</Select.Option>
-                    ))
-                  }
-                </Select>
+            <Col span={8}>
+              <Form.Item name='cid' label='实验项目分类id'>
+                <Input
+                  placeholder='请输入'
+                />
               </Form.Item>
+            </Col>
+            <Col span={8}><Form.Item
+              label='实验项目id'
+              name='eid'
+            >
+              <Input
+                placeholder='请输入'
+              />
+            </Form.Item>
             </Col>
           </Row>
         </Form>

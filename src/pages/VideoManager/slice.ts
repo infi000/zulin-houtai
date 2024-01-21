@@ -43,17 +43,17 @@ export const postCreate = createServiceAsyncThunk(
 
 export const getDel = createServiceAsyncThunk(
   `${NAMESPACE}/getDel`,
-  async (params: {cid: number}) => services.getDelService(params),
+  async (params: {vid: any}) => services.getDelService(params),
 );
 
 export const getDataDetail = createServiceAsyncThunk(
   `${NAMESPACE}/getDataDetail`,
-  async (params: {cid: number, type: any}) => services.getDataDetailService({ cid: params.cid }),
+  async (params: {vid: any, type: any}) => services.getDataDetailService({ vid: params.vid }),
 );
 
 export const getOnline = createServiceAsyncThunk(
   `${NAMESPACE}/getOnline`,
-  async (params: {cid: number}) => services.getOnlineService(params),
+  async (params: {vid: any}) => services.getOnlineService(params),
 );
 
 

@@ -85,21 +85,18 @@ function MainModal() {
       } else {
         dispatch(postEdit(falsyParamsFilter({
           ...values,
-          cid: data?.id,
+          vid: data?.id,
         })));
       }
     }
   };
-  // 	cardname:卡片名称
-  // cardtype:卡片类型，1年卡，2季卡，3月卡，4次卡
-  // cardduration:有效期
-  // carddurationtype：有效期类型，天day、周week、月month、年year 
-  // cardcount:次卡次数（次卡类型有效） 
-  // thumbinal:卡缩略图文件域（小图）
-  // cardpic:卡说明图片,文件域（大图）
-  // price：卡价格
-  // usedaytype:使用日类型，1周二至周日；2周二至周五
-  // remark：卡片说明
+  // title:视频标题
+  // des:视频描述文本
+  // cid：实验项目分类id
+  // eid：实验项目id
+  // thumbinal:视频预览图,文件域
+  // video:视频文件域
+  
 
   return (
     <Modal
@@ -114,9 +111,9 @@ function MainModal() {
     >
       <Form {...formItemLayout} form={form}>
         <Col span={24}><Form.Item
-          label='卡片名称'
-          name='cardname'
-          initialValue={memoData?.cardname || ''}
+          label='视频标题'
+          name='title'
+          initialValue={memoData?.title || ''}
           rules={[{ required: true, message: '必填项' }]}
         >
           <Input
@@ -126,61 +123,32 @@ function MainModal() {
         </Form.Item>
         </Col>
         <Col span={24}><Form.Item
-          label='卡片类型'
-          name='cardtype'
-          initialValue={memoData?.cardtype || ''}
+          label='实验项目分类id'
+          name='cid'
+          initialValue={memoData?.cid || ''}
           rules={[{ required: true, message: '必填项' }]}
         >
-          <Select allowClear disabled={isView(type)}>
-            {
-              Array.from(CARD_TYPE_MAP).map(([key, value]) => (
-                <Select.Option key={key} value={key}>{value}</Select.Option>
-              ))
-            }
-          </Select>
+          <Input
+            placeholder='请输入'
+            disabled={isView(type)}
+          />
         </Form.Item>
+
         </Col>
         <Col span={24}><Form.Item
-          label='有效期'
-          name='cardduration'
-          initialValue={memoData?.cardduration || ''}
+          label='实验项目id'
+          name='eid'
+          initialValue={memoData?.eid || ''}
           rules={[{ required: true, message: '必填项' }]}
         >
-          <InputNumber
+          <Input
+            placeholder='请输入'
             disabled={isView(type)}
-            style={{ width: '100%' }}
           />
         </Form.Item>
         </Col>
         <Col span={24}><Form.Item
-          label='有效期类型'
-          name='carddurationtype'
-          initialValue={memoData?.carddurationtype || ''}
-          rules={[{ required: true, message: '必填项' }]}
-        >
-          <Select allowClear disabled={isView(type)}>
-            {
-              Array.from(CARD_DURATION_TYPE_MAP).map(([key, value]) => (
-                <Select.Option key={key} value={key}>{value}</Select.Option>
-              ))
-            }
-          </Select>
-        </Form.Item>
-        </Col>
-        <Col span={24}><Form.Item
-          label='次卡次数（次卡类型有效）'
-          name='cardcount'
-          initialValue={memoData?.cardcount || ''}
-          rules={[{ required: true, message: '必填项' }]}
-        >
-          <InputNumber
-            disabled={isView(type)}
-            style={{ width: '100%' }}
-          />
-        </Form.Item>
-        </Col>
-        <Col span={24}><Form.Item
-          label='卡缩略图（小图）'
+          label='预览图'
           name='thumbinal'
           rules={[{ required: !isModify(type), message: '必填项' }]}
         >
@@ -190,64 +158,22 @@ function MainModal() {
         </Form.Item>
         </Col>
         <Col span={24}><Form.Item
-          label='卡说明图片（大图）'
-          name='cardpic'
+          label='视频（mp4）'
+          name='video'
           rules={[{ required: !isModify(type), message: '必填项' }]}
         >
-          <Upload action='' beforeUpload={() => false} listType="picture" maxCount={1}>
+          <Upload action='' beforeUpload={() => false} accept='.mp4' listType="picture" maxCount={1}>
             <Button icon={<UploadOutlined />}>Upload</Button>
           </Upload>
         </Form.Item>
         </Col>
-
         <Col span={24}><Form.Item
-          label='卡价格'
-          name='price'
-          initialValue={(memoData?.price || memoData?.price === 0) ? memoData?.price : ''}
+          label='描述'
+          name='des'
+          initialValue={memoData?.des || ''}
           rules={[{ required: true, message: '必填项' }]}
         >
-          <InputNumber
-            placeholder='请输入押金价格'
-            disabled={isView(type)}
-            style={{ width: '100%' }}
-          />
-        </Form.Item>
-        </Col>
-        <Col span={24}><Form.Item
-          label='积分值'
-          name='ta'
-          initialValue={(memoData?.ta || memoData?.ta === 0) ? memoData?.ta : ''}
-          // rules={[{ required: true, message: '必填项' }]}
-        >
-          <InputNumber
-            placeholder='请输入积分值'
-            disabled={isView(type)}
-            style={{ width: '100%' }}
-          />
-        </Form.Item>
-        </Col>
-        <Col span={24}><Form.Item
-          label='有效期类型'
-          name='usedaytype'
-          initialValue={memoData?.usedaytype || ''}
-          rules={[{ required: true, message: '必填项' }]}
-        >
-          <Select allowClear disabled={isView(type)}>
-            {
-              Array.from(USE_DAY_TYPE_MAP).map(([key, value]) => (
-                <Select.Option key={key} value={key}>{value}</Select.Option>
-              ))
-            }
-          </Select>
-        </Form.Item>
-        </Col>
-        <Col span={24}><Form.Item
-          label='卡片说明'
-          name='remark'
-          initialValue={memoData?.remark || ''}
-          rules={[{ required: true, message: '必填项' }]}
-        >
-          <Input.TextArea
+          <Input
             placeholder='请输入'
             disabled={isView(type)}
           />

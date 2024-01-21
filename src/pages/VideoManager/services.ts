@@ -2,7 +2,7 @@
  * @Author: 张驰阳 zhangchiyang@sfmail.sf-express.com
  * @Date: 2023-06-03 23:22:52
  * @LastEditors: 张驰阳 zhangchiyang@sfmail.sf-express.com
- * @LastEditTime: 2024-01-15 23:33:31
+ * @LastEditTime: 2024-01-21 22:27:59
  * @FilePath: /houtai/src/pages/ExperimentManager/services.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -22,18 +22,18 @@ export const postCreateService = (params: TCreateParams) =>
 export const postEditService = (params: TModifyParams) =>
   postFormDataRequest<TModifyParams, IResponseData<string>>('/Lease/experimentvideomodify', params);
 
-export const postStatusService = (params: { cid: number; status: any }) =>
-  postRequest<{ cid: number; status: any }, IResponseData<string>>('/Card/equipmentstatus', params);
+export const postStatusService = (params: { vid: number; status: any }) =>
+  postRequest<{ vid: number; status: any }, IResponseData<string>>('/Card/equipmentstatus', params);
 // 删除
-export const getDelService = (params: { cid: number }) =>
-  postRequest<{ cid: number }, IResponseData<string>>('/Lease/experimentvideodelete', params);
+export const getDelService = (params: { vid: number }) =>
+  postRequest<{ vid: number }, IResponseData<string>>('/Lease/experimentvideodelete', params);
 // 上线
-export const getOnlineService = (params: { cid: number }) =>
-  postRequest<{ cid: number }, IResponseData<string>>('/Lease/experimentonline', params);
+export const getOnlineService = (params: { vid: number }) =>
+  postRequest<{ vid: number }, IResponseData<string>>('/Lease/experimentonline', params);
 
 // 详情
-export const getDataDetailService = (params: { cid: number }) =>
-  getRequest<{ cid: number }, IResponseData<ITableItem>>('/Lease/experimentvideodetail', params);
+export const getDataDetailService = (params: { vid: number }) =>
+  getRequest<{ vid: number }, IResponseData<ITableItem>>('/Lease/experimentvideodetail', params);
 
 export default {
   getDataListService,
