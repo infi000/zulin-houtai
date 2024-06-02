@@ -34,6 +34,7 @@ function MainModal() {
   const mainModal = useSelector(selectors.mainModal);
   const loading = useSelector(selectors.loading);
   const experimentsList = useSelector(selectors.experimentsList);
+  const goodsList = useSelector(selectors.goodsList);
   const userList = useSelector(selectors.userList);
   const toolsList = useSelector(selectors.toolsList);
   const [bookTimesInfo, setBookTimesInfo] = useState<{
@@ -86,13 +87,34 @@ function MainModal() {
       message.warning(err.message);
     });
   };
+
+  const handleGoodsChange = (e) => {
+    console.log(e)
+    const total = goodsList.filter(item => e.includes(item.id))?.map(item => {
+      const { price } = item;
+      return price;
+    }).reduce((cur, res) => parseFloat(cur) + parseFloat(res), 0);
+    form2.setFieldValue('total', total);
+  };
   const handleOk = async (): Promise<void> => {
-    const values = await form2.validateFields();
-    const f_tools = toolsList.filter(item => values.tools.includes(item.id))?.map(item => {
-      const { id, price, tbid } = item;
-      return { id, price, tbid };
-    });
-    dispatch(postCreate(falsyParamsFilter(formatPostParams({ ...values, tools: f_tools }))));
+    const { tools, goods, ...restValue } = await form2.validateFields();
+
+    if (tools) {
+      const f_tools = toolsList.filter(item => tools?.includes(item.id))?.map(item => {
+        const { id, price, tbid } = item;
+        return { id, price, tbid };
+      });
+      restValue.tools = JSON.stringify(f_tools);
+    }
+    if (goods) {
+      const f_goods = goodsList.filter(item => goods?.includes(item.id))?.map(item => {
+        const { id } = item;
+        return { id, num: 1 };
+      });
+      restValue.goods = JSON.stringify(f_goods);
+    }
+
+    dispatch(postCreate(falsyParamsFilter(formatPostParams({ ...restValue }))));
   };
   const columns: ColumnsType = [
     {
@@ -275,9 +297,8 @@ function MainModal() {
           </Col>
           <Col span={24}>
             <Form.Item
-              label='工具'
+              label='工具包'
               name='tools'
-              rules={[{ required: true, message: '必填项' }]}
             >
               <Select
                 showSearch
@@ -294,11 +315,74 @@ function MainModal() {
               </Select>
             </Form.Item>
           </Col>
+          <Col span={24}>
+            <Form.Item
+              label='工具'
+              name='goods'
+              // rules={[{ required: true, message: '必填项' }]}
+            >
+              <Select
+                onChange={handleGoodsChange}
+                showSearch
+                allowClear
+                mode='multiple'
+                filterOption={
+                  (input: any, option: any) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                }
+              >
+                {goodsList.map(item => {
+                  const { id, price, tbid, title } = item;
+                  return <Select.Option value={id}>{`【${title}】/${price}`}</Select.Option>;
+                })}
+              </Select>
+            </Form.Item>
+          </Col>
 
+          <Col span={24}>
+            <Form.Item
+              label='总金额'
+              name='total'
+            >
+              <InputNumber />
+            </Form.Item>
+          </Col>
           <Col span={24}>
             <Form.Item
               label='备注信息'
               name='remark'
+            >
+              <Input />
+            </Form.Item>
+          </Col>
+          <Col span={24}>
+            <Form.Item
+              label='青少年名称'
+              name='peoplename'
+              rules={[{ required: true, message: '必填项' }]}
+            >
+              <Input />
+            </Form.Item>
+          </Col>
+          <Col span={24}>
+            <Form.Item
+              label='任务名称'
+              name='tasktitle'
+            >
+              <Input />
+            </Form.Item>
+          </Col>
+          <Col span={24}>
+            <Form.Item
+              label='队友名称'
+              name='membername'
+            >
+              <Input />
+            </Form.Item>
+          </Col>
+          <Col span={24}>
+            <Form.Item
+              label='新增加备注信息'
+              name='message'
             >
               <Input />
             </Form.Item>

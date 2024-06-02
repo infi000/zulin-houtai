@@ -2,7 +2,7 @@
  * @Author: 张驰阳 zhangchiyang@sfmail.sf-express.com
  * @Date: 2023-06-14 22:43:51
  * @LastEditors: 张驰阳 zhangchiyang@sfmail.sf-express.com
- * @LastEditTime: 2023-08-20 23:34:51
+ * @LastEditTime: 2024-05-26 22:20:11
  * @FilePath: /houtai/src/pages/OrderManager/services.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE，
  */
@@ -39,9 +39,15 @@ export const getOnlineService = (params: { oid: number }) =>
 
 const mock = 'http://easy-mock.sftcwl.com/mock/647f4ca88988f273dfbd7b8e/zl'
 // 详情
-export const getDataDetailService = (params: { oid: number }) =>
-  getRequest<{ oid: number }, IResponseData<ITableItem>>(
+export const getDataDetailService = (params: { oid: any }) =>
+  getRequest<{ oid: any }, IResponseData<ITableItem>>(
     '/Lease/orderdetail',
+    params,
+  );
+// 详情
+export const getQrService = (params: { oid: any }) =>
+  getRequest<{ oid: any }, IResponseData<ITableItem>>(
+    '/Lease/orderwxcode',
     params,
   );
 

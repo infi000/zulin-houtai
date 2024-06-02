@@ -2,7 +2,7 @@
  * @Author: 张驰阳 zhangchiyang@sfmail.sf-express.com
  * @Date: 2023-06-03 23:26:54
  * @LastEditors: 张驰阳 zhangchiyang@sfmail.sf-express.com
- * @LastEditTime: 2023-08-05 23:33:58
+ * @LastEditTime: 2024-05-26 20:46:59
  * @FilePath: /houtai/src/pages/ToolManager/services.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -78,6 +78,10 @@ export const getToolsListService = () =>
   getRequest< any, IResponseData<ITableItem>>(
     '/Lease/tools',
   );
+export const getGoodsListService = () =>
+  getRequest< any, IResponseData<ITableItem>>(
+    '/Shop/goods',
+  );
 
 export default {
   getDataListService,
@@ -92,4 +96,5 @@ export default {
   getExperimentsList,
   getUserListService,
   getToolsListService,
+  getGoodsListService,
 };

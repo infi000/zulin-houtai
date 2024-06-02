@@ -24,10 +24,6 @@ export const initialState: IPageState = {
   importModal: {
     visible: false,
   },
-  experimentsList: [],
-  userList: [],
-  toolsList: [],
-  goodsList: [],
 };
 
 export const getDataList = createServiceAsyncThunk(
@@ -42,47 +38,25 @@ export const postEdit = createServiceAsyncThunk(
 
 export const postCreate = createServiceAsyncThunk(
   `${NAMESPACE}/postCreate`,
-  async (params: any) => services.postCreateService(params),
+  async (params: TCreateParams) => services.postCreateService(params),
 );
 
 export const getDel = createServiceAsyncThunk(
   `${NAMESPACE}/getDel`,
-  async (params: {tid: number}) => services.getDelService(params),
-);
-export const getExperimentsList = createServiceAsyncThunk(
-  `${NAMESPACE}/getExperimentsList`,
-  async (params: {epid: any}) => services.getExperimentsList(params),
-);
-export const getUserListService = createServiceAsyncThunk(
-  `${NAMESPACE}/getUserList`,
-  async () => services.getUserListService(),
-);
-export const getToolsListService = createServiceAsyncThunk(
-  `${NAMESPACE}/getToolsList`,
-  async () => services.getToolsListService(),
-);
-export const getGoodsList = createServiceAsyncThunk(
-  `${NAMESPACE}/getGoodsList`,
-  async () => services.getGoodsListService(),
+  async (params: {eid: number}) => services.getDelService(params),
 );
 
 export const getDataDetail = createServiceAsyncThunk(
   `${NAMESPACE}/getDataDetail`,
-  async (params: {uid: any, type: any}) => services.getDataDetailService({ uid: params.uid }),
+  async (params: {eid: number, type: any}) => services.getDataDetailService({ eid: params.eid }),
 );
 
 export const getOnline = createServiceAsyncThunk(
   `${NAMESPACE}/getOnline`,
-  async (params: {tid: number}) => services.getOnlineService(params),
+  async (params: {eid: number}) => services.getOnlineService(params),
 );
-export const postSetBg = createServiceAsyncThunk(
-  `${NAMESPACE}/postSetBg`,
-  async (params: { yearbg: any; tabg: any }) => services.postSetBgService(params),
-);
-export const postUserverify = createServiceAsyncThunk(
-  `${NAMESPACE}/postUserverify`,
-  async (params:any) => services.postUserverify(params),
-);
+
+
 
 const slice = createSlice({
   name: NAMESPACE,
@@ -113,8 +87,8 @@ const slice = createSlice({
   // 异步的成功、失败处理，可以使用类似上面reducers的设置方式，但是由于是对字符串的捕获，会损失类型；
   extraReducers: builder => {
     builder.addCase(getDataList.fulfilled, (state, action) => {
-      state.tableData = Array.isArray(action.payload?.data?.equipmentsdata) ? action.payload?.data?.equipmentsdata : [];
-      state.pagination.total = action.payload?.data?.total || 0;
+      state.tableData = action.payload?.data?.experiments || [];
+      state.pagination.total = action.payload?.data?.experiments?.length || 0;
       state.pagination.pageNum = action?.meta?.arg?.pageNum || 1;
       state.pagination.pageSize = action?.meta?.arg?.pageSize || baseTableConf.pageSize;
     });
@@ -122,18 +96,6 @@ const slice = createSlice({
       state.mainModal.data = action.payload?.data || {};
       state.mainModal.type = action.meta?.arg?.type || '';
       state.mainModal.visible = true;
-    });
-    builder.addCase(getExperimentsList.fulfilled, (state, action) => {
-      state.experimentsList = action.payload?.data?.equipment?.experiments || [];
-    });
-    builder.addCase(getUserListService.fulfilled, (state, action) => {
-      state.userList = action.payload?.data?.users || [];
-    });
-    builder.addCase(getToolsListService.fulfilled, (state, action) => {
-      state.toolsList = action.payload?.data?.tools || [];
-    });
-    builder.addCase(getGoodsList.fulfilled, (state, action) => {
-      state.goodsList = action.payload?.data?.goods || [];
     });
     builder.addCase(postCreate.fulfilled, state => {
       state.mainModal.visible = false;
@@ -149,16 +111,6 @@ const slice = createSlice({
     });
     builder.addCase(getOnline.fulfilled, state => {
       message.success('上线成功');
-      state.refresh += 1;
-    });
-    builder.addCase(postUserverify.fulfilled, state => {
-      message.success('设置成功');
-      state.mainModal.visible = false;
-      state.refresh += 1;
-    });
-    builder.addCase(postSetBg.fulfilled, state => {
-      message.success('设置成功');
-      state.mainModal.visible = false;
       state.refresh += 1;
     });
   },

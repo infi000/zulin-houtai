@@ -8,7 +8,7 @@ import TableWrapper from 'components/TableWrapper';
 import { selectAllDictMap } from 'store/selectors';
 import { EDictMap, VIEW } from 'utils/constants';
 import moment from 'moment';
-import { actions, getDataDetail, getDataList, getDel, getExperimentsList, getOnline, getToolsListService, getUserListService } from '../slice';
+import { actions, getDataDetail, getDataList, getDel, getExperimentsList, getGoodsList, getOnline, getToolsListService, getUserListService } from '../slice';
 import selectors from '../selectors';
 import { ITableItem, TSearchParams } from '../types';
 import { formatSearchParams } from '../adapter';
@@ -98,6 +98,7 @@ function FormTable() {
     handleSearch();
     dispatch(getUserListService());
     dispatch(getToolsListService());
+    dispatch(getGoodsList());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refresh]);
 

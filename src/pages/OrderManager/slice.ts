@@ -8,9 +8,11 @@ import { NAMESPACE } from './constants';
 import services from './services';
 import { message } from 'antd';
 
+
 export const initialState: IPageState = {
   refresh: 0,
   loading: false,
+  lastId: 0,
   searchCondition: {}, // 初始化检索条件
   tableData: [],
   pagination: {
@@ -99,6 +101,7 @@ const slice = createSlice({
   extraReducers: builder => {
     builder.addCase(getDataList.fulfilled, (state, action) => {
       state.tableData = action.payload?.data?.orders || [];
+      state.lastId = action.payload?.data?.orders?.[0]?.id || 0;
       state.pagination.total = action.payload?.data?.total || 0;
       state.pagination.pageNum = action?.meta?.arg?.pageNum || 1;
       state.pagination.pageSize = action?.meta?.arg?.pageSize || baseTableConf.pageSize;

@@ -2,7 +2,7 @@
  * @Author: 张驰阳 zhangchiyang@sfmail.sf-express.com
  * @Date: 2023-06-03 23:26:54
  * @LastEditors: 张驰阳 zhangchiyang@sfmail.sf-express.com
- * @LastEditTime: 2023-08-05 23:32:44
+ * @LastEditTime: 2024-05-26 20:47:53
  * @FilePath: /houtai/src/pages/ToolManager/types.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -16,6 +16,7 @@ export interface IPageState {
   importModal: TImportModal;
   experimentsList: any[];
   userList: any[];
+  goodsList: any[];
   toolsList: any[];
 }
 
