@@ -39,7 +39,7 @@ function FormTable() {
   const loading = useSelector(selectors.loading);
   const dictMaps = useSelector(selectAllDictMap);
   const dispatch = useDispatch();
-  const [exportModal, setExportModal] = useState(false);
+  const [exportModal, setExportModal] = useState<{type?:'检票记录' | '导入卡检票记录', show: boolean }>({ type: '检票记录', show: false });
   const searchCondition = useSelector(selectors.searchCondition);
   // 查询
   const handleSearch = (additionalParams: Dictionary<TAdditionalParams> = {}) => {
@@ -192,7 +192,8 @@ function FormTable() {
         btns={(
           <>
             <Auth authCode={null}>
-              <Button type='primary' onClick={() => setExportModal(true)}>导出</Button>
+              <Button type='primary' onClick={() => setExportModal({ type: '检票记录', show: true })}>导出</Button>
+              <Button type='primary' onClick={() => setExportModal({ type: '导入卡检票记录', show: true })}>导入卡检票记录导出</Button>
             </Auth>
           </>
         )}
@@ -215,7 +216,8 @@ function FormTable() {
           }}
         />
       </TableWrapper>
-      { exportModal && <ExportModal onClose={() => setExportModal(false)} />}
+      { exportModal.show && exportModal.type === '检票记录' && <ExportModal type={exportModal.type} onClose={() => setExportModal({ type: '检票记录', show: false })} />}
+      { exportModal.show && exportModal.type === '导入卡检票记录' && <ExportModal type={exportModal.type} onClose={() => setExportModal({ type: '检票记录', show: false })} />}
     </>
   );
 }
