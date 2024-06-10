@@ -55,6 +55,10 @@ export const getOnline = createServiceAsyncThunk(
   `${NAMESPACE}/getOnline`,
   async (params: {oid: number}) => services.getOnlineService(params),
 );
+export const getTa = createServiceAsyncThunk(
+  `${NAMESPACE}/getTa`,
+  async (params: {oid: number}) => services.getTaService(params),
+);
 
 export const postOrderrenew = createServiceAsyncThunk(
   `${NAMESPACE}/postOrderrenew`,
@@ -122,6 +126,10 @@ const slice = createSlice({
     });
     builder.addCase(getOnline.fulfilled, state => {
       message.success('上线成功');
+      state.refresh += 1;
+    });
+    builder.addCase(getTa.fulfilled, state => {
+      message.success('支付成功');
       state.refresh += 1;
     });
     builder.addCase(postVerify.fulfilled, state => {

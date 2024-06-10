@@ -92,7 +92,17 @@ function MainModal() {
       const { id, price, tbid } = item;
       return { id, price, tbid };
     });
-    dispatch(postCreate(falsyParamsFilter(formatPostParams({ ...values, tools: f_tools }))));
+    const eptotalprice = f_tools?.reduce((res:any, cur:any) => {
+      const { price } = cur;
+      // eslint-disable-next-line no-param-reassign
+      res += Number(price);
+
+      return res;
+    }, 0);
+
+    console.log(falsyParamsFilter(formatPostParams({ ...values, tools: JSON.stringify(f_tools), eptotalprice })))
+    // return ;
+    dispatch(postCreate(falsyParamsFilter(formatPostParams({ ...values, tools: JSON.stringify(f_tools), eptotalprice }))));
   };
   const columns: ColumnsType = [
     {

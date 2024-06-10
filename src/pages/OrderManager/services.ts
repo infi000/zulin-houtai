@@ -2,7 +2,7 @@
  * @Author: 张驰阳 zhangchiyang@sfmail.sf-express.com
  * @Date: 2023-06-14 22:43:51
  * @LastEditors: 张驰阳 zhangchiyang@sfmail.sf-express.com
- * @LastEditTime: 2023-08-20 23:34:51
+ * @LastEditTime: 2024-06-10 21:42:44
  * @FilePath: /houtai/src/pages/OrderManager/services.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE，
  */
@@ -36,6 +36,9 @@ export const getDelService = (params: { oid: number }) =>
 // 上线
 export const getOnlineService = (params: { oid: number }) =>
   postRequest<{ oid: number }, IResponseData<string>>('/Lease/toolonline', params);
+// TA
+export const getTaService = (params: { oid: number }) =>
+  postRequest<{ oid: number }, IResponseData<string>>('/Lease/ordertapay', params);
 
 const mock = 'http://easy-mock.sftcwl.com/mock/647f4ca88988f273dfbd7b8e/zl'
 // 详情
@@ -95,4 +98,5 @@ export default {
   postOrderrenewService,
   getOrderwxcodeService,
   getOrdermodifyService,
+  getTaService,
 };

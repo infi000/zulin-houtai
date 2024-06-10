@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Col, Form, Input, Row, Table, Button, Image, Select, DatePicker } from 'antd';
+import { Col, Form, Input, Row, Table, Button, Image, Select, DatePicker, Popconfirm } from 'antd';
 import { ColumnsType } from 'antd/lib/table/interface';
 import { useSelector, useDispatch } from 'react-redux';
 import { falsyParamsFilter } from 'utils/filters';
@@ -14,7 +14,7 @@ import authMap from 'configs/auth.conf';
 import { objToArray } from 'utils/utils';
 import useDebounce from 'hooks/useDebounce';
 import moment from 'moment';
-import { actions, getDataDetail, getDataList, getDel, getOnline } from '../slice';
+import { actions, getDataDetail, getDataList, getDel, getOnline, getTa } from '../slice';
 import selectors from '../selectors';
 import { ITableItem, TSearchParams } from '../types';
 import { formatSearchParams } from '../adapter';
@@ -101,6 +101,11 @@ function FormTable() {
   const handleOnline = (data: ITableItem) => {
     const { id } = data;
     dispatch(getOnline({ oid: id }));
+  };
+  // ta
+  const handleTa = (data: ITableItem) => {
+    const { id } = data;
+    dispatch(getTa({ oid: id }));
   };
 
   useEffect(() => {
@@ -238,6 +243,16 @@ function FormTable() {
           </Auth>
           <Auth authCode={null}>
             <TableButton onClick={() => openModalWithOperate(EDIT, row)}>编辑</TableButton>
+          </Auth>
+          <Auth authCode={null}>
+            <Popconfirm
+              title="是否铊币支付"
+              onConfirm={() => handleTa(row)}
+              okText="是"
+              cancelText="否"
+            >
+              <TableButton>铊币支付</TableButton>
+            </Popconfirm>
           </Auth>
           {/* <Auth authCode={null}>
             <TableButton isWrapperConfirm onClick={() => handleDel(row)}>下线</TableButton>
