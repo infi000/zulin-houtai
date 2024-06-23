@@ -68,6 +68,22 @@ function MainModal() {
     dispatch(actions.updateMainModalVisible(false));
   };
 
+  const handleChangeTools = (opt:any) => {
+    const f_tools = toolsList.filter(item => opt.includes(item.id))?.map(item => {
+      const { id, price, tbid } = item;
+      return { id, price, tbid };
+    });
+    const total = f_tools?.reduce((res:any, cur:any) => {
+      const { price } = cur;
+      // eslint-disable-next-line no-param-reassign
+      res += Number(price);
+
+      return res;
+    }, 0);
+    console.log('total', total);
+    form2.setFieldValue('total', total);
+  };
+
   const handleSearch = () => {
     const params = form.getFieldsValue();
     const formatParams = formatSearchDetailParams({
@@ -99,7 +115,6 @@ function MainModal() {
 
       return res;
     }, 0);
-
     console.log(falsyParamsFilter(formatPostParams({ ...values, tools: JSON.stringify(f_tools), eptotalprice })))
     // return ;
     dispatch(postCreate(falsyParamsFilter(formatPostParams({ ...values, tools: JSON.stringify(f_tools), eptotalprice }))));
@@ -292,6 +307,7 @@ function MainModal() {
               <Select
                 showSearch
                 allowClear
+                onChange={handleChangeTools}
                 mode='multiple'
                 filterOption={
                   (input: any, option: any) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
@@ -305,6 +321,14 @@ function MainModal() {
             </Form.Item>
           </Col>
 
+          <Col span={24}>
+            <Form.Item
+              label='自定义金额'
+              name='total'
+            >
+              <InputNumber />
+            </Form.Item>
+          </Col>
           <Col span={24}>
             <Form.Item
               label='备注信息'
