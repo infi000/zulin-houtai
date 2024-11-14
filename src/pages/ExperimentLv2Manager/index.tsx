@@ -1,15 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useInjectReducer, useInjectSaga } from 'utils/redux-injectors';
 import ErrorBoundary from 'components/ErrorBoundary';
 import PageWrapper from 'components/PageWrapper';
+import { getQueryString } from 'utils/utils';
+
 import ImportModal from 'components/ImportModal';
 import saga from './saga';
 import { sliceKey, reducer, actions } from './slice';
 import FormTable from './modules/FormTable';
 import MainModal from './modules/MainModal';
-import YeModal from './modules/YeModal';
-import EditModal from './modules/EditModal';
 import selectors from './selectors';
 
 function Page() {
@@ -22,14 +22,17 @@ function Page() {
     dispatch(actions.refresh());
     dispatch(actions.updateImportModal({ visible: false }));
   };
+  const eid = getQueryString('eid');
+  useEffect(() => {
+    dispatch(actions.updateEid(eid))
+  }, [])
+
   return (
     <ErrorBoundary>
       <PageWrapper>
         <FormTable />
         <MainModal />
-        <YeModal />
-        <EditModal />
-        { importModal.visible && <ImportModal {...importModal.data} onClose={handleImportModalClose} />}
+        {importModal.visible && <ImportModal {...importModal.data} onClose={handleImportModalClose} />}
       </PageWrapper>
     </ErrorBoundary>
   );

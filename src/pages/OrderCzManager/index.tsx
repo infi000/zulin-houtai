@@ -1,3 +1,11 @@
+/*
+ * @Author: 张驰阳 zhangchiyang@sfmail.sf-express.com
+ * @Date: 2023-06-14 22:43:51
+ * @LastEditors: 张驰阳 zhangchiyang@sfmail.sf-express.com
+ * @LastEditTime: 2023-06-16 00:09:09
+ * @FilePath: /houtai/src/pages/OrderManager/index.tsx
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useInjectReducer, useInjectSaga } from 'utils/redux-injectors';
@@ -8,28 +16,18 @@ import saga from './saga';
 import { sliceKey, reducer, actions } from './slice';
 import FormTable from './modules/FormTable';
 import MainModal from './modules/MainModal';
-import YeModal from './modules/YeModal';
-import EditModal from './modules/EditModal';
 import selectors from './selectors';
 
 function Page() {
   useInjectReducer({ key: sliceKey, reducer });
   // 可选
   useInjectSaga({ key: sliceKey, saga });
-  const importModal = useSelector(selectors.importModal);
   const dispatch = useDispatch();
-  const handleImportModalClose = () => {
-    dispatch(actions.refresh());
-    dispatch(actions.updateImportModal({ visible: false }));
-  };
   return (
     <ErrorBoundary>
       <PageWrapper>
         <FormTable />
         <MainModal />
-        <YeModal />
-        <EditModal />
-        { importModal.visible && <ImportModal {...importModal.data} onClose={handleImportModalClose} />}
       </PageWrapper>
     </ErrorBoundary>
   );

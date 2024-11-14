@@ -156,6 +156,7 @@ function MainModal() {
       onOk={useDebounceBefore(handleOk)}
       okText='提交数据'
       onCancel={handleCancel}
+      maskClosable={false}
       width={800}
     >
       <Card title='预约信息'>
@@ -265,6 +266,24 @@ function MainModal() {
                   return <Select.Option value={item.id}>{`id:${id}/名称:【${title}】`}</Select.Option>;
                 })}
               </Select>
+            </Form.Item>
+          </Col>
+          <Col span={24}>
+            <Form.Item
+              label='实验项目小分类id'
+              name='ecid'
+              rules={[{ required: true, message: '必填项' }]}
+            >
+              <Input />
+            </Form.Item>
+          </Col>
+          <Col span={24}>
+            <Form.Item
+              label='小分类金额'
+              name='categoryprice'
+              rules={[{ required: true, message: '必填项' }]}
+            >
+              <InputNumber />
             </Form.Item>
           </Col>
           <Col span={24}>

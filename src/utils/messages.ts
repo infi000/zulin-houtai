@@ -204,6 +204,10 @@ export const menuMessages = defineMessages({
     id: `${scope}.experimentManager`,
     defaultMessage: '实验项目管理',
   },
+  experimentLv2Manager: {
+    id: `${scope}.experimentLv2Manager`,
+    defaultMessage: '实验项目小分类',
+  },
   equipmentManager: {
     id: `${scope}.equipmentManager`,
     defaultMessage: '设备管理',
@@ -219,6 +223,18 @@ export const menuMessages = defineMessages({
   orderManager: {
     id: `${scope}.orderManager`,
     defaultMessage: '订单管理',
+  },
+  orderCzManager: {
+    id: `${scope}.orderCzManager`,
+    defaultMessage: '充值记录',
+  },
+  teacherManager: {
+    id: `${scope}.teacherManager`,
+    defaultMessage: '老师管理',
+  },
+  teacherStatusManager: {
+    id: `${scope}.teacherStatusManager`,
+    defaultMessage: '老师状态管理',
   },
   order: {
     id: `${scope}.order`,

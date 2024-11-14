@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Col, Form, Input, Row, Table, Button, Image, Select, DatePicker, Modal, message } from 'antd';
+import { Col, Form, Input, Row, Table, Button, Image, Select, DatePicker, Modal, message, Tag } from 'antd';
 import { ColumnsType } from 'antd/lib/table/interface';
 import { useSelector, useDispatch } from 'react-redux';
 import { falsyParamsFilter } from 'utils/filters';
@@ -8,10 +8,12 @@ import FilterFormWrapper from 'components/FilterFormWrapper';
 import TableWrapper from 'components/TableWrapper';
 import TableButton from 'components/TableButton';
 import { selectAllDictMap } from 'store/selectors';
+import { useHistory } from 'react-router-dom';
+
 import { CREATE, EDictMap, EExportModuleId, EDIT, VIEW } from 'utils/constants';
 import Auth from 'containers/AuthController';
 import authMap from 'configs/auth.conf';
-import { objToArray } from 'utils/utils';
+import { getQueryString, objToArray } from 'utils/utils';
 import useDebounce from 'hooks/useDebounce';
 import moment from 'moment';
 import styled from 'styled-components';
@@ -53,7 +55,9 @@ function FormTable() {
   const dictMaps = useSelector(selectAllDictMap);
   const [isQrInfo, setIsQrInfo] = useState<any>({});
   const dispatch = useDispatch();
-
+  const UUID = getQueryString('uid');
+  const history: any = useHistory();
+  console.log('history', history)
   console.log('lastId', lastId)
   // 查询
   const handleSearch = (additionalParams: Dictionary<TAdditionalParams> = {}) => {
@@ -214,6 +218,9 @@ function FormTable() {
       key: 'desposit ', title: '包含的押金金额', dataIndex: 'desposit', width: 100,
     },
     {
+      key: 'categoryprice ', title: '小分类金额', dataIndex: 'categoryprice', width: 100,
+    },
+    {
       key: 'total ', title: '总金额', dataIndex: 'total', width: 100,
     },
     {
@@ -236,6 +243,32 @@ function FormTable() {
     },
     {
       key: 'message ', title: '新增加备注信息', dataIndex: 'message', width: 150,
+    },
+    {
+      key: 'tools',
+      title: '项目',
+      dataIndex: 'tools',
+      width: 300,
+      render: (text: any) => {
+        if (text && text.length > 0) {
+          return <>{text.map(item => <Tag key={item.id}>{item.title}/{item.price}</Tag>)}</>
+        } else {
+          return '-'
+        }
+      },
+    },
+    {
+      key: 'goods',
+      title: '工具',
+      dataIndex: 'goods',
+      width: 300,
+      render: (text: any) => {
+        if (text && text.length > 0) {
+          return <>{text.map(item => <Tag key={item.id}>{item.title}/{item.price}</Tag>)}</>
+        } else {
+          return '-'
+        }
+      },
     },
     {
       key: 'ostatus ',
@@ -315,40 +348,33 @@ function FormTable() {
         <Form {...formItemLayout} form={form}>
           <Row>
             <Col span={6}>
-              <Form.Item name='companyid' label='总公司id'>
-                <Input allowClear placeholder='请输入' />
+              <Form.Item name='uid' label='用户id' initialValue={UUID}>
+                <Input />
               </Form.Item>
             </Col>
             <Col span={6}>
-              <Form.Item name='title' label='工具名称'>
-                <Input allowClear placeholder='请输入' />
+              <Form.Item name='odate' label='订单日期'>
+                <DatePicker format="YYYY-MM-DD" />
+              </Form.Item>
+            </Col>
+
+            <Col span={6}>
+              <Form.Item name='ecid' label='订单分类'>
+                <Input />
               </Form.Item>
             </Col>
             <Col span={6}>
-              <Form.Item name='thumbinal' label='预览图'>
-                <Input allowClear placeholder='请输入' />
+              <Form.Item name='ostatus' label='订单状态'>
+                <Select allowClear>
+                  {
+                    Array.from(O_STATUS_MAP).map(([key, value]) => (
+                      <Select.Option key={key} value={key}>{value}</Select.Option>
+                    ))
+                  }
+                </Select>
               </Form.Item>
             </Col>
-            <Col span={6}>
-              <Form.Item name='des' label='工具使用说明'>
-                <Input allowClear placeholder='请输入' />
-              </Form.Item>
-            </Col>
-            <Col span={6}>
-              <Form.Item name='price' label='工具租赁价格，单位元'>
-                <Input allowClear placeholder='请输入' />
-              </Form.Item>
-            </Col>
-            <Col span={6}>
-              <Form.Item name='tbid' label='所属工具箱id'>
-                <Input allowClear placeholder='请输入' />
-              </Form.Item>
-            </Col>
-            <Col span={6}>
-              <Form.Item name='ctime' label='工具创建时间'>
-                <Input allowClear placeholder='请输入' />
-              </Form.Item>
-            </Col>
+
           </Row>
         </Form>
       </FilterFormWrapper>

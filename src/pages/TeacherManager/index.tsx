@@ -8,8 +8,6 @@ import saga from './saga';
 import { sliceKey, reducer, actions } from './slice';
 import FormTable from './modules/FormTable';
 import MainModal from './modules/MainModal';
-import YeModal from './modules/YeModal';
-import EditModal from './modules/EditModal';
 import selectors from './selectors';
 
 function Page() {
@@ -27,8 +25,6 @@ function Page() {
       <PageWrapper>
         <FormTable />
         <MainModal />
-        <YeModal />
-        <EditModal />
         { importModal.visible && <ImportModal {...importModal.data} onClose={handleImportModalClose} />}
       </PageWrapper>
     </ErrorBoundary>

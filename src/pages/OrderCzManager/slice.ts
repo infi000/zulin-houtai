@@ -8,10 +8,12 @@ import { NAMESPACE } from './constants';
 import services from './services';
 import { message } from 'antd';
 
+
 export const initialState: IPageState = {
   refresh: 0,
   loading: false,
-  searchCondition: {mtype: '1'}, // 初始化检索条件
+  lastId: 0,
+  searchCondition: {}, // 初始化检索条件
   tableData: [],
   pagination: {
     pageNum: 1,
@@ -20,14 +22,6 @@ export const initialState: IPageState = {
   mainModal: {
     visible: false,
     type: CREATE,
-  },
-  YeModalInfo: {
-    visible: false,
-    data: {}
-  },
-  EditModalInfo: {
-    visible: false,
-    data: {}
   },
   importModal: {
     visible: false,
@@ -51,35 +45,32 @@ export const postCreate = createServiceAsyncThunk(
 
 export const getDel = createServiceAsyncThunk(
   `${NAMESPACE}/getDel`,
-  async (params: {tid: number}) => services.getDelService(params),
+  async (params: {oid: number}) => services.getDelService(params),
 );
 
 export const getDataDetail = createServiceAsyncThunk(
   `${NAMESPACE}/getDataDetail`,
-  async (params: {uid: any, type: any}) => services.getDataDetailService({ uid: params.uid }),
+  async (params: {oid: number, type: any}) => services.getDataDetailService({ oid: params.oid }),
 );
 
-export const postSetuserut = createServiceAsyncThunk(
-  `${NAMESPACE}/postSetuserut`,
-  async (params: { uid: any; ut: '1' | '2' }) => services.postSetuserutService(params),
-);
-export const postSetBg = createServiceAsyncThunk(
-  `${NAMESPACE}/postSetBg`,
-  async (params: { yearbg: any; tabg: any }) => services.postSetBgService(params),
-);
-export const postUserverify = createServiceAsyncThunk(
-  `${NAMESPACE}/postUserverify`,
-  async (params:any) => services.postUserverify(params),
-);
-export const postBuysearch = createServiceAsyncThunk(
-  `${NAMESPACE}/postBuysearch`,
-  async (params:any) => services.postBuysearchService(params),
-);
-export const postInfoModify = createServiceAsyncThunk(
-  `${NAMESPACE}/postInfoModify`,
-  async (params:any) => services.postInfoModifyService(params),
+export const getOnline = createServiceAsyncThunk(
+  `${NAMESPACE}/getOnline`,
+  async (params: {oid: number}) => services.getOnlineService(params),
 );
 
+export const postOrderrenew = createServiceAsyncThunk(
+  `${NAMESPACE}/postOrderrenew`,
+  async (params: { pid: string, endtime: string}) => services.postOrderrenewService(params),
+);
+
+export const postVerify = createServiceAsyncThunk(
+  `${NAMESPACE}/postVerify`,
+  async (params: { oid: string, iscomplete: string}) => services.postVerifyService(params),
+);
+export const getOrdermodify = createServiceAsyncThunk(
+  `${NAMESPACE}/getOrdermodify`,
+  async (params: any) => services.getOrdermodifyService(params),
+);
 const slice = createSlice({
   name: NAMESPACE,
   initialState,
@@ -102,12 +93,6 @@ const slice = createSlice({
     updateMainModal(state, action: PayloadAction<IModalData<ITableItem>>) {
       state.mainModal = action.payload;
     },
-    updateYeModalInfo(state, action: PayloadAction<IModalData<any>>) {
-      state.YeModalInfo = action.payload;
-    },
-    updateEditModalInfo(state, action: PayloadAction<IModalData<any>>) {
-      state.EditModalInfo = action.payload;
-    },
     updateImportModal(state, action: PayloadAction<IPageState['importModal']>) {
       state.importModal = action.payload;
     },
@@ -115,7 +100,7 @@ const slice = createSlice({
   // 异步的成功、失败处理，可以使用类似上面reducers的设置方式，但是由于是对字符串的捕获，会损失类型；
   extraReducers: builder => {
     builder.addCase(getDataList.fulfilled, (state, action) => {
-      state.tableData = Array.isArray(action.payload?.data?.users) ? action.payload?.data?.users : [];
+      state.tableData = action.payload?.data?.buys || [];
       state.pagination.total = action.payload?.data?.total || 0;
       state.pagination.pageNum = action?.meta?.arg?.pageNum || 1;
       state.pagination.pageSize = action?.meta?.arg?.pageSize || baseTableConf.pageSize;
@@ -137,27 +122,22 @@ const slice = createSlice({
       message.success('下线成功');
       state.refresh += 1;
     });
-    builder.addCase(postSetuserut.fulfilled, state => {
-      message.success('设置成功');
+    builder.addCase(getOnline.fulfilled, state => {
+      message.success('上线成功');
       state.refresh += 1;
     });
-    builder.addCase(postUserverify.fulfilled, state => {
-      message.success('设置成功');
+    builder.addCase(postVerify.fulfilled, state => {
+      message.success('执行成功');
       state.mainModal.visible = false;
       state.refresh += 1;
     });
-    builder.addCase(postBuysearch.fulfilled, state => {
-      message.success('设置成功');
-      state.YeModalInfo.visible = false;
+    builder.addCase(postOrderrenew.fulfilled, state => {
+      message.success('执行成功');
+      state.mainModal.visible = false;
       state.refresh += 1;
     });
-    builder.addCase(postInfoModify.fulfilled, state => {
-      message.success('设置成功');
-      state.EditModalInfo.visible = false;
-      state.refresh += 1;
-    });
-    builder.addCase(postSetBg.fulfilled, state => {
-      message.success('设置成功');
+    builder.addCase(getOrdermodify.fulfilled, state => {
+      message.success('修改成功');
       state.mainModal.visible = false;
       state.refresh += 1;
     });

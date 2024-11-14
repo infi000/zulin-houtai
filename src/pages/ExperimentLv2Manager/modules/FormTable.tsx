@@ -18,7 +18,7 @@ import { ITableItem, TSearchParams } from '../types';
 import { formatSearchParams } from '../adapter';
 import moment from 'moment';
 import useDebounce from 'hooks/useDebounce';
-import usePageJump from 'hooks/usePageJump';
+import { getQueryString } from 'utils/utils';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -43,10 +43,13 @@ function FormTable() {
   const loading = useSelector(selectors.loading);
   const dictMaps = useSelector(selectAllDictMap);
   const dispatch = useDispatch();
-  const pageJump = usePageJump();
+  const eid = getQueryString('eid');
+
+console.log('eideideid', eid)
   // 查询
   const handleSearch = (additionalParams: Dictionary<TAdditionalParams> = {}) => {
     const params = form.getFieldsValue();
+
     const formatParams = formatSearchParams({
       ...params,
       pageNum: 1, // 默认所有的检索也都重新从1开始检索
@@ -70,7 +73,7 @@ function FormTable() {
   const openModalWithOperate = useDebounce(async (type: OperateType, data?: ITableItem) => {
     if (type !== CREATE) {
       const { id } = data;
-      await dispatch(getDataDetail({ eid: id, type }));
+      await dispatch(getDataDetail({ cid: id, type }));
     } else {
       dispatch(actions.updateMainModal({
         visible: true,
@@ -95,18 +98,12 @@ function FormTable() {
   // 删除
   const handleDel = (data: ITableItem) => {
     const { id } = data;
-    dispatch(getDel({ eid: id }));
+    dispatch(getDel({ cid: id }));
   };
   // 上线
   const handleOnline = (data: ITableItem) => {
     const { id } = data;
     dispatch(getOnline({ eid: id }));
-  };
-  // 跳转
-  const handleGoLv2 = (data: ITableItem) => {
-    const { id, title } = data;
-    const newPath = `/uiResources/leasedEquipment/experimentLv2Manager/:${title}?eid=${id}`;
-    pageJump(newPath);
   };
 
   useEffect(() => {
@@ -124,9 +121,51 @@ function FormTable() {
       fixed: 'left',
     },
     {
-      title: '实验项目标题',
+      title: '标题',
       dataIndex: 'title',
       key: 'title',
+      width: 100,
+      align: 'left',
+    },
+    {
+      title: '推送电话',
+      dataIndex: 'phones',
+      key: 'phones',
+      width: 100,
+      align: 'left',
+    },
+    {
+      title: '实验室老师',
+      dataIndex: 'remark',
+      key: 'remark',
+      width: 100,
+      align: 'left',
+    },
+    {
+      title: '金额(元)',
+      dataIndex: 'price',
+      key: 'price',
+      width: 100,
+      align: 'left',
+    },
+    {
+      title: '时长（小时）',
+      dataIndex: 'duration',
+      key: 'duration',
+      width: 100,
+      align: 'left',
+    },
+    {
+      title: '实验标题',
+      dataIndex: 'etitle',
+      key: 'etitle',
+      width: 100,
+      align: 'left',
+    },
+    {
+      title: '描述',
+      dataIndex: 'des',
+      key: 'des',
       width: 100,
       align: 'left',
     },
@@ -139,47 +178,12 @@ function FormTable() {
       render: (text:string) => <Image width={50} height={50} src={text} />,
     },
     {
-      title: '设备大图',
-      dataIndex: 'pics',
-      key: 'pics',
-      align: 'left',
-      render: (text:any) => text?.map((item:any) => <Image width={50} height={50} src={item.pic} />),
-    },
-    {
-      title: '项目宣传内容图',
-      dataIndex: 'conpics',
-      key: 'conpics',
-      align: 'left',
-      render: (text:any) => text?.map((item:any) => <Image width={50} height={50} src={item.pic} />),
-    },
-    {
-      title: '项目描述',
-      dataIndex: 'des',
-      key: 'des',
-      width: 100,
-      align: 'left',
-    },
-    {
-      title: '押金价格',
-      dataIndex: 'deposit',
-      key: 'deposit',
-      width: 100,
-      align: 'left',
-    },
-    {
-      title: '项目创建时间',
+      title: '创建时间',
       dataIndex: 'ctime',
       key: 'ctime',
       width: 100,
       align: 'left',
       render: (text: any) => (text ? moment.unix(text).format('YYYY-MM-DD hh:mm:ss') : '-'),
-    },
-    {
-      title: '实验项目状态，1正常，0关闭',
-      dataIndex: 'status',
-      key: 'status',
-      width: 100,
-      align: 'left',
     },
     {
       title: '操作',
@@ -188,9 +192,6 @@ function FormTable() {
       width: 200,
       render: (_value: unknown, row: ITableItem) => (
         <>
-          {/* <Auth authCode={null}>
-            <TableButton onClick={() => openModalWithOperate(STATUS, row)}>修改状态</TableButton>
-          </Auth> */}
           <Auth authCode={null}>
             <TableButton onClick={() => openModalWithOperate(VIEW, row)}>查看</TableButton>
           </Auth>
@@ -198,13 +199,7 @@ function FormTable() {
             <TableButton onClick={() => openModalWithOperate(EDIT, row)}>编辑</TableButton>
           </Auth>
           <Auth authCode={null}>
-            <TableButton isWrapperConfirm onClick={() => handleDel(row)}>下线</TableButton>
-          </Auth>
-          <Auth authCode={null}>
-            <TableButton isWrapperConfirm onClick={() => handleOnline(row)}>上线</TableButton>
-          </Auth>
-          <Auth authCode={null}>
-            <TableButton onClick={() => handleGoLv2(row)}>编辑小分类</TableButton>
+            <TableButton isWrapperConfirm onClick={() => handleDel(row)}>删除</TableButton>
           </Auth>
         </>
       ),
@@ -220,28 +215,8 @@ function FormTable() {
         <Form {...formItemLayout} form={form}>
           <Row>
             <Col span={6}>
-              <Form.Item name='title' label='实验项目标题'>
-                <Input allowClear placeholder='请输入' />
-              </Form.Item>
-            </Col>
-            <Col span={6}>
-              <Form.Item name='thumbinal' label='缩略图'>
-                <Input allowClear placeholder='请输入' />
-              </Form.Item>
-            </Col>
-            <Col span={6}>
-              <Form.Item name='des' label='项目描述'>
-                <Input allowClear placeholder='请输入' />
-              </Form.Item>
-            </Col>
-            <Col span={6}>
-              <Form.Item name='deposit' label='押金价格'>
-                <Input allowClear placeholder='请输入' />
-              </Form.Item>
-            </Col>
-            <Col span={6}>
-              <Form.Item name='ctime' label='项目创建时间'>
-                <Input allowClear placeholder='请输入' />
+              <Form.Item name='eid' label='实验项目id' initialValue={eid}>
+                <Input allowClear placeholder='请输入' disabled />
               </Form.Item>
             </Col>
           </Row>
@@ -252,9 +227,9 @@ function FormTable() {
         isShowTitlePrefixIcon
         btns={(
           <>
-            <Auth authCode={null}>
+            {/* <Auth authCode={null}>
               <Button type='primary' onClick={handleImport}>导入</Button>
-            </Auth>
+            </Auth> */}
             <Auth authCode={null}>
               <Button type='primary' onClick={() => openModalWithOperate(CREATE)}>新建</Button>
             </Auth>

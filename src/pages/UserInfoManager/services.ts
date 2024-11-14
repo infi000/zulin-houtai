@@ -145,6 +145,9 @@ export const getDelService = (params: { tid: number }) =>
 export const postSetuserutService = (params: { uid: any; ut: '1' | '2' }) =>
   getRequest<{ uid: any; ut: '1' | '2' }, IResponseData<string>>('/User/setuserut', params);
 
+export const postBuysearchService = (params:any) =>
+  getRequest<any, IResponseData<string>>('/User/setuserta', params);
+
 
 // 详情
 export const getDataDetailService = (params: { uid: any }) =>
@@ -153,6 +156,9 @@ export const getDataDetailService = (params: { uid: any }) =>
     params,
   );
 
+// 删除
+export const postInfoModifyService = (params:any) =>
+  postRequest<any, IResponseData<any>>('/User/baseinfomodify', params);
 export default {
   getDataListService,
   postCreateService,
@@ -162,4 +168,6 @@ export default {
   postSetuserutService,
   postSetBgService,
   postUserverify,
+  postBuysearchService,
+  postInfoModifyService,
 };

@@ -13,6 +13,8 @@ export interface IPageState {
   tableData: ITableItem[];
   pagination: IPagination;
   mainModal: IModalData<ITableItem>;
+  YeModalInfo: IModalData<any>;
+  EditModalInfo: IModalData<any>;
   importModal: TImportModal;
 }
 

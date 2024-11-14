@@ -50,6 +50,13 @@ const config: Array<any> = [
         name: '实验项目管理',
         componentName: 'ExperimentManager',
       },
+      {
+        path: 'experimentLv2Manager',
+        name: '实验项目小分类',
+        componentName: 'ExperimentLv2Manager',
+        hidden: true,
+        isDetail: true,
+      },
       // {
       //   path: 'ExperimentLeve2Manager',
       //   name: '实验项目二级页面',
@@ -78,7 +85,13 @@ const config: Array<any> = [
         path: 'orderManager',
         name: '订单管理',
         componentName: 'OrderManager',
+      },
+      {
+        path: 'orderCzManager',
+        name: '充值记录',
+        componentName: 'OrderCzManager',
       }
+
     ]
   },
   {
@@ -171,6 +184,22 @@ const config: Array<any> = [
     icon: <PieChartOutlined />,
     name: '出租列表',
     componentName: 'RentManager',
+  },
+  {
+    path: 'teacherManager',
+    icon: <PieChartOutlined />,
+    name: '老师管理',
+    componentName: 'TeacherManager',
+    exist: true,
+    children: [
+      {
+        hidden: true,
+        isDetail: true,
+        path: 'teacherStatusManager',
+        componentName: 'TeacherStatusManager',
+        name: '老师状态管理',
+      },
+    ],
   },
   {
     path: 'userInfoManager',

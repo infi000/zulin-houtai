@@ -10,31 +10,25 @@ import { ITableItem } from './types';
 
 export const formatPostParams = (params: any) => {
   const {
-
+    yearbg,
+    tabg,
     ...rest
   } = params;
 
-  return {
-    ...rest,
-
-
-  };
-};
-
-export const formatEditParams = (params: any) => {
-  const {
-    birthday,
-    ...rest
-  } = params;
-
-  let f_odate;
-  if (birthday) {
-    f_odate = (birthday as any).format('YYYY-MM-DD'); // 日期
+  let f_yearbg;
+  if (yearbg?.file) {
+    f_yearbg = yearbg.file;
+  }
+  let f_tabg;
+  if (tabg?.file) {
+    f_tabg = tabg.file;
   }
 
   return {
-    birthday: f_odate,
     ...rest,
+    yearbg: f_yearbg,
+    tabg: f_tabg,
+
   };
 };
 

@@ -10,6 +10,8 @@ import TableButton from 'components/TableButton';
 import { selectAllDictMap } from 'store/selectors';
 import { CREATE, EDictMap, EExportModuleId, REVIEW, VIEW } from 'utils/constants';
 import Auth from 'containers/AuthController';
+import { useHistory } from 'react-router-dom';
+
 import authMap from 'configs/auth.conf';
 import { objToArray } from 'utils/utils';
 import { actions, getDataDetail, getDataList, getDel, getOnline, postSetuserut } from '../slice';
@@ -44,7 +46,7 @@ function FormTable() {
   const dictMaps = useSelector(selectAllDictMap);
   const dispatch = useDispatch();
   const pageJump = usePageJump();
-
+  const history = useHistory();
   const searchCondition = useSelector(selectors.searchCondition);
   // 查询
   const handleSearch = (additionalParams: Dictionary<TAdditionalParams> = {}) => {
@@ -73,7 +75,7 @@ function FormTable() {
     if (type === VIEW) {
       const { id } = data;
       await dispatch(getDataDetail({ uid: id, type }));
-    }else{
+    } else {
       dispatch(actions.updateMainModal({
         visible: true,
         type,
@@ -96,7 +98,7 @@ function FormTable() {
     }));
   };
   // handleCheckCard
-  const handleCheckCard = (row:any) => {
+  const handleCheckCard = (row: any) => {
     const { id } = row;
     const newPath = `/uiResources/userInfoManager/userCardsManager/:${id}?uid=${id}`;
     pageJump(newPath);
@@ -111,6 +113,29 @@ function FormTable() {
   const handleSetuserut = useDebounce((data: ITableItem, ut: '1' | '2') => {
     const { id } = data;
     dispatch(postSetuserut({ uid: id, ut }));
+  });
+  // 编辑余额
+  const handleEditYe = useDebounce((data: ITableItem) => {
+    const { id } = data;
+    dispatch(actions.updateYeModalInfo({ visible: true, data }));
+  });
+  // 编辑余额
+  const handleEditInfo = useDebounce((data: ITableItem) => {
+    const { id } = data;
+    dispatch(actions.updateEditModalInfo({ visible: true, data }));
+  });
+  // 编辑余额
+  const handleCheckOrder = useDebounce((data: ITableItem) => {
+    const { id } = data;
+    const newPath = `/uiResources/order/orderManager?uid=${id}`;
+    window.open(newPath, '_blank')
+    // pageJump({
+    //   pathname: newPath,
+    //   state: {
+    //     uid: id
+    //   }
+    // });
+    // history.push(newPath)
   });
 
   useEffect(() => {
@@ -134,20 +159,11 @@ function FormTable() {
       width: 100,
     },
     {
-      title: '微信昵称',
-      dataIndex: 'wxnickname',
-      key: 'wxnickname',
+      title: '手机',
+      dataIndex: 'mobile',
+      key: 'mobile',
       width: 100,
       align: 'left',
-    },
-    {
-      title: '微信头像',
-      dataIndex: 'wxavatarurl',
-      key: 'wxavatarurl',
-      width: 100,
-      align: 'left',
-      render: (text: string) => <Image width={50} height={50} src={text} />,
-
     },
     {
       title: '头像',
@@ -159,20 +175,6 @@ function FormTable() {
 
     },
     {
-      title: '自拍',
-      dataIndex: 'zipaiphoto',
-      key: 'zipaiphoto',
-      width: 100,
-      render: (text: string) => <Image width={50} height={50} src={text} />,
-    },
-    {
-      title: '手机',
-      dataIndex: 'mobile',
-      key: 'mobile',
-      width: 100,
-      align: 'left',
-    },
-    {
       title: '生日',
       dataIndex: 'birthday',
       key: 'birthday',
@@ -180,17 +182,30 @@ function FormTable() {
       align: 'left',
     },
     {
-      title: '会员类型',
-      dataIndex: 'mtype',
-      key: 'mtype',
+      title: '余额总数',
+      dataIndex: 'ta',
+      key: 'ta',
       width: 100,
       align: 'left',
-      render: (text: string) => <span>{M_TYPE_MAP.get(text) || '-'}</span>,
     },
     {
-      title: '等级积分',
+      title: '登记积分',
       dataIndex: 'levelscore',
       key: 'levelscore',
+      width: 100,
+      align: 'left',
+    },
+    {
+      title: '次数总数',
+      dataIndex: 'leftcount',
+      key: 'leftcount',
+      width: 100,
+      align: 'left',
+    },
+    {
+      title: '注册日期',
+      dataIndex: 'regtime',
+      key: 'regtime',
       width: 100,
       align: 'left',
     },
@@ -202,11 +217,20 @@ function FormTable() {
       render: (_value: unknown, row: ITableItem) => (
         <>
           <Auth authCode={null}>
-            <TableButton onClick={() => handleCheckCard(row)}>查看会员卡</TableButton>
+            <TableButton onClick={() => handleEditYe(row)}>修改余额</TableButton>
           </Auth>
           <Auth authCode={null}>
-            <TableButton onClick={() => openModalWithOperate(VIEW, row)}>查看</TableButton>
+            <TableButton onClick={() => handleEditInfo(row)}>编辑信息</TableButton>
           </Auth>
+          {/* <Auth authCode={null}>
+            <TableButton onClick={() => handleCheckCard(row)}>查看会员卡</TableButton>
+          </Auth> */}
+          <Auth authCode={null}>
+            <TableButton onClick={() => handleCheckOrder(row)}>查看订单</TableButton>
+          </Auth>
+          {/* <Auth authCode={null}>
+            <TableButton onClick={() => openModalWithOperate(VIEW, row)}>查看</TableButton>
+          </Auth> */}
           <Auth authCode={null}>
             <TableButton onClick={() => openModalWithOperate(REVIEW, row)}>审核</TableButton>
           </Auth>
@@ -238,6 +262,11 @@ function FormTable() {
                     ))
                   }
                 </Select>
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item name='phone' label='手机'>
+                <Input />
               </Form.Item>
             </Col>
           </Row>
