@@ -47,7 +47,7 @@ function MainModal() {
     if (type === '继续支付') {
       // 获取二维码
       const token = getCookie('token');
-      const url = `/index.php/AdminApi/Lease/orderwxcode?oid=${data?.id}}&token=${token}`;
+      const url = `/index.php/AdminApi/Lease/orderwxcode?oid=${data?.id}&token=${token}`;
       setQr(url);
     }
   }, [data?.id, type]);
