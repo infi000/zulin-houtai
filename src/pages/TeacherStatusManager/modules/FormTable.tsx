@@ -74,6 +74,7 @@ function FormTable() {
     dispatch(actions.updateMainModal({
       visible: true,
       type,
+      data,
     }));
   });
 
@@ -114,6 +115,17 @@ function FormTable() {
         //0空闲，1预约，2休假
         const res = STATUS_MAP[`${str}`] || str || '-';
         return res;
+      }
+    },
+    {
+      title: '操作',
+      dataIndex: 'action',
+      key: 'action',
+      width: 100,
+      render: (_,row) => {
+        return <>
+          <TableButton onClick={() => openModalWithOperate('edit',row)}>修改</TableButton>
+        </>
       }
     },
   ];
@@ -167,7 +179,7 @@ function FormTable() {
               <Button type='primary' onClick={handleImport}>导入</Button>
             </Auth> */}
             <Auth authCode={null}>
-              <Button type='primary' onClick={() => openModalWithOperate(CREATE)}>修改状态</Button>
+              <Button type='primary' onClick={() => openModalWithOperate(CREATE)}>新增状态</Button>
             </Auth>
           </>
         )}

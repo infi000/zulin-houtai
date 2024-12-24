@@ -35,15 +35,48 @@ function MainModal() {
   const loading = useSelector(selectors.loading);
   const eid = useSelector(selectors.eid);
   const dictMaps = useSelector(selectAllDictMap);
-  const { data, type = EDIT, visible = false } = mainModal;
+  const { data, type = EDIT, visible = false } = mainModal as any;
   const teaid = getQueryString('teaid');
 
   useEffect(() => {
     visible && form.resetFields();
   }, [form, visible]);
 
+  // eslint-disable-next-line max-len
+  const memoData = useMemo<any>(() => {
+    if (type === CREATE) {
+      return {};
+    }
+    const oData = { ...data };
+    if (data.starttime) {
+      // 日期
+      const { starttime } = data;
+      (oData as any).starttime = moment.unix(Number(starttime));
+    }
+    if (data.endtime) {
+      // 日期
+      const { endtime } = data;
+      (oData as any).endtime = moment.unix(Number(endtime));
+    }
+    return {
+      ...oData,
+      // 添加需要格式化的初始值
+    };
+  }, [data, type]);
+
   const modalTitle = useMemo((): string => {
-    return '修改状态';
+    switch (type) {
+      case CREATE:
+        return '新建';
+      case EDIT:
+        return '编辑';
+      case '核销':
+        return '订单核销';
+      case '续订':
+        return '订单续订';
+      default:
+        return '查看';
+    }
   }, [type]);
 
   const handleCancel = (): void => {
@@ -92,6 +125,7 @@ function MainModal() {
             <Form.Item
               label='开始时间'
               name='starttime'
+              initialValue={memoData?.starttime || ''}
             >
               <DatePicker
                 showTime
@@ -105,6 +139,7 @@ function MainModal() {
             <Form.Item
               label='结束时间'
               name='endtime'
+              initialValue={memoData?.endtime || ''}
             >
               <DatePicker
                 showTime
@@ -118,6 +153,7 @@ function MainModal() {
             <Form.Item
               label='小分类id'
               name='cid'
+              initialValue={memoData?.cid || ''}
             >
               <Input />
             </Form.Item>
@@ -126,6 +162,7 @@ function MainModal() {
             <Form.Item
               label='状态'
               name='status'
+              initialValue={memoData?.status || ''}
             >
               <Select allowClear>
                 {

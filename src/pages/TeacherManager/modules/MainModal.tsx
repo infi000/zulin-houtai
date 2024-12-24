@@ -123,6 +123,78 @@ function MainModal() {
         </Col>
         <Col span={24}>
           <Form.Item
+            label='价格'
+            name='price'
+            rules={[{ required: true, message: '必填项' }]}
+            initialValue={memoData?.price || ''}
+          >
+            <Input
+              type='number'
+              disabled={isView(type)}
+            />
+          </Form.Item>
+        </Col>
+        <Col span={24}>
+          <Form.Item
+            label='手机号'
+            name='phone'
+            rules={[{ required: true, message: '必填项' }]}
+            initialValue={memoData?.phone || ''}
+          >
+            <Input
+              type='number'
+              disabled={isView(type)}
+            />
+          </Form.Item>
+        </Col>
+        <Col span={24}>
+          <Form.Item
+            label='密码'
+            name='pass'
+            rules={[{ required: true, message: '必填项' }]}
+            initialValue={memoData?.pass || ''}
+          >
+            <Input
+              type='number'
+              disabled={isView(type)}
+            />
+          </Form.Item>
+        </Col>
+        <Col span={24}>
+          <Form.Item
+            label='状态'
+            name='status'
+            rules={[{ required: true, message: '必填项' }]}
+            initialValue={memoData?.status || '1'}
+          >
+            <Select disabled={isView(type)}>
+              <Select.Option value='1'>上线</Select.Option>
+              <Select.Option value='-1'>不上线</Select.Option>
+            </Select>
+          </Form.Item>
+        </Col>
+        <Col span={24}>
+          <Form.Item
+            label='头像'
+            name='head'
+          >
+            <Upload action='' beforeUpload={() => false} listType="picture" maxCount={1}>
+              <Button icon={<UploadOutlined />}>Upload</Button>
+            </Upload>
+          </Form.Item>
+        </Col>
+        <Col span={24}>
+          <Form.Item
+            label='说明图片'
+            name='detailimg'
+          >
+            <Upload action='' beforeUpload={() => false} listType="picture" maxCount={1}>
+              <Button icon={<UploadOutlined />}>Upload</Button>
+            </Upload>
+          </Form.Item>
+        </Col>
+        <Col span={24}>
+          <Form.Item
             label='关联小分类id'
             name='cids'
             initialValue={memoData?.cids || ''}

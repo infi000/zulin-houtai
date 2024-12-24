@@ -114,6 +114,34 @@ function FormTable() {
       width: 100,
     },
     {
+      title: '价格',
+      dataIndex: 'price',
+      key: 'price',
+      width: 100,
+    },
+    {
+      title: '手机',
+      dataIndex: 'phone',
+      key: 'phone',
+      width: 100,
+    },
+    {
+      title: '头像',
+      dataIndex: 'head',
+      key: 'head',
+      width: 100,
+      render: (text: string) => <Image width={50} height={50} src={text} />,
+
+    },
+    {
+      title: '说明图片',
+      dataIndex: 'detailimg',
+      key: 'detailimg',
+      width: 100,
+      render: (text: string) => <Image width={50} height={50} src={text} />,
+
+    },
+    {
       title: '创建时间',
       dataIndex: 'ctimestr',
       key: 'ctimestr',

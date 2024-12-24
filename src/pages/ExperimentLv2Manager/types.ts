@@ -27,6 +27,7 @@ export interface ITableItem {
   price: any; // 项目描述
   remark: any; // 项目创建时间
   thumbinal: any; // 项目创建时间
+  ctype: any; //
 }
 
 //  查询项字段

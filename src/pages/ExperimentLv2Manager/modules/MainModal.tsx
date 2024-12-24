@@ -176,6 +176,18 @@ function MainModal() {
             />
           </Form.Item>
           </Col>
+          <Col span={24}>
+            <Form.Item
+              label='类型'
+              name='ctype'
+              initialValue={memoData?.ctype || '1'}
+            >
+              <Select disabled={isView(type)}>
+                <Select.Option value='1'>普通非系列</Select.Option>
+                <Select.Option value='2'>系列</Select.Option>
+              </Select>
+            </Form.Item>
+          </Col>
           <Col span={24}><Form.Item
             label='描述'
             name='des'
