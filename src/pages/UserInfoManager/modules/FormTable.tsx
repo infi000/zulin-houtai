@@ -186,6 +186,13 @@ function FormTable() {
       align: 'left',
     },
     {
+      title: '余额',
+      dataIndex: 'ta',
+      key: 'ta',
+      width: 100,
+      align: 'left',
+    },
+    {
       title: '操作',
       dataIndex: 'operate',
       key: 'operate',
