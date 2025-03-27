@@ -168,6 +168,23 @@ const config: Array<any> = [
     ]
   },
   {
+    path: 'checkManager',
+    icon: <MailOutlined />,
+    name: '检查管理',
+    children: [
+      {
+        path: 'checkOpenManager',
+        name: '检查内容列表',
+        componentName: 'CheckOpenManager',
+      },
+      {
+        path: 'checkedListManager',
+        name: '检查记录列表',
+        componentName: 'CheckedListManager',
+      },
+    ]
+  },
+  {
     path: 'videoManager',
     icon: <PieChartOutlined />,
     name: '视频介绍',

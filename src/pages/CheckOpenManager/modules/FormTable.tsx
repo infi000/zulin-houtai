@@ -18,7 +18,7 @@ import { ITableItem, TSearchParams } from '../types';
 import { formatSearchParams } from '../adapter';
 import useDebounce from 'hooks/useDebounce';
 import usePageJump from 'hooks/usePageJump';
-import { TEACHER_TYPE_MAP } from '../constants';
+import { CBTYPE_MAP, TEACHER_TYPE_MAP } from '../constants';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -92,7 +92,6 @@ function FormTable() {
     handleSearch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refresh]);
-
   const columns: ColumnsType = [
     {
       title: 'id',
@@ -103,76 +102,36 @@ function FormTable() {
       fixed: 'left',
     },
     {
-      title: '老师名称',
-      dataIndex: 'teaname',
-      key: 'teaname',
+      title: '分类1',
+      dataIndex: 'firstcategory',
+      key: 'firstcategory',
       width: 100,
     },
     {
-      title: '老师类型',
-      dataIndex: 'ttype',
-      key: 'ttype',
-      width: 100,
-      render: (text: string) => TEACHER_TYPE_MAP[text] || '',
-    },
-    {
-      title: '小分类id',
-      dataIndex: 'cids',
-      key: 'cids',
+      title: '分类2',
+      dataIndex: 'secondcategory',
+      key: 'secondcategory',
       width: 100,
     },
     {
-      title: '价格',
-      dataIndex: 'price',
-      key: 'price',
+      title: '照片位置',
+      dataIndex: 'imgposition',
+      key: 'imgposition',
       width: 100,
     },
     {
-      title: '手机',
-      dataIndex: 'phone',
-      key: 'phone',
+      title: '检查内容',
+      dataIndex: 'checkcontent',
+      key: 'checkcontent',
       width: 100,
     },
     {
-      title: '头像',
-      dataIndex: 'head',
-      key: 'head',
+      title: '开店/闭店检查',
+      dataIndex: 'cbtype',
+      key: 'cbtype',
       width: 100,
-      render: (text: string) => <Image width={50} height={50} src={text} />,
+      render: (text: string) => CBTYPE_MAP[text] || '',
 
-    },
-    {
-      title: '说明图片',
-      dataIndex: 'detailimg',
-      key: 'detailimg',
-      width: 100,
-      render: (text: string) => <Image width={50} height={50} src={text} />,
-
-    },
-    {
-      title: '创建时间',
-      dataIndex: 'ctimestr',
-      key: 'ctimestr',
-      width: 100,
-    },
-    {
-      title: '备注',
-      dataIndex: 'remark',
-      key: 'remark',
-      width: 100,
-    },
-    {
-      title: '操作',
-      dataIndex: 'action',
-      key: 'action',
-      width: 100,
-      render: (_,row) => {
-        return <>
-          <TableButton onClick={() => openModalWithOperate('edit',row)}>编辑</TableButton>
-          <TableButton isWrapperConfirm onClick={() => handleDel(row)}>删除</TableButton>
-          <TableButton  onClick={() => handleStatus(row)}>状态管理</TableButton>
-        </>
-      }
     },
   ];
 
@@ -185,8 +144,16 @@ function FormTable() {
         <Form {...formItemLayout} form={form}>
           <Row>
             <Col span={6}>
-              <Form.Item name='companyid' label='小分类id'>
-                <Input allowClear placeholder='请输入' />
+              <Form.Item name='cbtype' label='开店/闭店检查'>
+
+                <Select placeholder='请选择' allowClear>
+                  {
+                    objToArray(CBTYPE_MAP).map((item: any) => (
+                      <Option key={item.value} value={item.value}>{item.label}</Option>
+                    ))
+                  }
+                </Select>
+
               </Form.Item>
             </Col>
           </Row>
@@ -197,7 +164,7 @@ function FormTable() {
         isShowTitlePrefixIcon
         btns={(
           <>
-            <Auth authCode={null}>
+            <Auth authCode={999}>
               <Button type='primary' onClick={() => openModalWithOperate(CREATE)}>新建</Button>
             </Auth>
           </>

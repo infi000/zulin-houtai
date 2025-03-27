@@ -308,6 +308,18 @@ export const menuMessages = defineMessages({
     id: `${scope}.videoManager`,
     defaultMessage: '视频介绍',
   },
+  checkManager: {
+    id: `${scope}.checkManager`,
+    defaultMessage: '检查管理',
+  },
+  checkOpenManager: {
+    id: `${scope}.checkOpenManager`,
+    defaultMessage: '检查内容列表',
+  },
+  checkedListManager: {
+    id: `${scope}.checkedListManager`,
+    defaultMessage: '检查记录列表',
+  },
 });
 
 export const yesOrNoMessages = defineMessages({

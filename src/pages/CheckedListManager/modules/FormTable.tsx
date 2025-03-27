@@ -12,13 +12,14 @@ import { CREATE, EDictMap, EExportModuleId, EDIT, VIEW } from 'utils/constants';
 import Auth from 'containers/AuthController';
 import authMap from 'configs/auth.conf';
 import { objToArray } from 'utils/utils';
-import { actions, getDataDetail, getDataList, getDel, getOnline } from '../slice';
-import selectors from '../selectors';
+import { actions, getDataDetail, getDataList, getDel, getBaseList } from '../slice';
+import selectors, { selectFormatTable } from '../selectors';
 import { ITableItem, TSearchParams } from '../types';
 import { formatSearchParams } from '../adapter';
 import useDebounce from 'hooks/useDebounce';
 import usePageJump from 'hooks/usePageJump';
-import { TEACHER_TYPE_MAP } from '../constants';
+import { CBTYPE_MAP, TEACHER_TYPE_MAP } from '../constants';
+import moment from 'moment';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -37,7 +38,7 @@ const formItemLayout = {
 
 function FormTable() {
   const [form] = Form.useForm();
-  const tableData = useSelector(selectors.tableData);
+  const tableData = useSelector(selectFormatTable);
   const pagination = useSelector(selectors.pagination);
   const refresh = useSelector(selectors.refresh);
   const loading = useSelector(selectors.loading);
@@ -55,6 +56,7 @@ function FormTable() {
       ...additionalParams,
     });
     dispatch(getDataList(falsyParamsFilter<TSearchParams & IPagination>(formatParams)));
+    dispatch(getBaseList({ cbtype: formatParams.cbtype }));
   };
 
   // 重置
@@ -92,7 +94,6 @@ function FormTable() {
     handleSearch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refresh]);
-
   const columns: ColumnsType = [
     {
       title: 'id',
@@ -103,76 +104,63 @@ function FormTable() {
       fixed: 'left',
     },
     {
-      title: '老师名称',
-      dataIndex: 'teaname',
-      key: 'teaname',
+      title: '分类1',
+      dataIndex: 'firstcategory',
+      key: 'firstcategory',
       width: 100,
     },
     {
-      title: '老师类型',
-      dataIndex: 'ttype',
-      key: 'ttype',
-      width: 100,
-      render: (text: string) => TEACHER_TYPE_MAP[text] || '',
-    },
-    {
-      title: '小分类id',
-      dataIndex: 'cids',
-      key: 'cids',
+      title: '分类2',
+      dataIndex: 'secondcategory',
+      key: 'secondcategory',
       width: 100,
     },
     {
-      title: '价格',
-      dataIndex: 'price',
-      key: 'price',
+      title: '照片位置',
+      dataIndex: 'imgposition',
+      key: 'imgposition',
       width: 100,
     },
     {
-      title: '手机',
-      dataIndex: 'phone',
-      key: 'phone',
+      title: '检查内容',
+      dataIndex: 'checkcontent',
+      key: 'checkcontent',
       width: 100,
     },
+
     {
-      title: '头像',
-      dataIndex: 'head',
-      key: 'head',
+      title: '开店/闭店检查',
+      dataIndex: 'cbtype',
+      key: 'cbtype',
       width: 100,
-      render: (text: string) => <Image width={50} height={50} src={text} />,
+      render: (text: string) => CBTYPE_MAP[text] || '',
 
     },
+
     {
-      title: '说明图片',
-      dataIndex: 'detailimg',
-      key: 'detailimg',
+      title: '检查照片',
+      dataIndex: 'checkedimg',
+      key: 'checkedimg',
       width: 100,
       render: (text: string) => <Image width={50} height={50} src={text} />,
-
     },
     {
-      title: '创建时间',
-      dataIndex: 'ctimestr',
-      key: 'ctimestr',
-      width: 100,
-    },
-    {
-      title: '备注',
+      title: '描述',
       dataIndex: 'remark',
       key: 'remark',
       width: 100,
     },
     {
-      title: '操作',
-      dataIndex: 'action',
-      key: 'action',
+      title: '检查人',
+      dataIndex: 'chkuname',
+      key: 'chkuname',
       width: 100,
-      render: (_,row) => {
-        return <>
-          <TableButton onClick={() => openModalWithOperate('edit',row)}>编辑</TableButton>
-          <TableButton isWrapperConfirm onClick={() => handleDel(row)}>删除</TableButton>
-          <TableButton  onClick={() => handleStatus(row)}>状态管理</TableButton>
-        </>
-      }
+    },
+      {
+      title: '检查时间',
+      dataIndex: 'ctime',
+      key: 'ctime',
+      width: 100,
     },
   ];
 
@@ -185,8 +173,21 @@ function FormTable() {
         <Form {...formItemLayout} form={form}>
           <Row>
             <Col span={6}>
-              <Form.Item name='companyid' label='小分类id'>
-                <Input allowClear placeholder='请输入' />
+              <Form.Item name='cbtype' label='开店/闭店检查' initialValue="1">
+
+                <Select placeholder='请选择'>
+                  {
+                    objToArray(CBTYPE_MAP).map((item: any) => (
+                      <Option key={item.value} value={item.value}>{item.label}</Option>
+                    ))
+                  }
+                </Select>
+
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item name='checkdate' label='检查日期' initialValue={moment(new Date())}>
+                <DatePicker format="YYYY-MM-DD" />
               </Form.Item>
             </Col>
           </Row>
@@ -197,7 +198,7 @@ function FormTable() {
         isShowTitlePrefixIcon
         btns={(
           <>
-            <Auth authCode={null}>
+            <Auth authCode={999}>
               <Button type='primary' onClick={() => openModalWithOperate(CREATE)}>新建</Button>
             </Auth>
           </>

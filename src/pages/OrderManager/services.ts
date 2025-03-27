@@ -90,6 +90,18 @@ export const getOrdermodifyService = (params: any) =>
     params,
   );
 
+export const getOrdertaPayService = (params: { oid: any }) =>
+  getRequest<{ oid: any }, IResponseData<ITableItem>>(
+    '/Lease/ordertapay',
+    params,
+  );
+
+export const getOrderExportService = (params:any) =>
+  getRequest<any, IResponseData<ITableItem>>(
+    '/Lease/orderexport',
+    params,
+  );
+
 export default {
   getDataListService,
   postCreateService,
@@ -101,4 +113,6 @@ export default {
   postOrderrenewService,
   getOrderwxcodeService,
   getOrdermodifyService,
+  getOrdertaPayService,
+  getOrderExportService,
 };

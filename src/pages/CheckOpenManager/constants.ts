@@ -7,12 +7,19 @@
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 // namespace 使用大驼峰，理论上与文件夹命名一致
-export const NAMESPACE = 'TeacherManager';
+export const NAMESPACE = 'CheckOpenManager';
 
 export const TEACHER_TYPE_MAP:any = {
   1: '老师',
   2: '自主实验',
   3: '负责人',
+};
+
+//  1开店检查，2闭店检查
+
+export const CBTYPE_MAP:any = {
+  1: '开店检查',
+  2: '闭店检查',
 };
 
 export default {
