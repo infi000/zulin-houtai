@@ -1,1 +1,0 @@
-scp -r ./** root@10.188.40.184:/usr/local/www/cosmosdoc/
