@@ -15,6 +15,11 @@ export const TEACHER_TYPE_MAP:any = {
   3: '负责人',
 };
 
+export const TEACHER_VERIFY_MAP:any = {
+  1: '通过',
+  '-1': '不通过',
+};
+
 export default {
   NAMESPACE,
 };

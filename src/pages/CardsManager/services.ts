@@ -26,10 +26,10 @@ export const postStatusService = (params: { cid: number; status: any }) =>
   postRequest<{ cid: number; status: any }, IResponseData<string>>('/Card/equipmentstatus', params);
 // 删除
 export const getDelService = (params: { cid: number }) =>
-  postRequest<{ cid: number }, IResponseData<string>>('/Card/delete', params);
+  getRequest<{ cid: number }, IResponseData<string>>('/Card/offline', params);
 // 上线
 export const getOnlineService = (params: { cid: number }) =>
-  postRequest<{ cid: number }, IResponseData<string>>('/Lease/experimentonline', params);
+  getRequest<{ cid: number }, IResponseData<string>>('/Card/online', params);
 
 // 详情
 export const getDataDetailService = (params: { cid: number }) =>

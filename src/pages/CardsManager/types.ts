@@ -30,6 +30,14 @@ export interface ITableItem {
   ta: any; // 积分值
   usedaytype: any; // 使用日类型，1周二至周日；2周二至周五
   remark: any; // 卡片说明
+  usecardtype: any; // 卡片说明
+  leasemult: any; // 卡片说明
+  specialremark: any; // 卡片说明
+  istop: any; // 卡片说明
+  money: any; // 卡片说明
+  isaduitlimit: any; // 卡片说明
+  aduitlimittime: any; // 卡片说明
+  maxhours: any; // 卡片说明
 }
 
 //  查询项字段

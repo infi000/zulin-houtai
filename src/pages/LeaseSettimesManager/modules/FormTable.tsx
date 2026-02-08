@@ -1,5 +1,13 @@
+/*
+ * @Author: 张驰阳 zhangchiyang@sfmail.sf-express.com
+ * @Date: 2023-06-06 22:49:51
+ * @LastEditors: 张驰阳 zhangchiyang@sfmail.sf-express.com
+ * @LastEditTime: 2023-06-09 00:53:20
+ * @FilePath: /houtai/src/pages/EquipmentManager/modules/FormTable.tsx
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 import * as React from 'react';
-import { Col, Form, Input, Row, Table, Button, Image, Select, DatePicker, Tooltip, Modal } from 'antd';
+import { Col, Form, Input, Row, Table, Button, Image, Select, DatePicker } from 'antd';
 import { ColumnsType } from 'antd/lib/table/interface';
 import { useSelector, useDispatch } from 'react-redux';
 import { falsyParamsFilter } from 'utils/filters';
@@ -8,17 +16,17 @@ import FilterFormWrapper from 'components/FilterFormWrapper';
 import TableWrapper from 'components/TableWrapper';
 import TableButton from 'components/TableButton';
 import { selectAllDictMap } from 'store/selectors';
-import { CREATE, EDictMap, EExportModuleId, EDIT, VIEW } from 'utils/constants';
+import { CREATE, EDictMap, EExportModuleId, EDIT, VIEW, STATUS } from 'utils/constants';
 import Auth from 'containers/AuthController';
 import authMap from 'configs/auth.conf';
 import { objToArray } from 'utils/utils';
-import { actions, getDataDetail, getDataList, getDel, getVerify  } from '../slice';
+import { actions, getDataDetail, getDataList, getDel } from '../slice';
 import selectors from '../selectors';
 import { ITableItem, TSearchParams } from '../types';
 import { formatSearchParams } from '../adapter';
+import { STATUS_MAP } from '../constants';
+import moment from 'moment';
 import useDebounce from 'hooks/useDebounce';
-import usePageJump from 'hooks/usePageJump';
-import { TEACHER_TYPE_MAP, TEACHER_VERIFY_MAP } from '../constants';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -43,7 +51,6 @@ function FormTable() {
   const loading = useSelector(selectors.loading);
   const dictMaps = useSelector(selectAllDictMap);
   const dispatch = useDispatch();
-  const pageJump = usePageJump();
 
   // 查询
   const handleSearch = (additionalParams: Dictionary<TAdditionalParams> = {}) => {
@@ -72,39 +79,15 @@ function FormTable() {
     dispatch(actions.updateMainModal({
       visible: true,
       type,
-      data,
+      data
     }));
   });
 
   // 删除
   const handleDel = (data: ITableItem) => {
     const { id } = data;
-    dispatch(getDel({ teaid: id }));
+    dispatch(getDel({ id }));
   };
-  // 上线
-  const handleStatus = (data: ITableItem) => {
-    const { id, teaname } = data;
-    const newPath = `/uiResources/teacherManager/teacherStatusManager/:${teaname}?teaid=${id}`;
-    pageJump(newPath);
-  };
-
-  // 上线
-  const handleVerify = useDebounce((data: ITableItem) => {
-    const { id } = data;
-    Modal.confirm({
-      title: '引领者审核',
-      okText: '通过',
-      cancelText: '不通过',
-      onOk: () => {
-        dispatch(getVerify({ teaid: id, status: '1' }));
-        console.log('OK');
-      },
-      onCancel() {
-        dispatch(getVerify({ teaid: id, status: '-1' }));
-        console.log('Cancel');
-      },
-    });
-  });
 
   useEffect(() => {
     handleSearch();
@@ -121,84 +104,48 @@ function FormTable() {
       fixed: 'left',
     },
     {
-      title: '老师名称',
-      dataIndex: 'teaname',
-      key: 'teaname',
-      width: 100,
-    },
-    {
-      title: '老师类型',
-      dataIndex: 'ttype',
-      key: 'ttype',
-      width: 100,
-      render: (text: string) => TEACHER_TYPE_MAP[text] || '',
-    },
-    {
       title: '小分类id',
-      dataIndex: 'cids',
-      key: 'cids',
+      dataIndex: 'ecid',
+      key: 'ecid',
       width: 100,
+      align: 'left',
     },
     {
-      title: '价格',
-      dataIndex: 'price',
-      key: 'price',
+      title: '开始时间',
+      dataIndex: 'starttime',
+      key: 'starttime',
       width: 100,
+      align: 'left',
     },
     {
-      title: '手机',
-      dataIndex: 'phone',
-      key: 'phone',
+      title: '结束时间',
+      dataIndex: 'endtime',
+      key: 'endtime',
       width: 100,
+      align: 'left',
     },
     {
-      title: '头像',
-      dataIndex: 'head',
-      key: 'head',
+      title: '工时数',
+      dataIndex: 'duration',
+      key: 'duration',
       width: 100,
-      render: (text: string) => <Image width={50} height={50} src={text} />,
-
-    },
-    {
-      title: '说明图片',
-      dataIndex: 'detailimg',
-      key: 'detailimg',
-      width: 100,
-      render: (text: string) => <Image width={50} height={50} src={text} />,
-
-    },
-    {
-      title: '创建时间',
-      dataIndex: 'ctimestr',
-      key: 'ctimestr',
-      width: 100,
-    },
-    {
-      title: '审核',
-      dataIndex: 'status',
-      key: 'status',
-      width: 100,
-      render: (text: string) => TEACHER_VERIFY_MAP[text] || '',
-    },
-    {
-      title: '备注',
-      dataIndex: 'remark',
-      key: 'remark',
-      width: 100,
+      align: 'left',
     },
     {
       title: '操作',
-      dataIndex: 'action',
-      key: 'action',
+      dataIndex: 'operate',
+      key: 'operate',
       width: 100,
-      render: (_,row) => {
-        return <>
-          <TableButton onClick={() => openModalWithOperate('edit',row)}>编辑</TableButton>
-          <TableButton isWrapperConfirm onClick={() => handleDel(row)}>删除</TableButton>
-          <TableButton  onClick={() => handleStatus(row)}>状态管理</TableButton>
-          <TableButton  onClick={() => handleVerify(row)}>审核</TableButton>
+      render: (_value: unknown, row: ITableItem) => (
+        <>
+          <Auth authCode={null}>
+            <TableButton onClick={() => openModalWithOperate(EDIT, row)}>编辑</TableButton>
+          </Auth>
+          <Auth authCode={null}>
+            <TableButton isWrapperConfirm onClick={() => handleDel(row)}>删除</TableButton>
+          </Auth>
         </>
-      }
+      ),
     },
   ];
 
@@ -211,7 +158,7 @@ function FormTable() {
         <Form {...formItemLayout} form={form}>
           <Row>
             <Col span={6}>
-              <Form.Item name='companyid' label='小分类id'>
+              <Form.Item name='ecid' label='小分类id'>
                 <Input allowClear placeholder='请输入' />
               </Form.Item>
             </Col>
@@ -223,6 +170,9 @@ function FormTable() {
         isShowTitlePrefixIcon
         btns={(
           <>
+            {/* <Auth authCode={null}>
+              <Button type='primary' onClick={handleImport}>导入</Button>
+            </Auth> */}
             <Auth authCode={null}>
               <Button type='primary' onClick={() => openModalWithOperate(CREATE)}>新建</Button>
             </Auth>

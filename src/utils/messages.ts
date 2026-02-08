@@ -220,6 +220,10 @@ export const menuMessages = defineMessages({
     id: `${scope}.toolManager`,
     defaultMessage: '工具管理',
   },
+  leaseSettimesManager: {
+    id: `${scope}.leaseSettimesManager`,
+    defaultMessage: '租赁时间',
+  },
   orderManager: {
     id: `${scope}.orderManager`,
     defaultMessage: '订单管理',

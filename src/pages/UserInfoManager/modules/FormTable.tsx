@@ -175,6 +175,15 @@ function FormTable() {
 
     },
     {
+      title: '注册合同',
+      dataIndex: 'regimg',
+      key: 'regimg',
+      width: 100,
+      align: 'left',
+      render: (text: string) => text ?  <Image width={50} height={50} src={text} /> : '-',
+
+    },
+    {
       title: '生日',
       dataIndex: 'birthday',
       key: 'birthday',

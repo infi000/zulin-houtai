@@ -53,6 +53,11 @@ export const getOrdertaPay = createServiceAsyncThunk(
   async (params: {oid: number}) => services.getOrdertaPayService(params),
 );
 
+export const getOrderCancel = createServiceAsyncThunk(
+  `${NAMESPACE}/getOrderCancel`,
+  async (params: {oid: number}) => services.getOrderCancelService(params),
+);
+
 export const getDataDetail = createServiceAsyncThunk(
   `${NAMESPACE}/getDataDetail`,
   async (params: {oid: number, type: any}) => services.getDataDetailService({ oid: params.oid }),
@@ -133,6 +138,10 @@ const slice = createSlice({
     });
     builder.addCase(getOrdertaPay.fulfilled, state => {
       message.success('余额支付成功');
+      state.refresh += 1;
+    });
+    builder.addCase(getOrderCancel.fulfilled, state => {
+      message.success('退优惠卡次数成功');
       state.refresh += 1;
     });
     builder.addCase(getDel.fulfilled, state => {

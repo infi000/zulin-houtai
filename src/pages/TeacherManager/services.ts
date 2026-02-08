@@ -16,11 +16,11 @@ export const getDataListService = (params: TSearchParams & IPagination) =>
     '/Teacher/tealist',
     formatPage(params),
   );
-  
+
 // 设置setyearprice
 export const postSetYearService = (params: { price: number }) =>
   postFormDataRequest<{ price: number }, IResponseData<string>>('/User/setyearprice', params);
-  
+
 // 设置setbg
 export const postSetBgService = (params: { yearbg: any; tabg: any  }) =>
   postFormDataRequest< { yearbg: any; tabg: any  }, IResponseData<string>>('/User/setbg', params);
@@ -43,9 +43,9 @@ export const postEditService = (params: TModifyParams) =>
 // 删除
 export const getDelService = (params: { tid: number }) =>
   postRequest<{ teaid: number }, IResponseData<string>>('/Teacher/deletetea', params);
-// 上线
-export const getOnlineService = (params: { tid: number }) =>
-  postRequest<{ tid: number }, IResponseData<string>>('/Lease/toolonline', params);
+// 审核
+export const getVerifyService = (params: any) =>
+  getRequest<any, IResponseData<string>>('/Teacher/modify', params);
 
 
 // 详情
@@ -61,7 +61,7 @@ export default {
   postEditService,
   getDelService,
   getDataDetailService,
-  getOnlineService,
+  getVerifyService,
   postSetBgService,
   postSetYearService,
 };

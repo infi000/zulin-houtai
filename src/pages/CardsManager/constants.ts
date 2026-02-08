@@ -36,3 +36,16 @@ export const USE_DAY_TYPE_MAP = new Map<any, any>([
   ['1', '周二至周日'],
   ['2', '周二至周五'],
 ]);
+
+// 1工时卡，2、租赁时长，4购物卡；值为（1、2、4的按位与）
+export const USE_CARD_TYPE_MAP = new Map<any, any>([
+  ['1', '工时卡'],
+  ['2', '租赁时长'],
+  ['4', '购物卡'],
+]);
+
+// 不推荐0；1首页推荐
+export const IS_TOP_MAP = new Map<any, any>([
+  ['0', '不推荐'],
+  ['1', '首页推荐'],
+]);

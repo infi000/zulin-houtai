@@ -1,0 +1,48 @@
+/*
+ * @Author: 张驰阳 zhangchiyang@sfmail.sf-express.com
+ * @Date: 2023-06-06 22:49:51
+ * @LastEditors: 张驰阳 zhangchiyang@sfmail.sf-express.com
+ * @LastEditTime: 2023-06-07 23:56:11
+ * @FilePath: /houtai/src/pages/EquipmentManager/adapter.ts
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
+import { ITableItem } from './types';
+
+export const formatPostParams = (params: any) => {
+  const {
+    thumbinal,
+    pics,
+    buytime,
+    ...rest
+  } = params;
+
+  let f_thumbinal;
+  if (thumbinal?.file) {
+    // f_thumbinal = thumbinal.fileList.map((item: any) => item.originFileObj);
+    f_thumbinal = thumbinal.file;
+  }
+  let f_pics;
+  if (pics?.fileList && pics.fileList.length > 0) {
+    f_pics = pics.fileList.map((item: any) => item.originFileObj);
+  }
+  let f_buytime;
+  if (buytime) {
+    f_buytime = (buytime as any).format('YYYY-MM-DD'); // 日期
+  }
+  return {
+    ...rest,
+    thumbinal: f_thumbinal,
+    pics: f_pics,
+    buytime: f_buytime,
+  };
+};
+
+export const formatSearchParams = (params: any) => {
+  const {
+    ...rest
+  } = params;
+
+  return {
+    ...rest,
+  };
+};

@@ -74,6 +74,11 @@ const config: Array<any> = [
         name: '工具管理',
         componentName: 'ToolManager',
       },
+      {
+        path: 'leaseSettimesManager',
+        name: '租赁时间',
+        componentName: 'LeaseSettimesManager',
+      },
     ],
   },
   {

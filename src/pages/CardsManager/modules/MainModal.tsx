@@ -14,7 +14,7 @@ import { ITableItem } from '../types';
 import { formatPostParams } from '../adapter';
 import { UploadOutlined } from '@ant-design/icons';
 import ImageBox from 'components/ImageBox';
-import { CARD_DURATION_TYPE_MAP, CARD_TYPE_MAP, USE_DAY_TYPE_MAP } from '../constants';
+import { CARD_DURATION_TYPE_MAP, CARD_TYPE_MAP, IS_TOP_MAP, USE_CARD_TYPE_MAP, USE_DAY_TYPE_MAP } from '../constants';
 
 const { useEffect, useMemo } = React;
 const formItemLayout = {
@@ -93,7 +93,7 @@ function MainModal() {
   // 	cardname:卡片名称
   // cardtype:卡片类型，1年卡，2季卡，3月卡，4次卡
   // cardduration:有效期
-  // carddurationtype：有效期类型，天day、周week、月month、年year 
+  // carddurationtype：有效期类型，天day、周week、月month、年year
   // cardcount:次卡次数（次卡类型有效） 
   // thumbinal:卡缩略图文件域（小图）
   // cardpic:卡说明图片,文件域（大图）
@@ -217,7 +217,7 @@ function MainModal() {
           label='积分值'
           name='ta'
           initialValue={(memoData?.ta || memoData?.ta === 0) ? memoData?.ta : ''}
-          // rules={[{ required: true, message: '必填项' }]}
+        // rules={[{ required: true, message: '必填项' }]}
         >
           <InputNumber
             placeholder='请输入积分值'
@@ -248,6 +248,106 @@ function MainModal() {
           rules={[{ required: true, message: '必填项' }]}
         >
           <Input.TextArea
+            placeholder='请输入'
+            disabled={isView(type)}
+          />
+        </Form.Item>
+        </Col>
+        <Col span={24}><Form.Item
+          label='usecardtype'
+          name='usecardtype'
+          initialValue={memoData?.usecardtype || ''}
+          rules={[{ required: true, message: '必填项' }]}
+        >
+          <Select mode='multiple' allowClear disabled={isView(type)}>
+            {
+              Array.from(USE_CARD_TYPE_MAP).map(([key, value]) => (
+                <Select.Option key={key} value={key}>{value}</Select.Option>
+              ))
+            }
+          </Select>
+        </Form.Item>
+        </Col>
+        <Col span={24}><Form.Item
+          label='抵扣租赁时长的时候租赁的倍数'
+          name='leasemult'
+          initialValue={memoData?.leasemult || 1}
+        >
+          <InputNumber
+            placeholder='请输入'
+            disabled={isView(type)}
+            style={{ width: '100%' }}
+          />
+        </Form.Item>
+        </Col>
+        <Col span={24}><Form.Item
+          label='每次最多抵扣工时'
+          name='maxhours'
+          initialValue={memoData?.maxhours || 1}
+        >
+          <InputNumber
+            placeholder='请输入'
+            disabled={isView(type)}
+            style={{ width: '100%' }}
+          />
+        </Form.Item>
+        </Col>
+        <Col span={24}><Form.Item
+          label='成年人限制使用时间'
+          name='aduitlimittime'
+          initialValue={memoData?.aduitlimittime || 15}
+        >
+          <InputNumber
+            placeholder='请输入'
+            disabled={isView(type)}
+            style={{ width: '100%' }}
+          />
+        </Form.Item>
+        </Col>
+        <Col span={24}><Form.Item
+          label='isaduitlimit'
+          name='isaduitlimit'
+          initialValue={memoData?.isaduitlimit}
+        >
+          <InputNumber
+            placeholder='请输入'
+            disabled={isView(type)}
+            style={{ width: '100%' }}
+          />
+        </Form.Item>
+        </Col>
+        <Col span={24}><Form.Item
+          label='余额，单位分'
+          name='money'
+          initialValue={memoData?.money}
+        >
+          <InputNumber
+            placeholder='请输入'
+            disabled={isView(type)}
+            style={{ width: '100%' }}
+          />
+        </Form.Item>
+        </Col>
+        <Col span={24}><Form.Item
+          label='首页推荐'
+          name='istop'
+          initialValue={memoData?.istop}
+        >
+          <Select allowClear disabled={isView(type)}>
+            {
+              Array.from(IS_TOP_MAP).map(([key, value]) => (
+                <Select.Option key={key} value={key}>{value}</Select.Option>
+              ))
+            }
+          </Select>
+        </Form.Item>
+        </Col>
+        <Col span={24}><Form.Item
+          label='特别说明'
+          name='specialremark'
+          initialValue={memoData?.specialremark}
+        >
+          <Input
             placeholder='请输入'
             disabled={isView(type)}
           />

@@ -102,6 +102,12 @@ export const getOrderExportService = (params:any) =>
     params,
   );
 
+export const getOrderCancelService = (params:any) =>
+  getRequest<any, IResponseData<ITableItem>>(
+    '/Lease/ordercancel',
+    params,
+  );
+
 export default {
   getDataListService,
   postCreateService,
@@ -115,4 +121,5 @@ export default {
   getOrdermodifyService,
   getOrdertaPayService,
   getOrderExportService,
+  getOrderCancelService,
 };
