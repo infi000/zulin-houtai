@@ -280,6 +280,25 @@ export const menuMessages = defineMessages({
     id: `${scope}.jcyyList`,
     defaultMessage: '预约',
   },
+<<<<<<< HEAD
+=======
+  cardsManager: {
+    id: `${scope}.cardsManager`,
+    defaultMessage: '会员卡管理',
+  },
+  smjcjl: {
+    id: `${scope}.smjcjl`,
+    defaultMessage: '扫码进场记录',
+  },
+  userCardsManager: {
+    id: `${scope}.userCardsManager`,
+    defaultMessage: '用户会员卡管理',
+  },
+  importCardsManager: {
+    id: `${scope}.importCardsManager`,
+    defaultMessage: '导入卡管理',
+  },
+>>>>>>> 6fadbeb242a5d3e53cf7493a1506da0123f0b23e
 });
 
 export const yesOrNoMessages = defineMessages({

@@ -11,12 +11,17 @@ import { selectAllDictMap } from 'store/selectors';
 import { CREATE, EDictMap, EExportModuleId, REVIEW, VIEW } from 'utils/constants';
 import Auth from 'containers/AuthController';
 import authMap from 'configs/auth.conf';
+<<<<<<< HEAD
 import { objToArray } from 'utils/utils';
+=======
+import { getCookie, objToArray } from 'utils/utils';
+import useDebounce from 'hooks/useDebounce';
+import usePageJump from 'hooks/usePageJump';
+>>>>>>> 6fadbeb242a5d3e53cf7493a1506da0123f0b23e
 import { actions, getDataDetail, getDataList, getDel, getOnline, postSetuserut } from '../slice';
 import selectors from '../selectors';
 import { ITableItem, TSearchParams } from '../types';
 import { formatSearchParams } from '../adapter';
-import useDebounce from 'hooks/useDebounce';
 import { M_TYPE_MAP } from '../constants';
 
 const { RangePicker } = DatePicker;
@@ -42,6 +47,8 @@ function FormTable() {
   const loading = useSelector(selectors.loading);
   const dictMaps = useSelector(selectAllDictMap);
   const dispatch = useDispatch();
+  const pageJump = usePageJump();
+
   const searchCondition = useSelector(selectors.searchCondition);
   // 查询
   const handleSearch = (additionalParams: Dictionary<TAdditionalParams> = {}) => {
@@ -70,14 +77,13 @@ function FormTable() {
     if (type === VIEW) {
       const { id } = data;
       await dispatch(getDataDetail({ uid: id, type }));
-    }else{
+    } else {
       dispatch(actions.updateMainModal({
         visible: true,
         type,
-        data
+        data,
       }));
     }
-
   });
 
   // 导入
@@ -91,6 +97,19 @@ function FormTable() {
         templateId,
       },
     }));
+  };
+  // handleCheckCard
+  const handleCheckCard = (row:any) => {
+    const { id } = row;
+    const newPath = `/uiResources/userInfoManager/userCardsManager/:${id}?uid=${id}`;
+    pageJump(newPath);
+  };
+
+  // 导出
+  const handleExport = () => {
+    const token = getCookie('token');
+
+    window.open(`/index.php/AdminApi/Card/curcardexport?token=${token}`, '_blank');
   };
 
   // 删除
@@ -124,13 +143,7 @@ function FormTable() {
       align: 'left',
       width: 100,
     },
-    {
-      title: '微信昵称',
-      dataIndex: 'wxnickname',
-      key: 'wxnickname',
-      width: 100,
-      align: 'left',
-    },
+
     {
       title: '微信头像',
       dataIndex: 'wxavatarurl',
@@ -141,22 +154,6 @@ function FormTable() {
 
     },
     {
-      title: '头像',
-      dataIndex: 'face',
-      key: 'face',
-      width: 100,
-      align: 'left',
-      render: (text: string) => <Image width={50} height={50} src={text} />,
-
-    },
-    {
-      title: '自拍',
-      dataIndex: 'zipaiphoto',
-      key: 'zipaiphoto',
-      width: 100,
-      render: (text: string) => <Image width={50} height={50} src={text} />,
-    },
-    {
       title: '手机',
       dataIndex: 'mobile',
       key: 'mobile',
@@ -164,6 +161,7 @@ function FormTable() {
       align: 'left',
     },
     {
+<<<<<<< HEAD
       title: '生日',
       dataIndex: 'birthday',
       key: 'birthday',
@@ -193,6 +191,8 @@ function FormTable() {
       align: 'left',
     },
     {
+=======
+>>>>>>> 6fadbeb242a5d3e53cf7493a1506da0123f0b23e
       title: '操作',
       dataIndex: 'operate',
       key: 'operate',
@@ -200,7 +200,7 @@ function FormTable() {
       render: (_value: unknown, row: ITableItem) => (
         <>
           <Auth authCode={null}>
-            <TableButton onClick={() => openModalWithOperate(VIEW, row)}>查看</TableButton>
+            <TableButton onClick={() => handleCheckCard(row)}>查看会员卡</TableButton>
           </Auth>
           <Auth authCode={null}>
             <TableButton onClick={() => openModalWithOperate(REVIEW, row)}>审核</TableButton>
@@ -235,6 +235,11 @@ function FormTable() {
                 </Select>
               </Form.Item>
             </Col>
+            <Col span={6}>
+              <Form.Item name='phone' label='手机号'>
+                <Input placeholder='请输入' allowClear />
+              </Form.Item>
+            </Col>
           </Row>
         </Form>
       </FilterFormWrapper>
@@ -244,7 +249,7 @@ function FormTable() {
         btns={(
           <>
             <Auth authCode={null}>
-              <Button type='primary' onClick={() => openModalWithOperate('设置年会员')}>设置年会员价格</Button>
+              <Button type='primary' onClick={handleExport}>导出</Button>
             </Auth>
             <Auth authCode={null}>
               <Button type='primary' onClick={() => openModalWithOperate('设置背景')}>设置背景</Button>

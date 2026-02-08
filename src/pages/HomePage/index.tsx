@@ -1,8 +1,8 @@
 /*
  * @Author: 董方旭
  * @Date: 2021-02-01 11:14:47
- * @LastEditors: 董方旭
- * @LastEditTime: 2021-10-21 20:23:11
+ * @LastEditors: 张驰阳 zhangchiyang@sfmail.sf-express.com
+ * @LastEditTime: 2023-12-21 23:42:50
  * @Description: Homepage
  */
 import React from 'react';
@@ -10,7 +10,7 @@ import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
 import { StyledInterface } from 'styled-components';
 import { injectIntl, InjectedIntlProps } from 'react-intl';
-
+import shouye from 'static/images/shouye.png';
 import styled from 'utils/styled-px2vw';
 
 import messages from './messages';
@@ -45,7 +45,7 @@ function HomePage(props: InjectedIntlProps) {
     <HomePageWrapper>
       <div className='welcome'>{intl.formatMessage(messages.welcome)}</div>
       {/* <div className='sub'>Welcome to the operation platform of medical face-to-face customer system</div> */}
-      <img src='https://festatic-1254389369.cos.ap-guangzhou.myqcloud.com/yilushunxinhomepage-ch.png' alt='首页-插画' />
+      <img src={shouye} alt='首页-插画' />
     </HomePageWrapper>
   );
 }

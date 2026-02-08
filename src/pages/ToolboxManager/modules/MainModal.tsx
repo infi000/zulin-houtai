@@ -108,6 +108,18 @@ function MainModal() {
         </Form.Item>
         </Col>
         <Col span={24}><Form.Item
+          label='时长'
+          name='duration:'
+          initialValue={memoData?.duration || ''}
+          rules={[{ required: true, message: '必填项' }]}
+        >
+          <InputNumber
+            placeholder='请输入'
+            disabled={isView(type)}
+          />
+        </Form.Item>
+        </Col>
+        <Col span={24}><Form.Item
           label='工具箱标题'
           name='title'
           initialValue={memoData?.title || ''}

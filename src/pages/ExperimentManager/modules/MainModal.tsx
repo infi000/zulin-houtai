@@ -196,6 +196,20 @@ function MainModal() {
                 />
               </Form.Item>
               </Col>
+              <Col span={24}><Form.Item
+                label='最小起租时长'
+                name='minhour'
+                initialValue={(memoData?.minhour || memoData?.minhour === 0) ? memoData?.minhour : 1}
+              >
+                <InputNumber
+                  placeholder='请输入'
+                  disabled={isView(type)}
+                  style={{ width: '100%' }}
+                  max={10}
+                  min={1}
+                />
+              </Form.Item>
+              </Col>
               <Col span={24}>
                 <Form.Item
                   label='项目大图'

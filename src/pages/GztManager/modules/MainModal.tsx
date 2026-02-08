@@ -68,6 +68,7 @@ function MainModal() {
     dispatch(actions.updateMainModalVisible(false));
   };
 
+<<<<<<< HEAD
   const handleChangeTools = (opt:any) => {
     const f_tools = toolsList.filter(item => opt.includes(item.id))?.map(item => {
       const { id, price, tbid } = item;
@@ -84,6 +85,8 @@ function MainModal() {
     form2.setFieldValue('total', total);
   };
 
+=======
+>>>>>>> 6fadbeb242a5d3e53cf7493a1506da0123f0b23e
   const handleSearch = () => {
     const params = form.getFieldsValue();
     const formatParams = formatSearchDetailParams({
@@ -108,6 +111,7 @@ function MainModal() {
       const { id, price, tbid } = item;
       return { id, price, tbid };
     });
+<<<<<<< HEAD
     const eptotalprice = f_tools?.reduce((res:any, cur:any) => {
       const { price } = cur;
       // eslint-disable-next-line no-param-reassign
@@ -118,6 +122,9 @@ function MainModal() {
     console.log(falsyParamsFilter(formatPostParams({ ...values, tools: JSON.stringify(f_tools), eptotalprice })))
     // return ;
     dispatch(postCreate(falsyParamsFilter(formatPostParams({ ...values, tools: JSON.stringify(f_tools), eptotalprice }))));
+=======
+    dispatch(postCreate(falsyParamsFilter(formatPostParams({ ...values, tools: f_tools }))));
+>>>>>>> 6fadbeb242a5d3e53cf7493a1506da0123f0b23e
   };
   const columns: ColumnsType = [
     {
@@ -307,7 +314,10 @@ function MainModal() {
               <Select
                 showSearch
                 allowClear
+<<<<<<< HEAD
                 onChange={handleChangeTools}
+=======
+>>>>>>> 6fadbeb242a5d3e53cf7493a1506da0123f0b23e
                 mode='multiple'
                 filterOption={
                   (input: any, option: any) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
@@ -323,6 +333,7 @@ function MainModal() {
 
           <Col span={24}>
             <Form.Item
+<<<<<<< HEAD
               label='自定义金额'
               name='total'
             >
@@ -331,6 +342,8 @@ function MainModal() {
           </Col>
           <Col span={24}>
             <Form.Item
+=======
+>>>>>>> 6fadbeb242a5d3e53cf7493a1506da0123f0b23e
               label='备注信息'
               name='remark'
             >
