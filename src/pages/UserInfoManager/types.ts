@@ -33,7 +33,7 @@ export interface ITableItem {
 
 //  查询项字段
 export type TSearchParams = Partial<Omit<ITableItem, 'id'>> & {
-  mobile?: string; // 手机号
+  phone?: string; // 手机号
 };
 
 // 新建字段

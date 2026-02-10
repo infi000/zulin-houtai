@@ -136,23 +136,6 @@ const slice = createSlice({
       state.mainModal.visible = false;
       state.refresh += 1;
     });
-    builder.addCase(getZlListExport.fulfilled, (state, action) => {
-      const data = action.payload?.data;
-      if (Array.isArray(data)) {
-        // 导出数据为 Excel
-        const exportData = data.map((item: any) => ({
-          '标题': item.title || '',
-          '购买量': item.sale || '0',
-          '价格': item.price || '0',
-          '租赁价格': item.deposit || '0',
-        }));
-        const worksheet = XLSX.utils.json_to_sheet(exportData);
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, '租赁列表');
-        XLSX.writeFile(workbook, `租赁列表_${Date.now()}.xlsx`);
-        message.success('导出成功');
-      }
-    });
   },
 });
 

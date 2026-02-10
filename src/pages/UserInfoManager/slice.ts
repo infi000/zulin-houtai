@@ -135,23 +135,6 @@ const slice = createSlice({
       state.mainModal.visible = false;
       state.refresh += 1;
     });
-    builder.addCase(getUserExport.fulfilled, (state, action) => {
-      const data = action.payload?.data;
-      if (Array.isArray(data)) {
-        // 导出数据为 Excel
-        const exportData = data.map((item: any) => ({
-          '用户昵称': item.nickname || '',
-          '手机号': item.mobile || '',
-          '余额': item.ta || '0',
-          '用户等级': item.mtype === '1' ? '普通会员' : item.mtype === '2' ? '年会员' : '',
-        }));
-        const worksheet = XLSX.utils.json_to_sheet(exportData);
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, '用户列表');
-        XLSX.writeFile(workbook, `用户列表_${Date.now()}.xlsx`);
-        message.success('导出成功');
-      }
-    });
   },
 });
 

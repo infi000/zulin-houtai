@@ -8,8 +8,6 @@ import { NAMESPACE } from './constants';
 import services from './services';
 import { message } from 'antd';
 
-import moment from 'moment';
-
 export const initialState: IPageState = {
   refresh: 0,
   loading: false,
@@ -167,34 +165,6 @@ const slice = createSlice({
       message.success('修改成功');
       state.mainModal.visible = false;
       state.refresh += 1;
-    });
-    builder.addCase(getOrderExport.fulfilled, (state, action) => {
-      const data = action.payload?.data;
-      if (Array.isArray(data)) {
-        // 导出数据为 Excel
-        const exportData = data.map((item: any) => ({
-          '订单号': item.orderid || '',
-          '预约用户id': item.uid || '',
-          '预约用户名称': item.uname || '',
-          '预约电话': item.uphone || '',
-          '订单标题': item.title || '',
-          '包含的押金金额': item.desposit || '0',
-          '总金额': item.total || '0',
-          '会员优惠金额': item.discount || '0',
-          '积分抵扣金额': item.scorecount || '0',
-          '需要支付金额': item.totalpay || '0',
-          '订单状态': O_STATUS_MAP.get(item.ostatus) || '',
-          '订单创建时间': item.ctime ? moment.unix(item.ctime).format('YYYY-MM-DD HH:mm:ss') : '',
-          '开始时间': item.starttime || '',
-          '结束时间': item.endtime || '',
-          '更新时间': item.uptime ? moment.unix(item.uptime).format('YYYY-MM-DD HH:mm:ss') : '',
-        }));
-        const worksheet = XLSX.utils.json_to_sheet(exportData);
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, '订单列表');
-        XLSX.writeFile(workbook, `订单列表_${Date.now()}.xlsx`);
-        message.success('导出成功');
-      }
     });
     builder.addCase(postRefund.fulfilled, state => {
       message.success('退款成功');

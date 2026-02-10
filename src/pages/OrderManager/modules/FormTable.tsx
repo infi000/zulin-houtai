@@ -156,7 +156,7 @@ function FormTable() {
     dispatch(actions.updateMainModal({
       visible: true,
       type: '充值记录',
-      data: { uid },
+      data, // 传递完整的 data 对象，符合 ITableItem 类型
     }));
     // 获取充值记录列表
     dispatch(getRechargeList({ uid, pageNum: 1, pageSize: 100 }));

@@ -64,7 +64,12 @@ function parseUrl<T>(baseUrl = '', relativeUrl = '', query?: T): string {
   }
   return res;
 }
+function getWindowOpen(url:any,params:any) {
+  const token = getCookie('token');
+         const newUrl = parseUrl('/index.php/AdminApi', url, {...params, token});
 
+  window.open(newUrl);
+}
 /**
  * 处理请求头部
  * @param headerInit
@@ -349,4 +354,5 @@ export {
   postFormDataRequest,
   postJsonQueryRequest,
   postFormDataRequestWx,
+  getWindowOpen,
 };
