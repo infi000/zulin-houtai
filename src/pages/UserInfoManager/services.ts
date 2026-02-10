@@ -153,6 +153,13 @@ export const getDataDetailService = (params: { uid: any }) =>
     params,
   );
 
+// 导出用户列表
+export const getUserExportService = (params: TSearchParams) =>
+  getRequest<TSearchParams, IResponseData<ITableItem[]>>(
+    '/User/userexport',
+    params,
+  );
+
 export default {
   getDataListService,
   postCreateService,
@@ -162,4 +169,5 @@ export default {
   postSetuserutService,
   postSetBgService,
   postUserverify,
+  getUserExportService,
 };

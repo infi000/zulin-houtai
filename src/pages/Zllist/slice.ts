@@ -8,6 +8,7 @@ import { NAMESPACE } from './constants';
 import services from './services';
 import { message } from 'antd';
 
+
 export const initialState: IPageState = {
   refresh: 0,
   loading: false,
@@ -62,6 +63,12 @@ export const postSetBg = createServiceAsyncThunk(
 export const postUserverify = createServiceAsyncThunk(
   `${NAMESPACE}/postUserverify`,
   async (params:any) => services.postUserverify(params),
+);
+
+// 导出租赁列表
+export const getZlListExport = createServiceAsyncThunk(
+  `${NAMESPACE}/getZlListExport`,
+  async (params: TSearchParams) => services.getZlListExportService(params),
 );
 
 const slice = createSlice({
@@ -128,6 +135,23 @@ const slice = createSlice({
       message.success('设置成功');
       state.mainModal.visible = false;
       state.refresh += 1;
+    });
+    builder.addCase(getZlListExport.fulfilled, (state, action) => {
+      const data = action.payload?.data;
+      if (Array.isArray(data)) {
+        // 导出数据为 Excel
+        const exportData = data.map((item: any) => ({
+          '标题': item.title || '',
+          '购买量': item.sale || '0',
+          '价格': item.price || '0',
+          '租赁价格': item.deposit || '0',
+        }));
+        const worksheet = XLSX.utils.json_to_sheet(exportData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, '租赁列表');
+        XLSX.writeFile(workbook, `租赁列表_${Date.now()}.xlsx`);
+        message.success('导出成功');
+      }
     });
   },
 });

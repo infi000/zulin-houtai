@@ -11,7 +11,7 @@ import { selectAllDictMap } from 'store/selectors';
 import { UploadOutlined } from '@ant-design/icons';
 import ImageBox from 'components/ImageBox';
 import { useState } from 'react';
-import { actions, getOrdermodify, postCreate, postEdit, postOrderrenew, postVerify } from '../slice';
+import { actions, getOrdermodify, postCreate, postEdit, postOrderrenew, postVerify, getRechargeList } from '../slice';
 import selectors from '../selectors';
 import { IOrderDetail, ITableItem } from '../types';
 import { formatPostParams, formatPostParams2 } from '../adapter';
@@ -35,6 +35,7 @@ function MainModal() {
   const mainModal = useSelector(selectors.mainModal);
   const loading = useSelector(selectors.loading);
   const dictMaps = useSelector(selectAllDictMap);
+  const rechargeList = useSelector(selectors.rechargeList);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [qr, setQr] = useState(null);
   const { data, type = EDIT, visible = false } = mainModal;
@@ -83,6 +84,8 @@ function MainModal() {
         return '订单核销';
       case '续订':
         return '订单续订';
+      case '充值记录':
+        return '充值记录';
       default:
         return '查看';
     }
@@ -221,6 +224,40 @@ function MainModal() {
           {
             type === '继续支付' && (
               <img src={qr} width={300} height={300} alt='图片二维码' />
+            )
+          }
+          {
+            type === '充值记录' && (
+              <Card title='充值记录' size='small'>
+                <Table
+                  columns={[
+                    {
+                      title: '充值时间',
+                      dataIndex: 'ctime',
+                      key: 'ctime',
+                      render: (text: any) => (text ? moment.unix(text).format('YYYY-MM-DD HH:mm:ss') : '-'),
+                    },
+                    {
+                      title: '充值金额',
+                      dataIndex: 'amount',
+                      key: 'amount',
+                    },
+                    {
+                      title: '充值方式',
+                      dataIndex: 'pay_type',
+                      key: 'pay_type',
+                    },
+                    {
+                      title: '状态',
+                      dataIndex: 'status',
+                      key: 'status',
+                    },
+                  ]}
+                  dataSource={rechargeList || []}
+                  pagination={false}
+                  rowKey='id'
+                />
+              </Card>
             )
           }
           {

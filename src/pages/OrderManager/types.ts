@@ -14,6 +14,7 @@ export interface IPageState {
   pagination: IPagination;
   mainModal: IModalData<ITableItem>;
   importModal: TImportModal;
+  rechargeList: any[]; // 充值记录列表
 }
 
 // column全量字段
@@ -84,7 +85,9 @@ export interface IToolItem {
 
 
 //  查询项字段
-export type TSearchParams = Partial<Omit<ITableItem, 'id'>>;
+export type TSearchParams = Partial<Omit<ITableItem, 'id'>> & {
+  phone?: string; // 手机号
+};
 
 // 新建字段
 export type TCreateParams = Omit<ITableItem, ''>;

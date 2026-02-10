@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Col, Form, Input, Row, Table, Button, Image, Select, DatePicker, Tooltip } from 'antd';
+import { Col, Form, Input, Row, Table, Button, Image, Select, DatePicker, Tooltip, Modal } from 'antd';
 import { ColumnsType } from 'antd/lib/table/interface';
 import { useSelector, useDispatch } from 'react-redux';
 import { falsyParamsFilter } from 'utils/filters';
@@ -12,12 +12,13 @@ import { CREATE, EDictMap, EExportModuleId, REVIEW, VIEW } from 'utils/constants
 import Auth from 'containers/AuthController';
 import authMap from 'configs/auth.conf';
 import { objToArray } from 'utils/utils';
-import { actions, getDataDetail, getDataList, getDel, getOnline } from '../slice';
+import { actions, getDataDetail, getDataList, getDel, getOnline, getZlListExport } from '../slice';
 import selectors from '../selectors';
 import { ITableItem, TSearchParams } from '../types';
 import { formatSearchParams } from '../adapter';
 import useDebounce from 'hooks/useDebounce';
 import { M_TYPE_MAP } from '../constants';
+
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -104,6 +105,19 @@ function FormTable() {
     dispatch(getOnline({ tid: id }));
   };
 
+  // 导出租赁列表
+  const handleExport = async () => {
+    const params = form.getFieldsValue();
+    const formatParams = formatSearchParams(params);
+    Modal.confirm({
+      title: '确认导出',
+      content: '是否确认导出租赁列表？',
+      onOk: async () => {
+        dispatch(getZlListExport(falsyParamsFilter<TSearchParams>(formatParams)));
+      },
+    });
+  };
+
   useEffect(() => {
     handleSearch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -169,9 +183,30 @@ function FormTable() {
 
   return (
     <>
+      <FilterFormWrapper
+        onSearch={() => handleSearch()}
+        onReset={() => handleReset()}
+      >
+        <Form {...formItemLayout} form={form}>
+          <Row>
+            <Col span={6}>
+              <Form.Item name='phone' label='手机号'>
+                <Input allowClear placeholder='请输入手机号' />
+              </Form.Item>
+            </Col>
+          </Row>
+        </Form>
+      </FilterFormWrapper>
       <TableWrapper
         title='列表'
         isShowTitlePrefixIcon
+        btns={(
+          <>
+            <Auth authCode={null}>
+              <Button type='primary' onClick={handleExport}>导出租赁列表</Button>
+            </Auth>
+          </>
+        )}
       >
         <Table
           bordered

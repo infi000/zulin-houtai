@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Col, Form, Input, Row, Table, Button, Image, Select, DatePicker, Popconfirm } from 'antd';
+import { Col, Form, Input, Row, Table, Button, Image, Select, DatePicker, Popconfirm, Modal, InputNumber } from 'antd';
 import { ColumnsType } from 'antd/lib/table/interface';
 import { useSelector, useDispatch } from 'react-redux';
 import { falsyParamsFilter } from 'utils/filters';
@@ -14,11 +14,13 @@ import authMap from 'configs/auth.conf';
 import { objToArray } from 'utils/utils';
 import useDebounce from 'hooks/useDebounce';
 import moment from 'moment';
-import { actions, getDataDetail, getDataList, getDel, getOnline, getTa } from '../slice';
+import { actions, getDataDetail, getDataList, getDel, getOnline, getTa, getOrderExport, postRefund, getRechargeList } from '../slice';
 import selectors from '../selectors';
 import { ITableItem, TSearchParams } from '../types';
 import { formatSearchParams } from '../adapter';
 import { O_STATUS_MAP } from '../constants';
+
+import { message } from 'antd';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -106,6 +108,58 @@ function FormTable() {
   const handleTa = (data: ITableItem) => {
     const { id } = data;
     dispatch(getTa({ oid: id }));
+  };
+
+  // 导出订单列表
+  const handleExport = async () => {
+    const params = form.getFieldsValue();
+    const formatParams = formatSearchParams(params);
+    Modal.confirm({
+      title: '确认导出',
+      content: '是否确认导出订单列表？',
+      onOk: async () => {
+        dispatch(getOrderExport(falsyParamsFilter<TSearchParams>(formatParams)));
+      },
+    });
+  };
+
+  // 退款
+  const handleRefund = (data: ITableItem) => {
+    const { id } = data;
+    let refundAmount = '';
+    Modal.confirm({
+      title: '退款',
+      content: (
+        <div>
+          <p>请输入退款金额：</p>
+          <InputNumber
+            min={0}
+            style={{ width: '100%' }}
+            placeholder="请输入退款金额"
+            onChange={(value) => { refundAmount = String(value); }}
+          />
+        </div>
+      ),
+      onOk: () => {
+        if (!refundAmount || parseFloat(refundAmount) <= 0) {
+          message.error('请输入有效的退款金额');
+          return Promise.reject();
+        }
+        return dispatch(postRefund({ oid: String(id), amount: refundAmount, refund_type: 'original' }));
+      },
+    });
+  };
+
+  // 充值记录
+  const handleRechargeRecords = (data: ITableItem) => {
+    const { uid } = data;
+    dispatch(actions.updateMainModal({
+      visible: true,
+      type: '充值记录',
+      data: { uid },
+    }));
+    // 获取充值记录列表
+    dispatch(getRechargeList({ uid, pageNum: 1, pageSize: 100 }));
   };
 
   useEffect(() => {
@@ -254,6 +308,12 @@ function FormTable() {
               <TableButton>铊币支付</TableButton>
             </Popconfirm>
           </Auth>
+          <Auth authCode={null}>
+            <TableButton onClick={() => handleRefund(row)}>退款</TableButton>
+          </Auth>
+          <Auth authCode={null}>
+            <TableButton onClick={() => handleRechargeRecords(row)}>充值记录</TableButton>
+          </Auth>
           {/* <Auth authCode={null}>
             <TableButton isWrapperConfirm onClick={() => handleDel(row)}>下线</TableButton>
           </Auth>
@@ -308,6 +368,11 @@ function FormTable() {
                 <Input allowClear placeholder='请输入' />
               </Form.Item>
             </Col>
+            <Col span={6}>
+              <Form.Item name='phone' label='手机号'>
+                <Input allowClear placeholder='请输入手机号' />
+              </Form.Item>
+            </Col>
           </Row>
         </Form>
       </FilterFormWrapper>
@@ -321,6 +386,9 @@ function FormTable() {
             </Auth>
             <Auth authCode={null}>
               <Button type='primary' onClick={() => openModalWithOperate(CREATE)}>新建</Button>
+            </Auth>
+            <Auth authCode={null}>
+              <Button type='primary' onClick={handleExport}>导出订单列表</Button>
             </Auth>
           </>
         )}

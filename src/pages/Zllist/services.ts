@@ -151,6 +151,13 @@ export const getDataDetailService = (params: { uid: any }) =>
     params,
   );
 
+// 导出租赁列表
+export const getZlListExportService = (params: TSearchParams) =>
+  getRequest<TSearchParams, IResponseData<ITableItem[]>>(
+    '/Lease/zlexport',
+    params,
+  );
+
 export default {
   getDataListService,
   postCreateService,
@@ -160,4 +167,5 @@ export default {
   getOnlineService,
   postSetBgService,
   postUserverify,
+  getZlListExportService,
 };

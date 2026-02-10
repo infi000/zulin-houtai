@@ -87,6 +87,27 @@ export const getOrdermodifyService = (params: any) =>
     params,
   );
 
+// 导出订单列表
+export const getOrderExportService = (params: TSearchParams) =>
+  getRequest<TSearchParams, IResponseData<ITableItem[]>>(
+    '/Lease/orderexport',
+    params,
+  );
+
+// 退款
+export const postRefundService = (params: { oid: string; amount: string; refund_type: string }) =>
+  postFormDataRequest<{ oid: string; amount: string; refund_type: string }, IResponseData<string>>(
+    '/Lease/orderrefund',
+    params,
+  );
+
+// 充值记录
+export const getRechargeListService = (params: { uid: string } & IPagination) =>
+  getRequest<{ uid: string } & IPagination, IListResponse<any>>(
+    '/Lease/rechargelist',
+    formatPage(params),
+  );
+
 export default {
   getDataListService,
   postCreateService,
@@ -99,4 +120,7 @@ export default {
   getOrderwxcodeService,
   getOrdermodifyService,
   getTaService,
+  getOrderExportService,
+  postRefundService,
+  getRechargeListService,
 };
