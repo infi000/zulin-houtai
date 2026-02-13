@@ -14,7 +14,7 @@ import { useHistory } from 'react-router-dom';
 
 import authMap from 'configs/auth.conf';
 import { objToArray } from 'utils/utils';
-import { actions, getDataDetail, getDataList, getDel, getOnline, postSetuserut } from '../slice';
+import { actions, getDataDetail, getDataList, getDel, getOnline, postSetuserut, getUserExport } from '../slice';
 import selectors from '../selectors';
 import { ITableItem, TSearchParams } from '../types';
 import { formatSearchParams } from '../adapter';
@@ -137,6 +137,12 @@ function FormTable() {
     // });
     // history.push(newPath)
   });
+  // 导出
+  const handleExport = () => {
+    const params = form.getFieldsValue();
+    const formatParams = formatSearchParams(params);
+    dispatch(getUserExport(formatParams));
+  };
 
   useEffect(() => {
     handleSearch();
@@ -286,6 +292,9 @@ function FormTable() {
         isShowTitlePrefixIcon
         btns={(
           <>
+            <Auth authCode={null}>
+              <Button type='primary' onClick={handleExport}>导出</Button>
+            </Auth>
             <Auth authCode={null}>
               <Button type='primary' onClick={() => openModalWithOperate('设置年会员')}>设置年会员价格</Button>
             </Auth>

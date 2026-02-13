@@ -6,8 +6,8 @@
  * @FilePath: /houtai/src/pages/ToolManager/services.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
-import { getRequest, postRequest, postFormDataRequest } from 'utils/request';
-import { formatPage } from 'utils/utils';
+import { getRequest, postRequest, postFormDataRequest, getWindowOpen } from 'utils/request';
+import { formatPage, getCookie } from 'utils/utils';
 import { ITableItem, TSearchParams, TCreateParams, TModifyParams } from './types';
 // 3.1  用户列表
 // User/search
@@ -48,7 +48,7 @@ import { ITableItem, TSearchParams, TCreateParams, TModifyParams } from './types
 
 // {
 // 	"res": "succ",
-// 	"data":"审核完成！" 
+// 	"data":"审核完成！"
 // }
 
 // 3.3  获取协议详细信息agreementdetail
@@ -112,11 +112,11 @@ export const getDataListService = (params: TSearchParams & IPagination) =>
     '/User/search',
     formatPage(params),
   );
-  
+
 // 设置setyearprice
 export const postUserverify = (params:any) =>
   postFormDataRequest<any, IResponseData<string>>('/User/userverify', params);
-  
+
 // 设置setbg
 export const postSetBgService = (params: { yearbg: any; tabg: any  }) =>
   postFormDataRequest< { yearbg: any; tabg: any  }, IResponseData<string>>('/User/setbg', params);
@@ -159,6 +159,14 @@ export const getDataDetailService = (params: { uid: any }) =>
 // 删除
 export const postInfoModifyService = (params:any) =>
   postRequest<any, IResponseData<any>>('/User/baseinfomodify', params);
+
+// 用户列表导出
+export const getUserExportService = (params: TSearchParams) => {
+  getWindowOpen('/User/userexport',
+    params,
+  );
+  return Promise.resolve({} as any);
+};
 export default {
   getDataListService,
   postCreateService,
@@ -170,4 +178,5 @@ export default {
   postUserverify,
   postBuysearchService,
   postInfoModifyService,
+  getUserExportService,
 };

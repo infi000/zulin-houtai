@@ -80,6 +80,12 @@ export const postInfoModify = createServiceAsyncThunk(
   async (params:any) => services.postInfoModifyService(params),
 );
 
+// 用户列表导出
+export const getUserExport = createServiceAsyncThunk(
+  `${NAMESPACE}/getUserExport`,
+  async (params: TSearchParams) => services.getUserExportService(params),
+);
+
 const slice = createSlice({
   name: NAMESPACE,
   initialState,
@@ -160,6 +166,9 @@ const slice = createSlice({
       message.success('设置成功');
       state.mainModal.visible = false;
       state.refresh += 1;
+    });
+    builder.addCase(getUserExport.fulfilled, state => {
+      message.success('导出成功');
     });
   },
 });

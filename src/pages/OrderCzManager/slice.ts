@@ -71,6 +71,11 @@ export const getOrdermodify = createServiceAsyncThunk(
   `${NAMESPACE}/getOrdermodify`,
   async (params: any) => services.getOrdermodifyService(params),
 );
+
+export const getBuyExport = createServiceAsyncThunk(
+  `${NAMESPACE}/getBuyExport`,
+  async (params: TSearchParams) => services.getBuyExportService(params),
+);
 const slice = createSlice({
   name: NAMESPACE,
   initialState,
@@ -140,6 +145,9 @@ const slice = createSlice({
       message.success('修改成功');
       state.mainModal.visible = false;
       state.refresh += 1;
+    });
+    builder.addCase(getBuyExport.fulfilled, state => {
+      message.success('导出成功');
     });
   },
 });

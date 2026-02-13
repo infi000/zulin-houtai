@@ -338,6 +338,13 @@ export const parseParams = (params: { [key: string]: any }) => (
     .join('&')
 );
 
+function getWindowOpen(url:any,params:any) {
+  const token = getCookie('token');
+         const newUrl = parseUrl('/index.php/AdminApi', url, {...params, token});
+
+  window.open(newUrl);
+}
+
 const { create, getRequest, postRequest,
    postJsonRequest, postFormDataRequest, postJsonQueryRequest, postFormDataRequestWx } = FetchRequest;
 
@@ -349,4 +356,5 @@ export {
   postFormDataRequest,
   postJsonQueryRequest,
   postFormDataRequestWx,
+  getWindowOpen
 };

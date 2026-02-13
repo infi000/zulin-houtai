@@ -6,8 +6,8 @@
  * @FilePath: /houtai/src/pages/OrderManager/services.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE，
  */
-import { getRequest, postRequest, postFormDataRequest } from 'utils/request';
-import { formatPage } from 'utils/utils';
+import { getRequest, postRequest, postFormDataRequest, getWindowOpen } from 'utils/request';
+import { formatPage, getCookie } from 'utils/utils';
 import { ITableItem, TSearchParams, TCreateParams, TModifyParams } from './types';
 // 获取列表
 export const getDataListService = (params: TSearchParams & IPagination) =>
@@ -90,6 +90,12 @@ export const getOrdermodifyService = (params: any) =>
     params,
   );
 
+// 导出充值记录
+export const getBuyExportService = (params: TSearchParams) => {
+  getWindowOpen('/User/buyexport', params);
+  return Promise.resolve({} as any);
+};
+
 export default {
   getDataListService,
   postCreateService,
@@ -101,4 +107,5 @@ export default {
   postOrderrenewService,
   getOrderwxcodeService,
   getOrdermodifyService,
+  getBuyExportService,
 };

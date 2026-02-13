@@ -421,6 +421,11 @@ function FormTable() {
                 </Select>
               </Form.Item>
             </Col>
+            <Col span={6}>
+              <Form.Item name='phone' label='手机号'>
+                <Input allowClear placeholder='请输入手机号' />
+              </Form.Item>
+            </Col>
 
           </Row>
         </Form>

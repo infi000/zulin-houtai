@@ -17,7 +17,7 @@ import { getQueryString, objToArray } from 'utils/utils';
 import useDebounce from 'hooks/useDebounce';
 import moment from 'moment';
 import styled from 'styled-components';
-import { actions, getDataDetail, getDataList, getDel, getOnline } from '../slice';
+import { actions, getDataDetail, getDataList, getDel, getOnline, getBuyExport } from '../slice';
 import selectors from '../selectors';
 import { ITableItem, TSearchParams } from '../types';
 import { formatSearchParams } from '../adapter';
@@ -116,6 +116,12 @@ function FormTable() {
   const handleOnline = (data: ITableItem) => {
     const { id } = data;
     dispatch(getOnline({ oid: id }));
+  };
+  // 导出
+  const handleExport = () => {
+    const params = form.getFieldsValue();
+    const formatParams = formatSearchParams(params);
+    dispatch(getBuyExport(formatParams));
   };
   // qe
   const handleQr = useDebounce((data: ITableItem) => {
@@ -235,6 +241,11 @@ function FormTable() {
                 </Select>
               </Form.Item>
             </Col>
+            <Col span={6}>
+              <Form.Item name='phone' label='手机号'>
+                <Input allowClear placeholder='请输入手机号' />
+              </Form.Item>
+            </Col>
 
           </Row>
         </Form>
@@ -245,6 +256,9 @@ function FormTable() {
           isShowTitlePrefixIcon
           btns={(
             <>
+              <Auth authCode={null}>
+                <Button type='primary' onClick={handleExport}>导出</Button>
+              </Auth>
               {/* <Auth authCode={null}>
                 <Button type='primary' onClick={handleImport}>导入</Button>
               </Auth>

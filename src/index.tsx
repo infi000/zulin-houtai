@@ -15,7 +15,6 @@ import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'connected-react-router';
 import * as FontFaceObserver from 'fontfaceobserver';
 import history from 'utils/history';
-import { AppContainer } from 'react-hot-loader';
 // A CSS library that provides consistent, cross-browser default styling of HTML elements alongside useful defaults.
 import 'sanitize.css/sanitize.css';
 
@@ -77,30 +76,16 @@ const MOUNT_NODE = document.getElementById('app');
 const render = (messages: ITranslationMessages): void => {
   ReactDOM.render(
     <Provider store={store}>
-      <AppContainer>
-        <LanguageProvider messages={messages}>
-          <ConnectedRouter history={history}>
-            <App />
-          </ConnectedRouter>
-        </LanguageProvider>
-      </AppContainer>
+      <LanguageProvider messages={messages}>
+        <ConnectedRouter history={history}>
+          <App />
+        </ConnectedRouter>
+      </LanguageProvider>
     </Provider>,
     MOUNT_NODE,
   );
 };
 
-// eslint-disable-next-line
-if ((module as any).hot) {
-  // 注意需要依赖@types/webpack-env这个包
-  // Hot reloadable React components and translation json files
-  // modules.hot.accept does not accept dynamic dependencies,
-  // have to be constants at compile-time
-  // eslint-disable-next-line
-  (module as any).hot.accept(['./i18n', 'pages/Layout'], () => {
-    ReactDOM.unmountComponentAtNode(MOUNT_NODE);
-    render(translationMessages);
-  });
-}
 render(translationMessages);
 
 // Install ServiceWorker and AppCache in the end since

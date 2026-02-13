@@ -6,6 +6,7 @@
  * @FilePath: /houtai/src/pages/Layout/index.tsx
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
+import { hot } from 'react-hot-loader/root';
 import * as React from 'react';
 import { Layout as AntdLayout } from 'antd';
 import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons';
@@ -91,4 +92,4 @@ function Layout() {
   }
 }
 
-export default Layout;
+export default hot(Layout);
