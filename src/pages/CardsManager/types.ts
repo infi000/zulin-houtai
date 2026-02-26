@@ -6,6 +6,12 @@
  * @FilePath: /houtai/src/pages/ExperimentManager/types.ts
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
+export interface IRelvCardModal {
+  visible: boolean;
+  mode: 'add' | 'delete';
+  cardId?: number;
+}
+
 export interface IPageState {
   refresh: number;
   loading: boolean;
@@ -14,6 +20,7 @@ export interface IPageState {
   pagination: IPagination;
   mainModal: IModalData<ITableItem>;
   importModal: TImportModal;
+  relvCardModal: IRelvCardModal;
 }
 
 // column全量字段
@@ -29,6 +36,7 @@ export interface ITableItem {
   price: any; // 卡价格
   usedaytype: any; // 使用日类型，1周二至周日；2周二至周五
   remark: any; // 卡片说明
+  relesalecards?: ITableItem[]; // 关联的销售卡列表
 }
 
 //  查询项字段

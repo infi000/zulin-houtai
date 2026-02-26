@@ -24,6 +24,10 @@ export const initialState: IPageState = {
   importModal: {
     visible: false,
   },
+  relvCardModal: {
+    visible: false,
+    mode: 'add',
+  },
 };
 
 export const getDataList = createServiceAsyncThunk(
@@ -56,6 +60,16 @@ export const getOnline = createServiceAsyncThunk(
   async (params: {cid: number}) => services.getOnlineService(params),
 );
 
+export const addRelvCard = createServiceAsyncThunk(
+  `${NAMESPACE}/addRelvCard`,
+  async (params: { cardid: number; relvcardids: string }) => services.addRelvCardService(params),
+);
+
+export const deleteRelvCard = createServiceAsyncThunk(
+  `${NAMESPACE}/deleteRelvCard`,
+  async (params: { cardid: number; relvcardids: string }) => services.deleteRelvCardService(params),
+);
+
 
 
 const slice = createSlice({
@@ -82,6 +96,9 @@ const slice = createSlice({
     },
     updateImportModal(state, action: PayloadAction<IPageState['importModal']>) {
       state.importModal = action.payload;
+    },
+    updateRelvCardModal(state, action: PayloadAction<IPageState['relvCardModal']>) {
+      state.relvCardModal = action.payload;
     },
   },
   // 异步的成功、失败处理，可以使用类似上面reducers的设置方式，但是由于是对字符串的捕获，会损失类型；
@@ -111,6 +128,16 @@ const slice = createSlice({
     });
     builder.addCase(getOnline.fulfilled, state => {
       message.success('上线成功');
+      state.refresh += 1;
+    });
+    builder.addCase(addRelvCard.fulfilled, state => {
+      message.success('添加关联卡成功');
+      state.relvCardModal.visible = false;
+      state.refresh += 1;
+    });
+    builder.addCase(deleteRelvCard.fulfilled, state => {
+      message.success('删除关联卡成功');
+      state.relvCardModal.visible = false;
       state.refresh += 1;
     });
   },

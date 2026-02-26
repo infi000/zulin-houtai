@@ -8,6 +8,7 @@ import saga from './saga';
 import { sliceKey, reducer, actions } from './slice';
 import FormTable from './modules/FormTable';
 import MainModal from './modules/MainModal';
+import RelvCardModal from './modules/RelvCardModal';
 import selectors from './selectors';
 
 function Page() {
@@ -25,6 +26,7 @@ function Page() {
       <PageWrapper>
         <FormTable />
         <MainModal />
+        <RelvCardModal />
         { importModal.visible && <ImportModal {...importModal.data} onClose={handleImportModalClose} />}
       </PageWrapper>
     </ErrorBoundary>

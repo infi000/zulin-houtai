@@ -65,6 +65,13 @@ export const postCheckService = (params: any) =>
     params,
   );
 
+// 订单退款
+export const postRefundService = (params: { oid: string; money: number; usercardleft?: any }) =>
+  postRequest<{ oid: string; money: number; usercardleft?: any }, IResponseData<string>>(
+    '/Card/usercardorderrefund',
+    params,
+  );
+
 export default {
   getDataListService,
   postCreateService,
@@ -74,5 +81,6 @@ export default {
   postSetuserutService,
   postSetBgService,
   postUserverify,
-  postCheckService
+  postCheckService,
+  postRefundService
 };

@@ -71,6 +71,11 @@ export const postCheck = createServiceAsyncThunk(
   async (params:any) => services.postCheckService(params),
 );
 
+export const postRefund = createServiceAsyncThunk(
+  `${NAMESPACE}/postRefund`,
+  async (params: { oid: string; money: number; usercardleft?: any }) => services.postRefundService(params),
+);
+
 const slice = createSlice({
   name: NAMESPACE,
   initialState,
@@ -138,6 +143,10 @@ const slice = createSlice({
     });
     builder.addCase(postCheck.fulfilled, state => {
       message.success('核销成功');
+      state.refresh += 1;
+    });
+    builder.addCase(postRefund.fulfilled, state => {
+      message.success('退款成功');
       state.refresh += 1;
     });
   },

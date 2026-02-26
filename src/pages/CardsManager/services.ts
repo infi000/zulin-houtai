@@ -35,6 +35,14 @@ export const getOnlineService = (params: { cid: number }) =>
 export const getDataDetailService = (params: { cid: number }) =>
   getRequest<{ cid: number }, IResponseData<ITableItem>>('/Card/detail', params);
 
+// 添加关联卡
+export const addRelvCardService = (params: { cardid: number; relvcardids: string }) =>
+  postRequest<{ cardid: number; relvcardids: string }, IResponseData<string>>('/Card/addrelvcard', params);
+
+// 删除关联卡
+export const deleteRelvCardService = (params: { cardid: number; relvcardids: string }) =>
+  postRequest<{ cardid: number; relvcardids: string }, IResponseData<string>>('/Card/deleterelvcard', params);
+
 export default {
   getDataListService,
   postCreateService,
@@ -42,5 +50,7 @@ export default {
   getDelService,
   getDataDetailService,
   getOnlineService,
-  postStatusService
+  postStatusService,
+  addRelvCardService,
+  deleteRelvCardService,
 };

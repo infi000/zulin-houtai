@@ -20,6 +20,7 @@ import { ITableItem, TSearchParams } from '../types';
 import { formatSearchParams } from '../adapter';
 import { M_TYPE_MAP } from '../constants';
 import CheckModal from './CheckModal';
+import RefundModal from './RefundModal';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -45,6 +46,7 @@ function FormTable() {
   const dictMaps = useSelector(selectAllDictMap);
   const dispatch = useDispatch();
   const [checkModal, setCheckModal] = useState({ show: false, data: {} });
+  const [refundModal, setRefundModal] = useState({ show: false, data: {} });
   const UUID = getQueryString('uid');
 
   const searchCondition = useSelector(selectors.searchCondition);
@@ -114,6 +116,11 @@ function FormTable() {
     const { id } = data;
     dispatch(postSetuserut({ uid: id, ut }));
   });
+
+  // 订单退款
+  const handleRefund = (data: ITableItem) => {
+    setRefundModal({ show: true, data });
+  };
 
   useEffect(() => {
     handleSearch();
@@ -213,6 +220,9 @@ function FormTable() {
             <Button type='primary' onClick={() => setCheckModal({ show: true, data: row })}>核销</Button>
 
           </Auth>
+          <Auth authCode={null}>
+            <Button type='primary' onClick={() => handleRefund(row)}>订单退款</Button>
+          </Auth>
         </>
       ),
     },
@@ -276,6 +286,13 @@ function FormTable() {
           <CheckModal
             data={checkModal.data}
             onClose={() => setCheckModal({ show: false, data: {} })}
+          />
+        )}
+      {refundModal.show
+        && (
+          <RefundModal
+            data={refundModal.data}
+            onClose={() => setRefundModal({ show: false, data: {} })}
           />
         )}
 

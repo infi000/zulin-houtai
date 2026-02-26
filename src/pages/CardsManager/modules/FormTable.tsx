@@ -102,6 +102,11 @@ function FormTable() {
     dispatch(getOnline({ cid: id }));
   };
 
+  // 打开关联卡弹窗
+  const openRelvCardModal = (data: ITableItem, mode: 'add' | 'delete') => {
+    dispatch(actions.updateRelvCardModal({ visible: true, mode, cardId: data.id }));
+  };
+
   useEffect(() => {
     handleSearch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -192,7 +197,7 @@ function FormTable() {
       title: '操作',
       dataIndex: 'operate',
       key: 'operate',
-      width: 200,
+      width: 350,
       render: (_value: unknown, row: ITableItem) => (
         <>
           {/* <Auth authCode={null}>
@@ -209,6 +214,12 @@ function FormTable() {
           </Auth>
           <Auth authCode={null}>
             <TableButton isWrapperConfirm onClick={() => handleOnline(row)}>上线</TableButton>
+          </Auth>
+          <Auth authCode={null}>
+            <TableButton onClick={() => openRelvCardModal(row, 'add')}>添加关联卡</TableButton>
+          </Auth>
+          <Auth authCode={null}>
+            <TableButton onClick={() => openRelvCardModal(row, 'delete')}>删除关联卡</TableButton>
           </Auth>
         </>
       ),

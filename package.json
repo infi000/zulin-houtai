@@ -188,5 +188,8 @@
     "commitizen": {
       "path": "node_modules/cz-customizable"
     }
+  },
+  "volta": {
+    "node": "12.12.0"
   }
 }
