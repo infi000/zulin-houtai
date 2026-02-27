@@ -127,6 +127,11 @@ const config: Array<any> = [
         name: '会员卡管理',
         componentName: 'CardsManager',
       },
+      {
+        path: 'userCardOrders',
+        name: '购买记录',
+        componentName: 'UserCardOrders',
+      },
       // {
       //   path: 'rdManager',
       //   name: '入店客户',

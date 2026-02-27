@@ -296,6 +296,10 @@ export const menuMessages = defineMessages({
     id: `${scope}.importCardsManager`,
     defaultMessage: '导入卡管理',
   },
+  userCardOrders: {
+    id: `${scope}.userCardOrders`,
+    defaultMessage: '购买记录',
+  },
 });
 
 export const yesOrNoMessages = defineMessages({
