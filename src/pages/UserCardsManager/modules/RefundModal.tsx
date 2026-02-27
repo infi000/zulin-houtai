@@ -27,10 +27,10 @@ function RefundModal(props: IProps) {
   const [form] = Form.useForm();
 
   const handleRefund = async () => {
-    const { orderid } = data;
+    const { oid } = data;
     const { money, usercardleft } = await form.validateFields();
     const params = {
-      oid: orderid,
+      oid,
       money,
       ...(usercardleft ? { usercardleft: JSON.parse(usercardleft) } : {}),
     };
