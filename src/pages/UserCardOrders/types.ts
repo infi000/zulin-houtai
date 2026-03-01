@@ -14,6 +14,7 @@ export interface IPageState {
     wxid?: string;
     loading?: boolean;
   };
+  exportLoading?: boolean;
 }
 
 // column全量字段
@@ -22,9 +23,10 @@ export interface ITableItem {
   orderid: string; // 订单号
   uid: string; // 用户id
   uname: string; // 用户名
+  phone: string; // 手机号
   total: string; // 总金额
   remark: string; // 备注
-  ostatus: string; // 订单状态 0=已下单未支付, 1=已支付未核销, 2=核销完成, 3=关闭
+  ostatus: string; // 订单状态 0=已下单未支付, 1=已支付未核销, 2=核销完成, 3=关闭, 4=已退款
   cardtype: string; // 卡片类型 1=年卡, 2=季卡 等
   cardname: string; // 卡片名称
   ctime: string; // 创建时间（时间戳）

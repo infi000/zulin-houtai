@@ -27,8 +27,16 @@ export const getWxidService = (params: { oid: string }) =>
     params,
   );
 
+// 导出订单
+export const getExportService = (params: TSearchParams & IPagination) =>
+  getRequest<TSearchParams & IPagination, any>(
+    '/Card/exportusercardorders',
+    formatPage(params),
+  );
+
 export default {
   getDataListService,
   postRefundService,
   getWxidService,
+  getExportService,
 };

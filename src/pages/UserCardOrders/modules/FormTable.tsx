@@ -4,6 +4,7 @@
  */
 import * as React from 'react';
 import { Col, Form, Input, Row, Table, Button, DatePicker, Space } from 'antd';
+import { DownloadOutlined } from '@ant-design/icons';
 import { ColumnsType } from 'antd/lib/table/interface';
 import { useSelector, useDispatch } from 'react-redux';
 import { falsyParamsFilter } from 'utils/filters';
@@ -19,6 +20,7 @@ import { formatSearchParams } from '../adapter';
 import { O_STATUS_MAP, CARD_TYPE_MAP } from '../constants';
 import RefundModal from './RefundModal';
 import WxidModal from './WxidModal';
+import { getCookie } from 'utils/utils';
 
 const { useEffect, useRef, useState, useMemo } = React;
 
@@ -88,6 +90,26 @@ function FormTable() {
     dispatch(actions.updateWxidModal({ visible: false, wxid: undefined, loading: false }));
   };
 
+  // 导出当页
+  const handleExport = useDebounce(() => {
+    const params = form.getFieldsValue();
+    const formatParams = formatSearchParams({
+      ...params,
+      pageNum: pagination.pageNum,
+      pageSize: pagination.pageSize,
+    });
+    const token = getCookie('token');
+    const { odate, uid, phone } = formatParams;
+
+    let queryString = `token=${token}`;
+    if (odate) queryString += `&odate=${odate}`;
+    if (uid) queryString += `&uid=${uid}`;
+    if (phone) queryString += `&phone=${phone}`;
+    queryString += `&pageNum=${pagination.pageNum}&pageSize=${pagination.pageSize}`;
+
+    window.open(`/index.php/AdminApi/Card/exportusercardorders?${queryString}`, '_blank');
+  });
+
   // 初始化加载数据
   useEffect(() => {
     handleSearch();
@@ -118,6 +140,12 @@ function FormTable() {
       dataIndex: 'uname',
       key: 'uname',
       width: 120,
+    },
+    {
+      title: '手机号',
+      dataIndex: 'phone',
+      key: 'phone',
+      width: 130,
     },
     {
       title: '总金额',
@@ -192,11 +220,28 @@ function FormTable() {
                 <DatePicker placeholder="请选择日期" style={{ width: '100%' }} />
               </Form.Item>
             </Col>
+            <Col span={6}>
+              <Form.Item label="用户UID" name="uid" className="fullwidth-input">
+                <Input placeholder="请输入用户UID" />
+              </Form.Item>
+            </Col>
+            <Col span={6}>
+              <Form.Item label="手机号" name="phone" className="fullwidth-input">
+                <Input placeholder="请输入手机号" />
+              </Form.Item>
+            </Col>
           </Row>
         </Form>
       </FilterFormWrapper>
 
-      <TableWrapper>
+      <TableWrapper
+        title='列表'
+        btns={(
+          <>
+           <Button type='primary' onClick={handleExport}>导出</Button>
+          </>
+        )}
+      >
         <Table
           columns={columns}
           dataSource={tableData}
