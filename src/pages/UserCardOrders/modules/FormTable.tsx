@@ -156,8 +156,8 @@ function FormTable() {
     },
     {
       title: '备注',
-      dataIndex: 'remark',
-      key: 'remark',
+      dataIndex: 'cardremak',
+      key: 'cardremak',
       width: 150,
       render: (text: string) => text || '-',
     },
